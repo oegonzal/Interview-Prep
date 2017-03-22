@@ -1,0 +1,33 @@
+http://www.geeksforgeeks.org/shortest-common-supersequence/
+http://www.cnblogs.com/EdwardLiu/p/5146961.html
+
+
+public class Solution {
+	
+	public String findShortest(String a, String b) {
+		if(a == null || b == null || a.length()==0 || b.length() == 0) throw new IllegalArgumentException();
+
+		int lena = a.length(), b = b.length();
+		int[][] dp = new int[lenb][lenb];
+
+		for(int i = 0; i < lenb; i++){
+			char bc = b.charAt(i);
+			for(int j=0; j < lena; j++){
+				char ac = a.charAt(j);
+				dp[i][j] = Integer.MAX_VALUE;
+
+				if(ac==bc){
+					if(i==0) dp[i][j] = 1;
+					else {
+						for(int t = 0; t < j; t++){
+							if(dp[i - 1])
+						}
+					}
+				}
+			}
+		}
+	}
+
+
+
+}

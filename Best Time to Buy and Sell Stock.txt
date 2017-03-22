@@ -1,0 +1,16 @@
+//First Try:
+Total Runtime: 1574 ms
+100% test cases passed.
+
+public class Solution {
+    public int maxProfit(int[] A) {
+        int max = 0,
+            min = Integer.MAX_VALUE;
+        
+        for(int i = 0; i < A.length; i++){
+            if(min > A[i]) min = A[i];
+            if(max < A[i] - min) max = A[i] - min;
+        }
+        return max;
+    }
+}

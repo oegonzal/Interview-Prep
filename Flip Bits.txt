@@ -1,0 +1,16 @@
+//First Submission Successful 3/15 mins
+Total Runtime: 2398 ms
+100% test cases passed.
+
+
+class Solution {
+    /**
+     *@param a, b: Two integer
+     *return: An integer
+     */
+    public static int bitSwapRequired(int a, int b) {
+        int bits = a^b, bitsToFlip = 0;
+        for(int i = 0; i < 32; i++) if(((bits>>i) & 1) == 1) bitsToFlip++;
+        return bitsToFlip;
+    } //3mins
+};

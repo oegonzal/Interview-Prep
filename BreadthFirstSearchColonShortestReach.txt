@@ -1,0 +1,189 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        
+        new Solution(args);
+    }
+    
+    public Solution(String[] args){
+        
+        Scanner in = new Scanner(System.in);
+        
+        int numTestCases = Integer.parseInt(in.nextLine());
+        LinkedList<Node> graph;
+        
+        String[] info;
+        int numNodes;
+        int numEdges;
+        for(int i = 0; i < numTestCases; i++){
+            info = in.nextLine().split(" ");
+            numNodes = Integer.parseInt(info[0]);
+            numEdges = Integer.parseInt(info[1]);
+            graph = new LinkedList<Node>();
+            
+            for(int k = 1; k <= numNodes; k++){
+                graph.add(new Node(k));
+            }
+            
+            for(int j = 0; j < numEdges; j++){
+                info = in.nextLine().split(" ");
+                Node first = findNode( Integer.parseInt(info[0]), graph );
+                Node second = findNode( Integer.parseInt(info[1]), graph );
+                
+                first.addEdge(second);
+                second.addEdge(first);
+                
+            }
+            Node initialNode = findNode( Integer.parseInt(in.nextLine().replaceAll(" ","")) , graph);
+            calculateDistances( initialNode );
+            printGraph(graph);
+        }
+    }
+    
+    /*
+     * printGraph
+     */
+    
+    public void printGraph( LinkedList<Node> graph ){
+        Iterator<Node> iter = graph.iterator();
+        int i = 0;
+        
+        Node curr;
+        while(iter.hasNext()){
+            curr = iter.next();
+            if(curr.distance != 0){// && curr.distance != -1){
+               System.out.print( curr.distance + " " );  
+            }
+            //else if( curr.distance == -1 ){
+              //  i++;
+            //}   
+            //System.out.print("Node " + curr.identifier + ". " + curr.distance + " |");
+        }
+        //for(int j = i; j > 0; j--){
+        //    System.out.print("-1 ");
+        //}
+        
+        System.out.println();
+    }
+    
+    /*
+     * isNodeInGraph
+     */
+    public boolean isNodeInGraph(Node node, LinkedList<Node> list){
+        Iterator<Node> iter = list.iterator();
+        while(iter.hasNext()){
+            if( (iter.next()).equals(node) ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    /*
+     * findNode
+     */
+    public Node findNode(int id, LinkedList<Node> list){
+        Iterator<Node> iter = list.iterator();
+        while(iter.hasNext()){
+            Node curr = iter.next();
+            if( (curr.identifier) == id ){
+                return curr;
+            }
+        }
+        return null;
+    }
+    
+    /*
+     * calculate distance
+     */
+    public void calculateDistances( Node start ){
+       
+       LinkedList<Node> queue = new LinkedList<Node>();
+       queue.add(start);
+       start.visited = true;
+       start.distance = 0;
+        
+       Node curr;
+       while(!queue.isEmpty()){
+           curr = queue.poll();
+           addEdgesToQueue(queue, curr);
+       } 
+    }
+    
+    /*
+     * addEdgesToQueue and changes distances
+     */
+    public void addEdgesToQueue(LinkedList<Node> queue, Node node){
+      
+        Iterator<Node> iter = node.edges.iterator();
+        
+        while(iter.hasNext()){
+            Node curr = iter.next();
+            if(curr.visited == false){
+               queue.add(curr); 
+                if(curr.distance == -1){
+                    curr.distance = 0;
+                }
+               curr.distance = node.distance + 6;
+               curr.visited = true;
+            }
+            else{
+                if(curr.distance > node.distance + 6){
+                    curr.distance = node.distance + 6;
+                }
+            }  
+        }
+    }
+    
+}
+
+
+//////////////////////////class Node
+class Node {
+    
+    int identifier;
+    int distance;
+    boolean visited;
+    LinkedList<Node> edges;
+    
+    public Node(int id){
+        this.identifier = id;
+        this.distance = -1;
+        this.visited = false;
+        this.edges = new LinkedList<Node>();
+    }
+    
+    public boolean isEdge(Node sibling){
+        
+        Iterator<Node> iter =  edges.iterator();
+        while(iter.hasNext()){
+            if( (iter.next()).equals(sibling) ){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    public void addEdge(Node node){
+        this.edges.add(node);
+    }
+    
+    public int getDistance(){
+        return this.distance;
+    }
+    
+    public void setDistance(int d){
+        this.distance = d;
+    }
+    
+    public LinkedList<Node> getEdges(){
+        return this.edges;
+    }
+    
+}

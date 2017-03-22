@@ -1,0 +1,31 @@
+//First Try:
+Total Runtime: 9687 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param n a number
+     * @return Gray code
+     */
+    public ArrayList<Integer> grayCode(int n) {
+        ArrayList<Integer> nums = new ArrayList<Integer>();
+        if(n < 0) return nums;
+        
+        nums.add(0);
+        if(n == 0) return nums;
+        
+        nums.add(1);
+        int curr = 0, len = 0, bit = 0;
+        
+        while(++curr < n){
+            len = nums.size();
+            bit = 1 << curr;
+            for(int i = len - 1; i >= 0; i--){
+                int num = nums.get(i);
+                nums.add((num | bit));
+            }
+        }
+        return nums;
+    }
+}

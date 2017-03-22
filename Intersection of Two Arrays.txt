@@ -1,0 +1,35 @@
+//First Submission, Successful and done in 12 mins!
+Total Runtime: 12546 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums1 an integer array
+     * @param nums2 an integer array
+     * @return an integer array
+     */
+    public int[] intersection(int[] nums1, int[] nums2) {
+        if(nums1 == null || nums2 == null) return null;
+        HashMap<Integer, Boolean> map = new HashMap<Integer, Boolean>();
+        int size = 0, index = 0;
+        
+        for(int n : nums1) if(!map.containsKey(n)) map.put(n, true);
+        for(int n : nums2){
+            if(map.containsKey(n) && map.get(n)){
+                 map.put(n, false);
+                 size++;
+            }   
+        }
+        
+        int[] ans = new int[size];
+        for(int n : nums2){
+            if(map.containsKey(n) && !map.get(n)) {
+                map.put(n, true);
+                ans[index++] = n;
+            }  
+        }
+        
+        return ans;
+    }
+}

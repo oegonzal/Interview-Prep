@@ -1,0 +1,173 @@
+//First submission but I did not solve it and I was not able to (I looked at the solution)
+
+
+I am trying to figure out how to solve this one I still do not understand it.
+
+
+Total Runtime: 3105 ms
+100% test cases passed.
+
+
+public class Tower {
+    private Stack<Integer> disks;
+    // create three towers (i from 0 to 2)
+    public Tower(int i) {
+        disks = new Stack<Integer>();
+    }
+	
+    // Add a disk into this tower
+    public void add(int d) {
+        if (!disks.isEmpty() && disks.peek() <= d) {
+            System.out.println("Error placing disk " + d);
+        } else {
+            disks.push(d);
+        }
+    }
+	
+    // @param t a tower
+    // Move the top disk of this tower to the top of t.
+    public void moveTopTo(Tower t) {
+        if(t.getDisks().size() > 0 && t.getDisks().peek() < this.getDisks().peek()){
+            System.out.println("Error moving disk to different stack");
+            return;
+        }
+        t.getDisks().push(this.getDisks().pop());
+    }
+	
+    // @param n an integer
+    // @param destination a tower
+    // @param buffer a tower
+    // Move n Disks from this tower to destination by buffer tower
+    public void moveDisks(int n, Tower destination, Tower buffer) {
+        if(n == 0) return;
+        
+        moveDisks(n-1, buffer, destination);
+        moveTopTo(destination);
+        buffer.moveDisks(n-1, destination, this);
+    }
+
+    public Stack<Integer> getDisks() {
+        return disks;
+    }
+    
+    public Tower getBigStack(Tower a, Tower b, Tower c){
+        Integer aN = getLastDisk(a), bN = getLastDisk(b), cN = getLastDisk(c),
+                max = (aN != null) ? aN : (bN != null) ? bN : cN;
+        if(aN != null && max < aN) max = aN;
+        if(bN != null && max < bN) max = bN;
+        if(cN != null && max < cN) max = cN;
+        return (aN == max) ? a : (bN == max) ? b : c;
+    }
+    
+    public Tower getMiddleStack(Tower a, Tower b, Tower c){
+        Integer aN = getLastDisk(a), bN = getLastDisk(b), cN = getLastDisk(c),
+                min = (aN != null) ? aN : (bN != null) ? bN : cN,
+                max = (aN != null) ? aN : (bN != null) ? bN : cN;
+                
+        if(aN != null && min > aN) min = aN;
+        if(bN != null && min > bN) min = bN;
+        if(cN != null && min > cN) min = cN;
+        
+        if(aN != null && max < aN) max = aN;
+        if(bN != null && max < bN) max = bN;
+        if(cN != null && max < cN) max = cN;
+                
+        return (max != aN && min != aN) ? a : (max != bN && min != bN) ? b : c ;
+    }
+    
+    public Tower getMinimumStack(Tower a, Tower b, Tower c){
+        Integer aN = getLastDisk(a), bN = getLastDisk(b), cN = getLastDisk(c),
+                min = (aN != null) ? aN : (bN != null) ? bN : cN;
+        if(aN != null && min > aN) min = aN;
+        if(bN != null && min > bN) min = bN;
+        if(cN != null && min > cN) min = cN;
+        return (aN == min) ? a : (bN == min) ? b : c;
+    }
+    
+    public Integer getLastDisk(Tower a){
+        if(a.getDisks().size() > 0) return a.getDisks().peek();
+        return null;
+    }
+}
+/**
+ * Your Tower object will be instantiated and called as such:
+ * Tower[] towers = new Tower[3];	
+ * for (int i = 0; i < 3; i++) towers[i] = new Tower(i);
+ * for (int i = n - 1; i >= 0; i--) towers[0].add(i);	
+ * towers[0].moveDisks(n, towers[2], towers[1]);
+ * print towers[0], towers[1], towers[2]
+ * 
+ * 
+ * 
+ * Use a recursion algorithm to try all the towers
+ * only one disk at a time
+ * 
+ * How do I know when I am done? 
+ *  -how will this recursion know when to iterate
+ *      -When all disks in last stack (pre-cond: no bigger can be above smaller)
+ * 
+ * How can we hit all possibilities?
+ * 
+ * To try all possibilities, you have to move a disk and call next recursion in
+ * that next possible state.
+ * 
+ * How to distinguish between buffer tower and destination tower
+ * 
+ * How do I prevent infinite loops?
+ * 
+ * Might need memorization, key for each type of formation already made,
+ * so that it wont get repeated
+ * 
+ * Goal is to recursively get the biggest disk into the last slot
+ * When that happens we reduce the problem to n-1
+ * Then we get the second biggest over this biggest disk in the dest slot
+ * and we reduce to n-2
+ * and so on...
+ * 
+ * In order to get the biggest one into the last position,
+ * the last position needs to be cleared for it to go in.
+ * So keep track of current biggest disk and then go to next biggest
+ * when it goes in the last stack and never update that disk again make a condi.
+ * for that
+ * 
+ * So then we need to clear the last stack for the biggest current disk to go in
+ * 
+ * Find a way to make a movement based off this pattern. which of the three avai
+ * disks should move and where?
+ * 
+ * So each time there is at most 3 numbers available and at most 3 possibilities
+ * to move a disk.
+ * 
+ * buffer and starting disks will be switching places.
+ * 
+ * hint: keep as few as possible in the dest (not including disks locked in)
+ * small moves every second turn
+ * algo:
+ * 
+ * curr smallest in the buffer,
+ * biggest in the dest,
+ * smallest in init,
+ * biggest in buffer,
+ * smallest in buffer,
+ * biggest in dest,
+ * smallest in dest,
+ * middle in init,
+ * smallest in init,
+ * biggest in buffer,
+ * smallest in dest,
+ * middle in buffer,
+ * smallest in buffer,
+ * biggest in dest,    //stack of 3 in buff, middle in dest, rest in init 
+ * 
+ * small in dest,
+ * middle in init,
+ * small in init,
+ * middle in dest,
+ * small in dest,
+ * 
+ * 
+ * 
+ * 
+ * The way to do this problem is that you have to keep taking out the big one when ever you finish stacking up the tower on one of the others. when you do you take out the next biggest tower from init, place it on the empty dest, then continue stacking the buffer into the dest. 
+ * repeat until they are all gone.
+*/

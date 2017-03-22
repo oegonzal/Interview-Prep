@@ -1,0 +1,121 @@
+//Second Try:
+Total Runtime: 1806 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param matrix, a list of lists of integers
+     * @param target, an integer
+     * @return a boolean, indicate whether matrix contains target
+     */
+    public boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
+
+        int xStart = 0, yStart = 0, xEnd = matrix[0].length-1, yEnd = matrix.length-1,
+            mid = 0;
+        
+        while(yStart + 1 < yEnd){
+            mid = (yStart + yEnd)/2;
+            if(target == matrix[mid][xStart]) return true;
+            else if(target<matrix[mid][xStart]) yEnd = mid;
+            else if(target>matrix[mid][xStart]&&target>matrix[mid][xEnd])yStart=mid+1;
+            else yStart = yEnd = mid;
+        }
+        
+        while(xStart + 1 < xEnd){
+            mid = (xStart + xEnd)/2;
+            if(target == matrix[yStart][mid]) return true;
+            else if(target < matrix[yStart][mid]) xEnd = mid;
+            else xStart = mid;
+        }
+        
+        if(matrix[yStart][xStart] == target) return true;
+        if(matrix[yStart][xEnd] == target) return true;
+        return false;
+    }
+}
+
+
+
+
+
+
+
+//First Try:
+Wrong Answer
+
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @param: A number you want to search in the matrix
+     * @return: An integer indicate the occurrence of target in the given matrix
+     */
+    public int searchMatrix(int[][] matrix, int target) {
+        
+        //CORNER CASES
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0) return false;
+        
+        //If 0?
+        int xStart = 0, yStart = 0, xEnd = matrix[0].length, yEnd = matrix.length,
+            xMid = 0, yMid = 0, prevX = 0, prevY = 0;
+        
+        while(xStart < xEnd && yStart < yEnd){
+            prevX = xMid;
+            prevY = yMid;
+            xMid = (xStart + xEnd)/2;
+            yMid = (yStart + yMid)/2;
+            
+            //to prevent infinite loops
+            if(prevX == xMid && prevY == yMid) break;
+
+            if(matrix[yMid][xMid] == target) return true;
+            else if(matrix[yMid][xMid] < target){
+                xEnd = xMid;
+                yEnd = yMid;
+            }
+            else{
+                xStart = yMid;
+                yStart = yMid;
+            }
+        }
+        
+        if(matrix[yStart][xStart] == target) return true;
+        if(matrix[yStart+1][xStart] == target) return true;
+        if(matrix[yStart][xStart+1] == target) return true;
+        
+        return false;
+    }
+}
+
+
+/*
+    Get mid of x axis,
+    get mid of y axis
+    
+    Combine them, and get element at that location and compare to target.
+    
+    if bigger then those 2 elements are your new starting point
+    
+    if smaller then those 2 new elements are you edge point
+
+*/
+
+
+public int searchMatrix(int[][] matrix, int target) {
+        
+        //CORNER CASES
+        
+        //If 0?
+        int xStart = 0, yStart = 0, xEnd = matrix[0].length, yEnd = matrix.length,
+            xMid = 0, yMid = 0;
+        
+        while(xStart < xEnd && yStart < yEnd){
+            xMid = (xStart + xEnd)/2;
+            yMid = (yStart + yMid)/2;
+            
+            if(matrix[yMid][xMid] == target) return 0;
+        }
+        
+        return 0;
+    }

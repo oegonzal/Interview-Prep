@@ -1,0 +1,51 @@
+//Second Submission Successful, first submission had a minor bug. Took about 30/15
+Total Runtime: 7075 ms
+100% test cases passed.
+
+
+
+
+/**
+ * // This is the interface that allows for creating nested lists.
+ * // You should not implement it, or speculate about its implementation
+ * public interface NestedInteger {
+ *
+ *     // @return true if this NestedInteger holds a single integer,
+ *     // rather than a nested list.
+ *     public boolean isInteger();
+ *
+ *     // @return the single integer that this NestedInteger holds,
+ *     // if it holds a single integer
+ *     // Return null if this NestedInteger holds a nested list
+ *     public Integer getInteger();
+ *
+ *     // @return the nested list that this NestedInteger holds,
+ *     // if it holds a nested list
+ *     // Return null if this NestedInteger holds a single integer
+ *     public List<NestedInteger> getList();
+ * }
+ */
+public class Solution {
+
+    // @param nestedList a list of NestedInteger
+    // @return a list of integer
+    public List<Integer> flatten(List<NestedInteger> nestedList) {
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        
+        if(nestedList == null || nestedList.size() == 0) return list;
+        
+        LinkedList<NestedInteger> stack = new LinkedList<NestedInteger>(),
+                                  temp  = new LinkedList<NestedInteger>();
+        stack.addLast(nestedList.get(0));
+        
+        while(stack.size() > 0){
+            NestedInteger nl = stack.removeLast();
+            
+            if(!nl.isInteger()){
+                for(NestedInteger n : nl.getList()) temp.addLast(n);
+                while(temp.size() > 0) stack.addLast(temp.removeLast());
+            } else list.add(nl.getInteger());
+        }
+        return list;
+    }
+}

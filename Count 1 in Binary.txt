@@ -1,0 +1,44 @@
+//Second Try:
+Total Runtime: 2015 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param num: an integer
+     * @return: an integer, the number of ones in num
+     */
+    public int countOnes(int num) {
+        int m = 0;
+        while(num != 0){
+            num &= (num-1);
+            m++;
+        }
+        return m;
+    }
+};
+
+//41241241
+
+
+
+//First Try:  (Wrong Answer)
+Total Runtime: 1071 ms
+44% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param num: an integer
+     * @return: an integer, the number of ones in num
+     */
+    public int countOnes(int num) {
+        int m = 0;
+        while(num != 0){
+            if(num>>1 == (num+1)/2) return ++m;
+            num>>=1;
+            m++;
+        }
+        return m;
+    }
+};
+

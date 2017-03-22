@@ -1,0 +1,56 @@
+//First Submission: Successfull done in 20 mins
+
+
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+public class Solution {
+    /**
+     *@param A, queries: Given an integer array and an query list
+     *@return: The result list
+     */
+    public ArrayList<Long> intervalSum(int[] A, ArrayList<Interval> queries) {
+        if(A == null) return null;
+        ArrayList<Long> list = new ArrayList<Long>();
+        Node root = buildST(A, 0, A.length - 1);
+        for(Interval in : queries) list.add(query(root, in.start, in.end));
+        return list;
+    }
+    
+    public long query(Node root, int start, int end){
+        if(root == null || start > end) return 0;
+        if(start == root.start && end == root.end) return count;
+        int mid = (root.start + root.end)/2;
+        return query(root.left, Math.max(root.start, start), Math.min(mid, end)) + 
+                    query(root.right, Math.max(mid+1, start), Math.min(root.end, end));
+    }
+    
+    public Node buildST(int[] A, int start, int end){
+        if(start > end) return null;
+        Node n = new Node(start, end);
+        int mid = (n.start + n.end)/2;
+        if(mid != end) n.left = buildST(A, start, mid);
+        n.right = buildST(A, mid+1, end);
+        if(n.right == null && n.left == null) n.count = A[start];
+        else n.count = ((n.right!=null) ? n.right.count : 0) + ((n.left!=null) ? n.left.count : 0);
+        return n;
+    }
+    
+    class Node{
+        public long count;
+        public int start, end;
+        public Node left, right;
+        public Node(int start, int end){
+            this.start = start;
+            this.end = end;
+            this.count = 0;
+            this.left = this.right = null;
+        }
+    }
+}

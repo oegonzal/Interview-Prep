@@ -1,0 +1,22 @@
+//First Submission Successful 6/8
+Total Runtime: 5603 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param root the root of binary tree
+     * @return the max ndoe
+     */
+    public TreeNode maxNode(TreeNode node) {
+        if(node == null || (node.left == null && node.right == null)) return node;
+        return getMax(node, maxNode(node.left), maxNode(node.right));
+    }
+    
+    public TreeNode getMax(TreeNode parent, TreeNode left, TreeNode right){
+        TreeNode max = parent;
+        if(left != null && left.val > max.val) max = left;
+        if(right != null && right.val > max.val) max = right;
+        return max;
+    }
+}

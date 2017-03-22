@@ -1,0 +1,35 @@
+//First Try:
+Total Runtime: 1350 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param n: Given the range of numbers
+     * @param k: Given the numbers of combinations
+     * @return: All the combinations of k numbers out of 1..n
+     */
+    public ArrayList<ArrayList<Integer>> combine(int n, int k) {
+		ArrayList<ArrayList<Integer>> combs = new ArrayList<ArrayList<Integer>>();
+		if(k < 1 || n < 1) return combs;
+		
+		recurse(combs, new ArrayList<Integer>(), 1, n, k);
+		return combs;
+    }
+    
+    public void recurse(ArrayList<ArrayList<Integer>> C, ArrayList<Integer> l, int start, int n, int k){
+        if(k == 0){
+            ArrayList<Integer> item = new ArrayList<Integer>();
+            for(int num: l) item.add(num);
+            C.add(item);
+            return;
+        }
+        
+        for(int i = start; i <= n; i++){
+            l.add(i);
+            recurse(C, l, i+1, n, k-1);
+            l.remove(l.size() - 1);
+        }
+    }
+}

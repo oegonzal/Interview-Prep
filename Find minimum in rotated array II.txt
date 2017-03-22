@@ -1,0 +1,76 @@
+//Second Try:
+Total Runtime: 2375 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: a rotated sorted array
+     * @return: the minimum Aber in the array
+     */
+    public int findMin(int[] A) {
+        if(A==null || A.length == 0) return -1;
+        int start = 0, mid = 0, end = A.length - 1;
+        while(start + 1 < end){
+            mid = (start+end)/2;
+            
+            if(A[start] < A[end]) return A[start];
+            else if(A[start] < A[mid]) start =  mid;
+            else if(A[mid] < A[end]) end = mid;
+            else if(A[mid] == A[start] && A[mid] != A[end]) start = mid;
+            else{
+                start++; end--;
+            }
+            
+        }
+        if(A[start] < A[end]) return A[start];
+        return A[end];
+    }
+}
+
+
+
+
+//First Try:
+
+(Failed Attempt/Wrong Answer)
+
+public class Solution {
+    /**
+     * @param A: a rotated sorted array
+     * @return: the minimum Aber in the array
+     */
+    public int findMin(int[] A) {
+        
+        int start = 0, mid = 0, end = A.length - 1;
+        //if(A[start] < A[end]) return A[start];
+        
+        while(start + 1 < end){
+            mid = (start+end)/2;
+            
+            if(A[start] < A[end]) return A[start];
+            else if(A[start] < A[mid]) start =  mid;
+            else if(A[mid] < A[end]) end = mid;
+            else if(A[mid] == A[start] && A[mid] != A[end]) start = mid;
+            else if(A[mid] == A[start] && A[mid] == A[end]){
+                while(A[mid] == A[start] && A[mid] == A[end]){
+                    start++;
+                    end--;
+                }
+            }
+            // else {
+            //     start++;
+            //     end--;
+            // }
+            // else if(A[mid] == A[start]){
+            //     if(A[mid] == A[end]) start = mid;;
+            // }
+            // else start = mid;
+            
+        }
+        if(A[start] < A[end]) return A[start];
+        return A[end];
+    }
+}
+//[1]
+//[4,4,5,6,7,0,1,2]

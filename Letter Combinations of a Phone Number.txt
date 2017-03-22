@@ -1,0 +1,57 @@
+//First Submission: Successful but took me like an hour and 30mins bc i was really tired. I could have solved it a lot faster using recursion but I wanted to solve it iteratively.
+Total Runtime: 10699 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param digits A digital string
+     * @return all posible letter combinations
+     */
+    public ArrayList<String> letterCombinations(String digits) {
+        //TODO: TEST CORNER CASE, if 1 or 0 is contained in digits or if empty or null
+        ArrayList<String> list = new ArrayList<String>();
+        LinkedList<Pair> stack = new LinkedList<Pair>();
+        char[][] options = {
+                            {'a', 'b', 'c'}, {'d', 'e', 'f'}, {'g', 'h', 'i'},
+                            {'j', 'k', 'l'},{'m', 'n', 'o'},{'p', 'q', 'r', 's'},
+                            {'t', 'u', 'v'},{'w', 'x', 'y', 'z'}
+                           };
+        int sLen = digits.length();
+        char[] chars = new char[sLen];
+        
+        if(digits == null || digits == "") return list;
+        for(int i = 0; i < sLen; i++) if(digits.charAt(i)=='0'||digits.charAt(i)=='1') return list;
+        stack.addLast(new Pair(digits.charAt(0) - '2', 0));
+        while(stack.size() > 0){
+            Pair temp = stack.peekLast();
+            if(stack.size() <= sLen && temp.pos < options[temp.num].length){
+                chars[stack.size() - 1] = options[temp.num][temp.pos];
+                if(stack.size() == sLen){
+                     list.add(new String(chars));
+                     temp.pos++;
+                }
+                else stack.addLast(new Pair(digits.charAt(stack.size()) - '2', 0));
+            } else {
+                stack.removeLast();
+                if(stack.size() > 0) stack.peekLast().pos++;
+            }
+        }
+        return list;
+    }
+    
+    class Pair{
+        public int num;
+        public int pos;
+        
+        public Pair(int num, int pos){
+            this.num = num;
+            this.pos = pos;
+        }
+    }
+    
+    public void printList(ArrayList<String> list){
+        for(String s : list) System.out.print(s + ", ");
+        System.out.println("___");
+    }
+}

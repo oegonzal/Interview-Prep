@@ -1,0 +1,106 @@
+//Third Try: Successful Submission
+Total Runtime: 2262 ms
+100% test cases passed.
+
+
+class Solution {
+    /*
+     * param k : As description.
+     * param n : As description.
+     * return: An integer denote the count of digit k in 1..n
+     */
+    public int digitCounts(int k, int n) {
+        if(k < 0 || n < 0) return 0;
+        if(k==0 && n==0) return 1;
+        
+        int ten = 1, kSum = 0, count = 0, decPlace = 0;
+        if(k==0 && (n%10) > 0) kSum++;
+        
+        while(n/10 > 0 || n%10 > 0){        
+            int mod = n%10;
+            
+            //Count of k from current decimal place
+            if(k < mod && k != 0) kSum += ten;
+            else if(k == mod) kSum += (count + 1);
+            
+            //Count of k from previous decimal places
+            kSum += (mod * (ten/10) * decPlace);
+            
+            count += (mod*ten);
+            ten *= 10;
+            n /= 10;
+            decPlace++;
+        }
+        return kSum;
+    }
+};
+
+//[1,1]
+//[4,490]
+
+
+
+//Second Try:
+//Total Runtime: 2334 ms
+//90% test cases passed.
+
+
+class Solution {
+    /*
+     * param k : As description.
+     * param n : As description.
+     * return: An integer denote the count of digit k in 1..n
+     */
+    public int digitCounts(int k, int n) {
+        int ten = 1, kSum = (k==0 && (n%10) == 0 || k!=0) ? 0 : 1, count = 0, decPlace = 0;
+        while(n/10 > 0 || n%10 > 0){        
+            int mod = n%10;
+            
+            //Count of k from current decimal place
+            if(k < mod && k != 0) kSum += ten;
+            else if(k == mod) kSum += (count + 1);
+            
+            //Count of k from previous decimal places
+            kSum += (mod * (ten/10) * decPlace);
+            
+            count += (mod*ten);
+            ten *= 10;
+            n /= 10;
+            decPlace++;
+        }
+        return kSum;
+    }
+};
+
+
+
+//First Try: Failed pass
+class Solution {
+    /*
+     * param k : As description.
+     * param n : As description.
+     * return: An integer denote the count of digit k in 1..n
+     */
+    public int digitCounts(int k, int n) {
+        //1, 10, 100, 1000, ... * k
+        //Use subtractions to find total count, subtractions on n
+        
+        int ten = 1, kSum = 0, count = 0, decPlace = 0;
+        
+        while(n/10 > 0 || n%10 > 0){        //System.out.println("count: " + count + ", n: " + n);
+            int mod = n%10;
+                                    //System.out.println("val: " + (ten * (k+1)) + ", mod: " + mod);
+            if(mod >= k){
+                //System.out.println(Math.min(mod * ten, ten * (k+1)) - (ten*k) + 1);
+                count += (Math.min(mod * ten + 1, ten * (k+1)) - (ten*k));
+            } 
+            count += (mod*(ten/10)*decPlace); //4 * 1000 * 3
+
+            ten *= 10;
+            n /= 10;
+            // decPlace++;
+        }
+        
+        return count;
+    }
+};

@@ -1,0 +1,112 @@
+//Second try:
+
+public class Solution {
+    /**
+     * @param numbers : Give an array numbers of n integer
+     * @return : Find all unique triplets in the array which gives the sum of zero.
+     */
+    public ArrayList<ArrayList<Integer>> threeSum(int[] A) {
+        
+        //INITIALIZATIONS + SORT
+        ArrayList<ArrayList<Integer>> sums = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> item = null;
+        Arrays.sort(A);
+        
+        //BASE CASE + CORNER CASE
+        if(A == null || A.length < 3) return sums;
+        
+        //WORK
+        for(int i = 0; i + 2 < A.length; ++i){
+            if(A[i] == A[i+1]) continue;
+            
+            int low = i + 1, high = A.length - 1;
+            while(low < high){
+                if(A[i] + A[low] + A[high] == 0){
+                    item = new ArrayList<Integer>();
+                    
+                    item.add(A[i]);
+                    item.add(A[low++]);
+                    item.add(A[high--]);
+                    sums.add(item);
+                    
+                    while(low<high && A[low] == A[low-1]) low++;
+                    while(low<high && A[high] == A[high+1]) high--;
+                }
+                else if((A[i] + A[low] + A[high] > 0)) high--;
+                else low++;
+            }
+        }
+        
+        return sums;
+    }
+}
+
+/*
+    Forgot about duplicates
+
+*/
+
+//[2,7,11,15]
+//[2,7,11,15,-9]
+//[1,0,-1,-1,-1,-1,0,1,1,1]
+//[-1,1,0]
+//[-2,-3,5,-1,-4,5,-11,7,1,2,3,4,-7,-1,-2,-3,-4,-5]
+//
+
+
+
+
+//First Try:
+Should work, but not most efficient way O(n^3)
+
+
+public class Solution {
+    /**
+     * @param numbers : Give an array numbers of n integer
+     * @return : Find all unique triplets in the array which gives the sum of zero.
+     */
+    public ArrayList<ArrayList<Integer>> threeSum(int[] A) {
+        
+        //INITIALIZATIONS + SORT
+        ArrayList<ArrayList<Integer>> sums = new ArrayList<ArrayList<Integer>>();
+        ArrayList<Integer> item = null;
+        Arrays.sort(A);
+        
+        //BASE CASE + CORNER CASE
+        if(A == null || A.length < 3) return sums;
+        
+        //WORK
+        for(int i = 0; i < A.length - 2; i++){
+            if(A[i] == A[i+1]) continue;
+            
+            for(int j = i + 1; j < A.length - 1; j++){
+                if(A[j] == A[j+1]) continue;
+                if(A[i] + A[j] + A[j+1] > 0) break;
+                
+                for(int k = j + 1; k < A.length; k++){
+                    if(A[k] == A[k-1]) continue;
+                    if(A[i] + A[j] + A[k] == 0){
+                        item = new ArrayList<Integer>();
+                        item.add(A[i]);
+                        item.add(A[j]);
+                        item.add(A[k]);
+                        sums.add(item);
+                    }
+                }
+            }
+        }
+        return sums;
+    }
+}
+
+/*
+    Forgot about duplicates
+
+*/
+
+//[2,7,11,15]
+//[2,7,11,15,-9]
+//[1,0,-1,-1,-1,-1,0,1,1,1]
+//[-1,1,0]
+//[-2,-3,5,-1,-4,5,-11,7,1,2,3,4,-7,-1,-2,-3,-4,-5]
+//

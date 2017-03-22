@@ -1,0 +1,298 @@
+
+Successful, my solution below this one!
+
+Online Solution that solved it much faster thn mine:
+Total Runtime: 2099 ms
+100% test cases passed.
+
+
+public class Solution {
+    public  int maxPoints(Point[] points) {
+        if (points == null || points.length == 0) {
+            return 0;
+        }  
+
+        HashMap<Double, Integer> map=new HashMap<Double, Integer>();
+        int max = 1;
+
+        for(int i = 0 ; i < points.length; i++) {
+            map.clear();
+            map.put((double)Integer.MIN_VALUE, 1);
+
+            int dup = 0;
+            for(int j = i + 1; j < points.length; j++) {
+                if (points[j].x == points[i].x && points[j].y == points[i].y) {
+                    dup++;
+                    continue;
+                }
+                double key=points[j].x - points[i].x == 0 ? 
+                    Integer.MAX_VALUE :
+                    0.0 + (double)(points[j].y - points[i].y) / (double)(points[j].x - points[i].x);
+
+                if (map.containsKey(key)) {
+                    map.put(key, map.get(key) + 1);
+                } else {
+                    map.put(key, 2);
+                }
+            }
+
+            for (int temp: map.values()) {
+                if (temp + dup > max) {
+                    max = temp + dup;
+                }
+            }
+
+        }
+        return max;
+    }
+}
+
+
+
+//Second Submission 240/30 and Successful
+Total Runtime: 4203 ms
+100% test cases passed.
+
+This was a really tricky one because I did not know that slight differenced in precision in decimals was evaluation my stuff to false.
+I had to round to get the right answer on them. Precision was the problem here
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param points an array of point
+     * @return an integer
+     */
+    public int maxPoints(Point[] points) {
+        if(points == null || points.length == 0) return 0;
+        int max = 1;
+        
+        for(int i = 0; i < points.length; i++){
+            float x1 = points[i].x, y1 = points[i].y;
+            
+            for(int j = i + 1; j < points.length; j++){
+                int count = 0;
+                float x2 = points[j].x, y2 = points[j].y;
+                Float slope = (x1 - x2 == 0) ? null : (y1 - y2)/(x1 - x2), yIntercept = (slope == null) ? 0 : (y1 - slope*x1);
+                
+                for(int k = 0; k < points.length; k++){
+                    if(slope == null){
+                        if(points[k].x == x1) count++;
+                    }
+                    else if(sameLine(points[k], slope, yIntercept)) count++;
+                }
+                
+                if(count > max) max = count;
+            }
+        }
+        return max;
+    }
+    
+    public boolean sameLine(Point a, float slope, float yIntercept){
+        if(a.y == Math.round(slope*a.x + yIntercept)) return true;
+        return false;
+    }
+}
+//[[1,2],[3,6],[0,0],[1,3]]
+//[[0,0],[0,0]]
+//[[-54,-297],[-36,-222],[3,-2],[2,4],[0,0],[54,153],[-30,-197],[4,5],[4,3],[-42,-247],[6,-47]]
+//[[-54,-297],[-36,-222],[3,-2],[30,53],[-5,1],[-36,-222],[0,2],[1,3],[6,-47],[0,4],[2,3],[5,0],[48,128],[24,28],[0,-5],[48,128],[-12,-122],[-54,-297],[-42,-247],[-5,0],[2,4],[0,0],[54,153],[-30,-197],[4,5],[4,3],[-42,-247],[6,-47],[-60,-322],[-4,-2],[-18,-147],[6,-47],[60,178],[30,53],[-5,3],[-42,-247],[2,-2],[12,-22],[24,28],[0,-72],[3,-4],[-60,-322],[48,128],[0,-72],[-5,3],[5,5],[-24,-172],[-48,-272],[36,78],[-3,3]]
+
+//[[-240,-657],[-27,-188],[-616,-247],[-264,-311],[-352,-393],[-270,-748],[3,4],[-308,-87],[150,526],[0,-13],[-7,-40],[-3,-10],[-531,-892],[-88,-147],[4,-3],[-873,-555],[-582,-360],[-539,-207],[-118,-206],[970,680],[-231,-47],[352,263],[510,143],[295,480],[-590,-990],[-236,-402],[308,233],[-60,-111],[462,313],[-270,-748],[-352,-393],[-35,-148],[-7,-40],[440,345],[388,290],[270,890],[10,-7],[60,253],[-531,-892],[388,290],[-388,-230],[340,85],[0,-13],[770,473],[0,73],[873,615],[-42,-175],[-6,-8],[49,176],[308,222],[170,27],[-485,-295],[170,27],[510,143],[-18,-156],[-63,-316],[-28,-121],[396,304],[472,774],[-14,-67],[-5,7],[-485,-295],[118,186],[-154,-7],[-7,-40],[-97,-35],[4,-9],[-18,-156],[0,-31],[-9,-124],[-300,-839],[-308,-352],[-425,-176],[-194,-100],[873,615],[413,676],[-90,-202],[220,140],[77,113],[-236,-402],[-9,-124],[63,230],[-255,-118],[472,774],[-56,-229],[90,228],[3,-8],[81,196],[970,680],[485,355],[-354,-598],[-385,-127],[-2,7],[531,872],[-680,-263],[-21,-94],[-118,-206],[616,393],[291,225],[-240,-657],[-5,-4],[1,-2],[485,355],[231,193],[-88,-147],[-291,-165],[-176,-229],[154,153],[-970,-620],[-77,33],[-60,-111],[30,162],[-18,-156],[425,114],[-177,-304],[-21,-94],[-10,9],[-352,-393],[154,153],[-220,-270],[44,-24],[-291,-165],[0,-31],[240,799],[-5,-9],[-70,-283],[-176,-229],[3,8],[-679,-425],[-385,-127],[396,304],[-308,-352],[-595,-234],[42,149],[-220,-270],[385,273],[-308,-87],[-54,-284],[680,201],[-154,-7],[-440,-475],[-531,-892],[-42,-175],[770,473],[118,186],[-385,-127],[154,153],[56,203],[-616,-247]]
+
+
+
+
+
+//First Submission: Failed not working for same points and not working for points in the infinite slop
+
+
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param points an array of point
+     * @return an integer
+     */
+    public int maxPoints(Point[] points) {
+        int maxPoints = 0;
+        if(points == null || points.length == 0) return maxPoints;
+        
+        HashMap<Float, LinkedList<Float>> map = new HashMap<Float, LinkedList<Float>>();
+        boolean[] visited = new boolean[points.length];
+        
+        for(int i = 0; i < points.length; i++){
+            int x1 = points[i].x, y1 = points[i].y;
+            for(int j = i+1; j<points.length; j++){
+                int x2 = points[j].x, y2 = points[j].y, k = 0;
+                float slope = (x1 - x2)/(y1 - y2), yIntercept = (y1 - slope*x1);
+                
+                if(!map.containsKey(slope)) map.put(slope, new LinkedList<Float>());
+                
+                //map.get(slope).add(yIntercept);
+                LinkedList<Float> list = map.get(slope);
+                for(; k < list.size(); k++) if(list.get(k) == yIntercept) break;
+                if(k == list.size()) list.addLast(yIntercept);
+            }
+        }
+        
+        for(Float slope : map.keySet()){
+            LinkedList<Float> l = map.get(slope);
+            for(int a = 0; a < l.size(); a++){
+                float yInter = l.get(a);
+                int tempMax = 0;
+                for(int i = 0; i < points.length; i++){
+                    if(sameLine(points[i], slope, yInter)){
+                        tempMax++;  
+                        if(tempMax > maxPoints) maxPoints = tempMax;
+                    } 
+                }
+            }
+        }
+        
+        return maxPoints;
+    }
+    
+    public boolean sameLine(Point a, float slope, float yIntercept){
+        System.out.println(a.y + ", " + (slope*a.x + yIntercept));
+        if(a.y == (slope*a.x + yIntercept)) return true;
+        return false;
+    }
+    
+}
+
+/*
+    looking for all possible linear equations y =Ax+b
+    Will take O(n^2) just to find the all possible linear equations
+    
+    AFter finding all of them (max of (n^2)/2)
+    
+    Then take all those possibilites and count all points in each linear equ
+    O((n^2)/2 * n) => O(n^3)
+    
+    Worst case is that all points form a circle shape
+    
+                            .
+                        .       .
+                      .           .
+                     .             .
+                      .           .
+                        .       .
+                            .
+*/
+
+
+
+
+
+//Implementation right after submission one
+
+/**
+ * Definition for a point.
+ * class Point {
+ *     int x;
+ *     int y;
+ *     Point() { x = 0; y = 0; }
+ *     Point(int a, int b) { x = a; y = b; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param points an array of point
+     * @return an integer
+     */
+    public int maxPoints(Point[] points) {
+        if(points == null) return 0;
+        if(points.length <= 1) return points.length;
+        return Math.max(getMaxPointsInIntercept('x',points), getMaxPointsInIntercept('y',points));
+    }
+    
+    
+    
+    public boolean sameLine(Point a, float slope, float yIntercept){
+        if(a.y == (slope*a.x + yIntercept)) return true;
+        return false;
+    }
+    
+    public int getMaxPointsInIntercept(char axis, Point[] points){
+        HashMap<Float, LinkedList<Float>> map = new HashMap<Float, LinkedList<Float>>();
+        int maxPoints = 0;
+        
+        for(int i = 0; i < points.length; i++){
+            int x1 = points[i].x, y1 = points[i].y;
+            for(int j = i+1; j<points.length; j++){
+                int x2 = points[j].x, y2 = points[j].y, k = 0;
+                if((axis == 'x' && (x1 - x2) == 0) || (axis == 'y' && (y1 - y2) == 0)) continue;
+                
+                float slope = (axis == 'x') ? (y1 - y2)/(x1 - x2) : (x1 - x2)/(y1 - y2),
+                yIntercept = (y1 - slope*x1);
+                
+                if(!map.containsKey(slope)) map.put(slope, new LinkedList<Float>());
+                
+                LinkedList<Float> list = map.get(slope);
+                for(; k < list.size(); k++) if(list.get(k) == yIntercept) break;
+                if(k == list.size()) list.addLast(yIntercept);
+            }
+        }
+        
+        //for points that are over eachother may be worth checking slopes vertical for all points too.
+        for(Float slope : map.keySet()){
+            LinkedList<Float> l = map.get(slope);
+            for(int interInd = 0; interInd < l.size(); interInd++){
+                float yInter = l.get(interInd);
+                
+                //System.out.println("y = " + slope + "x + " + yInter);
+                int tempMax = 0;
+                for(int i = 0; i < points.length; i++){
+                    if(sameLine(points[i], slope, yInter)){
+                        tempMax++;  
+                        if(tempMax > maxPoints) maxPoints = tempMax;
+                    } 
+                }
+            }
+        }
+        return maxPoints;
+    }
+}
+/*
+[[1,2],[3,6],[0,0],[1,3]]
+[[0,0],[0,0]]
+
+*/
+
+
+/*
+    looking for all possible linear equations y =Ax+b
+    Will take O(n^2) just to find the all possible linear equations
+    
+    AFter finding all of them (max of (n^2)/2)
+    
+    Then take all those possibilites and count all points in each linear equ
+    O((n^2)/2 * n) => O(n^3)
+    
+    Worst case is that all points form a circle shape
+    
+                            .
+                        .       .
+                      .           .
+                     .             .
+                      .           .
+                        .       .
+                            .
+    To cover for undefined you have to do this both for the x-axis and y-axis
+*/

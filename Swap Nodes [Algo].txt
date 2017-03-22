@@ -1,0 +1,194 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        Scanner in = new Scanner(System.in);
+        Node root = new Node(1);
+        LinkedList<Node> q = new LinkedList<Node>();
+        
+        q.add(root);
+        //Tree building
+        String line = in.nextLine();
+        int N = Integer.parseInt(line.trim());
+        for(int i = 0; i < N; i++){
+
+            line = in.nextLine();
+            String[] array = line.split(" ");
+            
+            int nodeL = Integer.parseInt(array[0]);
+            int nodeR = Integer.parseInt(array[1]);
+            
+            //Removing the first node placed on the list
+            Node parent = q.poll();
+            if(nodeL != -1){
+                parent.left = new Node(nodeL);
+                q.add(parent.left);//adds to end of list
+            }
+            
+            if(nodeR != -1){         
+                parent.right = new Node(nodeR);
+                q.add(parent.right);
+            }
+        }
+        
+        //Swap operations
+        line = in.nextLine();
+        int K = Integer.parseInt(line);
+        for(int i = 0; i < K; i++){
+            line = in.nextLine();
+            String[] array = line.split(" ");
+            
+            int depthToSplit = Integer.parseInt(array[0]);
+            swap(root, depthToSplit, 1);
+            
+            printInorder(root);
+            System.out.println();
+        }     
+    }
+   
+    //root depth is one
+    static void swap(Node node, int depthToSplit, int currentLevel){
+        if(currentLevel % depthToSplit == 0){
+            Node curr = node.left;
+            node.left = node.right;
+            node.right = curr;
+        }
+        if(node.left != null){
+            swap(node.left, depthToSplit, currentLevel + 1);
+        }
+        
+        if(node.right != null){
+            swap(node.right, depthToSplit, currentLevel + 1);    
+        }
+    }
+    
+    static void printInorder(Node root){
+        
+        if(root == null) return;
+        
+        if(root.left != null){
+            printInorder(root.left);
+        }
+        
+        System.out.print(root.data + " ");
+        
+        if(root.right != null){
+            printInorder(root.right);
+        }
+    }
+}
+
+class Node{
+        Node left, right;
+        int data;
+        
+        public Node(){
+            this.left = this.right = null;
+            this.data = 0;
+        }
+        
+        public Node(int data){
+            this.left = this.right = null;
+            this.data = data;
+        }
+        
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+private Node createTree(String[] nodes, int index, int depth)
+{
+    int left = Integer.parseInt(nodes[index].split(" ")[0]);
+    int right = Integer.parseInt(nodes[index].split(" ")[1]);
+    Node curr = new Node();
+    curr.data = index;
+    curr.depth = depth;
+    if (left != -1)
+        curr.left = createTree(nodes, left, depth+1);
+    if (right != -1)
+        curr.right = createTree(nodes, right, depth+1);
+    return curr;
+}
+
+public static void main(String[] args) 
+{
+    new Solution(args);
+}
+
+private void printInorder(Node root)
+{
+    if (root == null)
+        return;
+    printInorder(root.left);
+    System.out.print(root.data + " ");
+    printInorder(root.right);
+}
+
+private Node swapDepths(Node root, int depth)
+{
+    if (root == null)
+        return null;
+    if (root.depth % depth == 0)
+    {
+        Node temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+    }
+    swapDepths(root.left, depth);
+    swapDepths(root.right, depth);
+    return root; 
+}
+
+public Solution(String[] args)
+{
+    Scanner scan = new Scanner(System.in);
+    int N = Integer.parseInt(scan.nextLine());
+    String[] nodes = new String[N+1];
+    for (int i = 1; i < N+1; i++)
+        nodes[i] = scan.nextLine();
+    int T = Integer.parseInt(scan.nextLine());
+    int[] swaps = new int[T];
+    for (int i = 0; i < T; i++)
+        swaps[i] = Integer.parseInt(scan.nextLine());
+    Node root = createTree(nodes, 1, 1);
+    for (int swap : swaps)
+    {
+        root = swapDepths(root, swap);
+        printInorder(root);
+        System.out.println();
+    }
+}

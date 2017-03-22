@@ -1,0 +1,54 @@
+//First Try:
+Total Runtime: 1902 ms
+100% test cases passed.
+
+
+
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param ListNode head is the head of the linked list
+     * @return: ListNode head of the linked list
+     */
+    public static ListNode deleteDuplicates(ListNode head) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        head = dummy;
+        
+        ListNode prev = head, curr = prev.next, next = curr.next;
+        boolean dup = false;
+        
+        while(next != null){
+            if(curr.val == next.val){
+                dup = true;
+                prev.next = next;
+                curr = next;
+            }
+            else if(dup){
+                prev.next = next;
+                curr = next;
+                dup = false;
+            }
+            else{
+                prev = curr;
+                curr = next;
+            }
+            next = next.next;
+        }
+        if(dup) prev.next = null;
+        
+        return dummy.next;
+    }
+}

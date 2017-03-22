@@ -1,0 +1,43 @@
+//First Submission: Successful and around 1 hr
+Total Runtime: 1831 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param s: A string
+     * @return: A list of lists of string
+     */
+    public List<List<String>> partition(String s) {
+        if(s == null) return null;
+        
+        List<List<String>> list = new ArrayList<List<String>>();
+        boolean[][] pal = new boolean[s.length()][s.length()];
+        getPal(s, list, pal, new ArrayList<String>(), 0);
+        return list;
+    }
+    public void getPal(String s,List<List<String>> l,boolean[][] pal,ArrayList<String>i,int start){
+        if(start == s.length()) l.add(new ArrayList<String>(i)); 
+        else{
+            for(int end = start + 1; end <= s.length(); end++){
+                if(s.charAt(start) == s.charAt(end-1) && (start+2 >= end - 1 || (start+1 < s.length() && end-2 >= 0 && pal[start+1][end-2]))){
+                    pal[start][end-1] = true;
+                    i.add(s.substring(start, end));
+                    getPal(s, l, pal, i, end);
+                    i.remove(i.size() - 1);
+                }
+            }
+        }
+    }
+}
+
+
+/*
+    Find all possible palindromes and do a DFS,
+    as we reach the end of the array we add the palindrome to the list.
+    
+    1. loop through string, when we find a palindrome
+
+
+*/

@@ -1,0 +1,84 @@
+//Second Try:
+public class Solution {
+    /** 
+     *@param L: Given n pieces of wood with length L[i]
+     *@param k: An integer
+     *return: The maximum length of the small pieces.
+     */
+    public int woodCut(int[] L, int k) {
+        if(L == null || L.length == 0 || k == 0) return 0;
+        Arrays.sort(L);
+        
+        int last = L.length -1, curr = L[last], kCount = 0;
+        while(curr-- > 0){
+            kCount = L[last]/(curr+1);
+            for(int i = last - 1; i >= 0; i--) kCount += (L[i]/(curr+1));
+            if(kCount >= k) return curr+1;
+        }
+        return 0;
+    }
+}
+
+
+
+//First Try:
+//Didn't pass a testcase
+
+public class Solution {
+    /** 
+     *@param L: Given n pieces of wood with length L[i]
+     *@param k: An integer
+     *return: The maximum length of the small pieces.
+     */
+    public int woodCut(int[] L, int k) {
+        if(L == null || L.length == 0 || k == 0) return 0;
+        Arrays.sort(L);
+        
+        int ratio = 0, curr = L.length - 1, max = L[curr],
+            kCount = 0, currLength = 0;
+            
+        while(max/++ratio > 0){
+            kCount = ratio;
+            currLength = max/ratio;
+            for(int i = curr - 1; i >= 0; i--){
+                kCount += (L[i]/currLength);
+            }
+            if(kCount >= k) return currLength;
+        }
+        
+        return currLength;
+    }
+}
+
+//[232,124,456], 7 => 114
+//[12,45,32], 5 => 15
+
+/*
+    My goal in life will always be to make the highest percentages no matter what.
+    To have good time in my actions and to stay disciplined.
+    And to learn to recognize emotion and logic. Wait for the opportunity don't chase it.
+    
+    
+    Here we have a problem where we have n number of woods of varying length
+    
+    And we have to have k or more pieces where we they all have to be of equal length. The equal length has to be the biggest possible while following top constrain.
+    
+    We have to know how much each can afford to lose. So if we stacked them (all wood peices) side by side from tallest to smallest we would see the difference in height for all of them.
+    
+    -
+    ---
+    ------
+    ------------
+    
+    say we need k amount, 
+    First we verify if we have k, if not we subtract 1 from highest and put on a new placement.
+    we keep doing this until we get k. (The smaller k is the more we insure we will have the longest. And if we cant flatten the sticks out with k do k = k+1 and try that until we get our answer)
+
+    
+    
+    How to solve this?
+    1. Sort the lumber array
+    2. Divide the biggest stick by k and further until we get a round number
+        -what if we cant, find highest common denominator
+    
+*/

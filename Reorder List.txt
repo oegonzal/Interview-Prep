@@ -1,0 +1,133 @@
+//First submission:
+Total Runtime: 1965 ms
+100% test cases passed.
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The head of linked list.
+     * @return: void
+     */
+    public void reorderList(ListNode head) {  
+        if(head == null || head.next == null) return;
+        
+        ListNode prev = null, curr = head, last = head.next, temp = null;
+        
+        //get the half point of the list to cut list in half
+        while(last != null && last.next != null){
+            curr = curr.next;
+            last = last.next.next;
+        }
+        
+        //cut list in half
+        prev = curr;
+        curr = curr.next;
+        
+        //prepare second half for reversal
+        prev.next = null;
+        prev = null;
+        last = curr.next;
+        
+        //reverse second half of the list
+        while(last != null){
+            curr.next = prev;
+            prev = curr;
+            curr = last;
+            last = last.next;
+        }
+        
+        //Make the pattern
+        curr.next = prev;
+        prev = head;
+        
+        while(curr != null){
+            temp = prev.next;
+            last = curr.next;
+            
+            prev.next = curr;
+            curr.next = temp;
+            
+            curr = last;
+            prev  = temp;
+        }
+    }
+}
+
+//null
+//1->2->3->4->null
+
+
+
+
+
+//First Implementation:
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The head of linked list.
+     * @return: void
+     */
+    public void reorderList(ListNode head) {  
+        if(head == null || head.next == null) return;
+        
+        ListNode prev = null, curr = head, last = head.next, temp = null;
+        
+        //get half of point of the list
+        while(last != null && last.next != null){
+            prev = curr;
+            curr = curr.next;
+            last = last.next.next;
+        }
+        
+        //reverse second half of the list
+        prev.next = null;
+        prev = null;
+        last = curr.next;
+        
+        while(last != null){
+            curr.next = prev;
+            prev = curr;
+            curr = last;
+            last = last.next;
+        }
+
+        curr.next = prev;
+        prev = head;
+        
+        while(curr != null){
+            temp = prev.next;
+            last = curr.next;
+            
+            prev.next = curr;
+            curr.next = temp;
+            
+            curr = last;
+            prev  = temp;
+        }
+    }
+}
+
+//null
+//1->2->3->4->null

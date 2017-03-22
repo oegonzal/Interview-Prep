@@ -1,0 +1,86 @@
+//Second Try:
+Total Runtime: 1692 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     *@param preorder : A list of integers that preorder traversal of a tree
+     *@param inorder : A list of integers that inorder traversal of a tree
+     *@return : Root of a tree
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length == 0) return null;
+        
+        TreeNode root = new TreeNode(preorder[0]), prev = null, curr = null;
+        HashMap<Integer, Integer> map = new HashMap<Integer,Integer>();
+        for(int i = 0; i < inorder.length; i++) map.put(inorder[i], i);
+        
+        for(int i = 1; i < preorder.length; i++){
+            int num = preorder[i], orderInd = map.get(num);
+            TreeNode newNode = new TreeNode(num);
+            curr = prev = root;
+            
+            while(curr != null){
+                prev = curr;
+                if(orderInd < map.get(curr.val)) curr = curr.left;
+                else curr = curr.right;
+            }
+            
+            if(orderInd < map.get(prev.val)) prev.left = newNode;
+            else prev.right = newNode;
+        }
+        return root;
+    }
+}
+
+
+
+
+//First Try:
+
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+ 
+ 
+public class Solution {
+    /**
+     *@param preorder : A list of integers that preorder traversal of a tree
+     *@param inorder : A list of integers that inorder traversal of a tree
+     *@return : Root of a tree
+     */
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        if(preorder == null || preorder.length == 0) return null;
+        TreeNode root = new TreeNode(preorder[0]), prev = null, curr = null;
+        
+        for(int i = 1; i < preorder.length; i++){
+            int num = preorder[i];
+            curr = root;
+            
+            TreeNode newNode = new TreeNode(num);
+            while(curr != null){
+                prev = curr;
+                if(num < curr.val) curr = curr.left;
+                else curr = curr.right;
+            }
+            if(num < prev.val) prev.left = newNode;
+            else prev.right = newNode;
+        }
+        return root;
+    }
+}
+
+
+//[[1,2,3],[2,1,3]]

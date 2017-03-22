@@ -1,0 +1,75 @@
+//Second Try:
+Total Runtime: 1788 ms
+100% test cases passed.
+
+public class Solution {
+
+    public List<Integer> numbersByRecursion(int n) {
+        
+        ArrayList<Integer> results = new ArrayList<Integer>();
+        
+        //if n is not valid
+        if(n <= 0) return results;
+        
+        recursion(results, n);
+        return results;
+    }
+    
+    public void recursion(ArrayList<Integer> results, int n) {
+        if (n == 0) return;
+        recursion(results, n - 1);
+        
+        int max = 0, min = 1;
+        for(int j = 0; j < n; j++) {
+            max = (10 * max) + 9;
+            if(j == n - 2) min = max + 1;
+        }
+        
+        for(int j = min; j <= max; j++){
+            results.add(j);
+        }
+    }
+}
+
+
+//First Try: Failed Submission
+
+public class Solution {
+    
+    
+    private List<Integer> results = new ArrayList<Integer>();
+    private int max = 0;
+    
+    /**
+     * @param n: An integer.
+     * return : An array storing 1 to the largest number with n digits.
+     */
+    public List<Integer> numbersByRecursion(int n) {
+        
+        //if n is not valid
+        if(n <= 0) return results;
+        
+        //Get largest number possible
+        for(int i = 0; i < n; i++) {
+            max = (10 * max) + 9;
+        }
+        //smallest number possible
+        int middle = max/2 + 1;
+        
+        results.add(middle);
+        recursion(middle - 1, middle + 1);
+
+        
+        return results;
+    }
+    
+    public void recursion(int smallerHalf, int biggerHalf) {
+        results.add( 0, smallerHalf );
+        results.add( results.size(), biggerHalf );
+        
+        if(biggerHalf == max || smallerHalf == 1) return;
+        
+        recursion(smallerHalf - 1, biggerHalf + 1);
+        return;
+    }
+}

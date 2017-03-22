@@ -1,0 +1,49 @@
+//Second  Try
+Total Runtime: 2334 ms
+100% test cases passed.
+
+
+class Solution {
+    /**
+     *@param n, m: Two integer
+     *@param i, j: Two bit positions
+     *return: An integer
+     */
+    public int updateBits(int n, int m, int i, int j) {
+        for(int c = i; c <= j; c++){
+            if((m>>(c-i) & 1) == 1) n = (1<<c) | n;
+            else n = n & (0xffffffff ^ (1<<c));
+        }
+        return n;
+    }
+}
+
+
+BOTH CORRECT
+Integer.MIN_VALUE = 0x80000000 OR 1000 0000 0000 0000 0000 0000 0000 0000
+
+1111 1111 1111 1111 1111 1111 1111 1111 = -1 in binary, leading 1 means negative then flip the rest over and add one to get magnitude
+
+
+//First Try
+
+
+class Solution {
+    /**
+     *@param n, m: Two integer
+     *@param i, j: Two bit positions
+     *return: An integer
+     */
+    public int updateBits(int n, int m, int i, int j) {
+        int num = 0;
+        for(int c = i; c <= j; c++){
+            if((m>>(c-i) & 1) == 1) n = (1<<c) | n;
+            else {
+                num = ~(Integer.MIN_VALUE & (1<<c));   
+                n = n & num;
+            }
+        }
+        
+        return n; //ones compliment: ~val & 0xff
+    }
+}

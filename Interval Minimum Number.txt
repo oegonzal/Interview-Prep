@@ -1,0 +1,58 @@
+//First Submission: Successful and took 1 hour but it was bc i made a bug accidentally otherwise would have taken ~35 mins.
+Total Runtime: 5901 ms
+100% test cases passed.
+
+
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+public class Solution {
+    /**
+     *@param A, queries: Given an integer array and an query list
+     *@return: The result list
+     */
+    public ArrayList<Integer> intervalMinNumber(int[] A, ArrayList<Interval> queries) {
+        if(A == null || A.length == 0) return null;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        Node root = buildSegmentTree(A, 0, A.length - 1);       //System.out.println(root.count);
+        for(Interval i : queries) list.add(query(root, i.start, i.end));
+        return list;
+    }
+    
+    public int query(Node n, int start, int end){
+        if(n == null || start > end) return Integer.MAX_VALUE;
+        if(start == n.start && end == n.end) return n.count;
+        int mid = (n.start + n.end)/2;
+        return Math.min(query(n.left, Math.max(n.start, start), Math.min(mid, end)),
+                    query(n.right, Math.max(mid+1, start), Math.min(n.end, end)));
+    }
+    
+    public Node buildSegmentTree(int[] A, int start, int end){
+        if(start > end) return null;
+        
+        int mid = (start + end)/2;
+        Node n = new Node(start, end);
+        if(mid != end) n.left = buildSegmentTree(A, start, mid);
+        n.right = buildSegmentTree(A, mid+1, end);
+        n.count = Math.min((n.left != null) ? n.left.count : A[start], 
+                        (n.right != null) ? n.right.count : A[end]);
+        return n;
+    }
+    class Node{
+        public int count, start, end;
+        public Node left, right;
+        public Node(int start, int end){
+            this.start = start;
+            this.end = end;
+            this.count = Integer.MAX_VALUE;
+            this.left = this.right = null;
+        }
+    }
+}
+//[1,2,7,8,5], [[1,2],[0,4],[2,4]]

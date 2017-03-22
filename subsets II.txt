@@ -1,0 +1,95 @@
+class Solution {
+    /**
+     * @param nums: A set of numbers.
+     * @return: A list of lists. All valid subsets.
+     */
+    public ArrayList<ArrayList<Integer>> subsetsWithDup(int[] nums) {
+        ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
+        if(nums.length == 0) return list;
+
+        ArrayList<Integer> nonDups = new ArrayList<Integer>();
+        ArrayList<Node> dups = new ArrayList<Node>();
+        
+        list.add(new ArrayList<Integer>());
+        Arrays.sort(nums);
+        
+        boolean isDup = false;
+        int dupsCount = 0;
+        for(int i = 0; i < nums.length-1; i++){
+            if(!isDup && nums[i] != nums[i+1]) nonDups.add(nums[i]);
+            else if (isDup && nums[i] != nums[i+1]){
+                dups.add(new Node(nums[i], dupsCount+1));
+                isDup = false;
+                dupsCount = 0;
+            }
+            else if(nums[i] == nums[i+1]){
+                dupsCount++;
+                isDup=true;
+            }
+            
+        }
+        if(nums.length > 1){
+            if(nums[nums.length - 1] == nums[nums.length - 2] ) dups.add(new Node(nums[nums.length-1], dupsCount+1));
+            else nonDups.add(nums[nums.length-1]);
+        }
+        else{
+            ArrayList<Integer> newItem = new ArrayList<Integer>();
+            newItem.add(nums[0]);
+            list.add(newItem);
+            return list;
+        }
+        
+        //make non dup set
+        ArrayList<Integer> currItem;
+        for(int i = 0; i < nonDups.size(); i++){
+            
+            //SOLUTION: ADD DUPS WHILE YOU ARE INCREMENTING THIS
+            int lSize = list.size();
+            for(int j = 0; j < lSize; j++){
+                ArrayList<Integer> newItem = new ArrayList<Integer>();
+                currItem = list.get(j);
+                for(int k = 0; k < currItem.size(); k++){
+                    newItem.add(currItem.get(k));
+                }
+                newItem.add(nonDups.get(i));
+                list.add(newItem);
+            }
+        }
+        
+        //add missing dup values
+        for(int i = 0; i < dups.size(); i++){
+            Node n = dups.get(i);
+            int key = n.key;
+            int count = n.size;
+            ArrayList<ArrayList<Integer>> dupList = list;
+            while(count > 0){
+                ArrayList<ArrayList<Integer>> temp = new ArrayList<ArrayList<Integer>>();
+                int lSize = dupList.size();
+                for(int j = 0; j < lSize; j++){
+                    ArrayList<Integer> newItem = new ArrayList<Integer>();
+                    currItem = dupList.get(j);
+                    for(int k = 0; k < currItem.size(); k++){
+                        newItem.add(currItem.get(k));
+                    }
+                    newItem.add(key);
+                    
+                    list.add(newItem);
+                    temp.add(newItem);
+                }
+                dupList = temp;
+                count--;
+            }
+        }
+        return list;
+    }
+    
+    class Node{
+        public int key;
+        public int size;
+        
+        public Node(int key, int size){
+            this.key = key;
+            this.size = size;
+        }
+    }
+}

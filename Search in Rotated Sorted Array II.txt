@@ -1,0 +1,142 @@
+//Third Try:
+Total Runtime: 1887 ms
+100% test cases passed.
+
+
+public class Solution {
+    /** 
+     *@param A : an integer rotated sorted array
+     *@param target :  an integer to be searched
+     *return : an integer
+     */
+    public int search(int[] A, int target) {
+        
+        if(A == null || A.length == 0) return -1;
+        int start = 0, end = A.length - 1, n = A.length, mid = 0;
+        
+        if(A[start] > A[end]){
+            while(start + 1 < end){
+                mid = start + (end - start)/2;
+                if(A[start] > A[mid]) end = mid;
+                else if(A[end] < A[mid]) start = mid;
+            } 
+            if(target >= A[end] && target <= A[A.length-1]){start = end; end = A.length-1; }
+            else { end = start; start = 0;  }
+        }
+        
+        while(start + 1 < end ){
+            mid = start + (end - start)/2;  
+            if(A[mid] == target) return mid;
+            else if(target < A[mid]) end = mid;
+            else start = mid;
+        }
+        
+        if(A[end] == target) return end;
+        if(A[start] == target) return start;
+        return -1;
+    }
+}
+
+//[1,2,3], 1
+//[4,5,1,2,3], 7
+//[4,5,6,7,0,1,2,3], 7
+//[4,5,6,7,0,1,2,3], 8
+//[0,1,2,3,4,5,6], 3
+//[0,1,2,-10,-9,-8,-7,-6,-5,-4,-3,-2,-1], -9
+
+//Second Try:
+Total Runtime: 2072 ms
+81% test cases passed.
+
+public class Solution {
+    /** 
+     * param A : an integer ratated sorted array and duplicates are allowed
+     * param target :  an integer to be search
+     * return : a boolean 
+     */
+    public boolean search(int[] A, int target) {
+        if(A == null || A.length == 0) return false;
+        
+        int start = 0, end = A.length -1, mid = 0;
+        
+        while(start + 1 < end){
+            mid = start + (end - start)/2;
+            
+            if(A[mid] == target) return true;
+            else if(target < A[mid]){
+                if(A[start] < A[mid]){
+                    if(A[start] <= target) end = mid-1; //regular sort
+                    else if(A[start] > target) start = mid+1;
+                } 
+                else if(A[start] > A[mid]) end = mid-1;
+                else if(A[start] == A[mid]) end = mid-1;
+            }
+            else if(target > A[mid]){
+                if(A[mid] < A[end]){
+                    if(target <= A[end]) start = mid+1;
+                    else if(target > A[end]) end = mid-1;
+                }
+                else if(A[mid] > A[end]) start = mid+1;
+                else if(A[mid] == A[end]) end = mid-1;
+            }
+        }
+        
+        if(A[start] == target) return true;
+        if(A[end] == target) return true;
+        
+        return false;
+    }
+}
+
+//[3,3,4,4,5,5,5,5,6,6,6,6,7,1,2,2,2], 1
+//[1,1,0,1,1,1], 0
+//[1,1,1,1,1,1], 0
+//[9,5,6,7,8,9,9,9,9,9,9], 8
+//[2,2,2,3,1], 1
+
+
+//First Try: (Wrong Answer)
+
+
+
+public class Solution {
+    /** 
+     * param A : an integer ratated sorted array and duplicates are allowed
+     * param target :  an integer to be search
+     * return : a boolean 
+     */
+    public boolean search(int[] A, int target) {
+        if(A == null || A.length == 0) return false;
+        
+        int start = 0, end = A.length -1, mid = 0;
+        
+        while(start + 1 < end){
+            mid = start + (end - start)/2;
+            
+            if(A[mid] == target) return true;
+            else if(target < A[mid]){
+                if(A[start] < A[mid]){
+                    if(A[start] <= target) end = mid-1; //regular sort
+                    else start = mid+1;
+                } 
+                else if(A[start] > A[mid]) end = mid-1;
+            }
+            else if(target > A[mid]){
+                if(A[mid] < A[end]){
+                    if(target <= A[end]) start = mid+1;
+                    else if(target > A[end]) end = mid-1;
+                }
+                else if(A[mid] > A[end]) start = mid+1;
+            }
+        }
+        
+        if(A[start] == target) return true;
+        if(A[end] == target) return true;
+        
+        return false;
+    }
+}
+
+//[3,3,4,4,5,5,5,5,6,6,6,6,7,1,2,2,2], 1
+//[1,1,0,1,1,1], 0
+//[1,1,1,1,1,1], 0

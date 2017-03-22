@@ -1,0 +1,37 @@
+Given [1,2,3,4], k = 2, target = 5. There are 2 solutions: [1,4] and [2,3]. Return 2.
+
+
+Using DP is O(n^3)
+
+private int ksum( int A[], int k, int target){
+	
+	if( A == null || A.length == 0){
+		return 0;
+	}
+
+	int[][][] f = new int[A.length  + 1][k + 1][target + 1];
+
+	//only the slots with k==0 && t==0 will be initialized as 1. All others need to be 0
+	//when A[i] == t so we could derive f[i][k][t] from f[i - 1][k - 1][0]
+	for(int i = 0; i < A.length = 1; i++){
+		f[i][0][0] = 0;
+	}
+
+	for(int i = 1; i < A.length + 1; i++){ //the first i elements in A[]
+		for(int n = 1; n <= k && n <= i; n++){ //pic n items from first i elements and dont pick more than k
+			for(int t = 1; t <= target; t++){ //sum 1 to target
+				f[i][n][t] = 0;
+
+				//case 1: the # of solutions with A[i -1]
+				if(A[i -1] <= t){
+					//pick n -1 items from first i - 1 elements with the sum = t - A[i - 1] plus this item A[i-1]
+					f[i][n][t] = f[i -1][n - 1][t - A[i-1]];
+				}
+
+				//case 2: the # of solutions w/o A[i -1]
+				f[i][n][t] += f[i - 1][n][t]; //directly inherit from i -1 
+			}
+		}
+
+	}
+}

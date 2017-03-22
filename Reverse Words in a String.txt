@@ -1,0 +1,26 @@
+//First Submission: Successful but went over time limit by 1 minute... so 16 min total
+Total Runtime: 1203 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param s : A string
+     * @return : A string
+     */
+    public String reverseWords(String s) {
+        String newWord = "";
+        int len = s.length(), ind = len - 1;
+        
+        for(int i = len-1; i >= 0; i--){
+            char c = s.charAt(i);
+            
+            if(c == ' '){
+                if(i != ind) newWord += s.substring(i+1, ind+1) + " ";
+                ind = i - 1;
+            }
+        }
+        if(len>0 && s.charAt(0) != ind) newWord += s.substring(0, ind+1);
+        return newWord;
+    }
+}

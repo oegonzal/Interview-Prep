@@ -1,0 +1,225 @@
+//Third: Successful and improved
+Total Runtime: 1546 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: The longest common prefix
+     */
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length == 0) return "";
+        String pre = strs[0];
+        
+        for(int i = 1; i < strs.length; i++){
+            int i1 = 0, i2 = 0;
+            while(i1 < pre.length() && i2 < strs[i].length()){
+                if(pre.charAt(i1++) != strs[i].charAt(i2++)){
+                    pre = pre.substring(0, i1-1);
+                    break;
+                }
+            }
+            if(i2 == strs[i].length()) pre = strs[i];
+        }
+        return pre;
+    }
+}
+
+Solutions 2:
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: The longest common prefix
+     */
+    public String longestCommonPrefix(String[] strs) {
+		if(strs == null || strs.length == 0) return "";
+		StringBuilder result = new StringBuilder();
+		Arrays.sort(strs);
+
+		char [] a = strs[0].toCharArray();
+		char [] b = strs[strs.length-1].toCharArray();
+
+		for (int i = 0; i < a.length; i ++){
+		    if (b.length > i && b[i] == a[i]){
+		        result.append(b[i]);
+		    }
+		    else {
+		        return result.toString();
+		    }
+		}
+		return result.toString();
+	}
+}
+
+
+//Second Submission: Successful but burened out so took longer than should have
+Total Runtime: 1544 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: The longest common prefix
+     */
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length == 0) return "";
+        if(strs.length == 1) return strs[0];
+        
+        String s1 = strs[0], s2 = strs[1], pre = "";
+        int i1 = 0, i2 = 0, l1 = s1.length(), l2 = s2.length();
+        while(i1 < l1 && i2 < l2 && s1.charAt(i1++) == s2.charAt(i2++)) pre += s1.charAt(i1-1);
+        
+        for(int i = 2; i < strs.length; i++){
+            i1 = 0; i2 = 0;
+            while(i1 < pre.length() && i2 < strs[i].length()){
+                if(pre.charAt(i1++) != strs[i].charAt(i2++)){
+                    pre = pre.substring(0, i1-1);
+                    break;
+                }
+            }
+            if(i2 == strs[i].length()) pre = strs[i];
+        }
+        return pre;
+    }
+    
+    public PriorityQueue<Pair> lcpDP(String s1, String s2){
+        if(s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) return null;
+        
+        PriorityQueue<Pair> heap = new PriorityQueue<Pair>(Math.min(s1.length(), s2.length()), new Comparator<Pair>(){
+          @Override
+          public int compare(Pair a, Pair b){
+              if(a.size < b.size) return 1;
+              else if(a.size > b.size) return -1;
+              else return 0;
+          }
+        });
+        
+        int[][] dp = new int[s1.length()+1][s2.length()+1];
+        for(int i = 0; i < Math.min(s1.length(), s2.length()); i++){
+            for(int j = 0; j < s2.length(); j++){
+                if(s1.charAt(i) == s2.charAt(j)){
+                    dp[i+1][j+1] = dp[i][j] + 1;
+                    
+                    //Only works for continuous strings
+                    if(i==s1.length()-1 || j==s2.length()-1 || s1.charAt(i+1) != s2.charAt(j+1)){ heap.offer(new Pair(dp[i+1][j+1], s1.substring(i-dp[i][j], i + 1)));
+                        //System.out.println("i-dp[i][j]: "+(i-dp[i][j])+", i + 1: "+(i + 1));
+                    }
+                }
+                else dp[i+1][j+1] = Math.max(dp[i][j+1], dp[i+1][j]);
+            }
+        }
+        return heap;
+    }
+    
+    public int lcp(String s1, String s2, int i1, int i2){
+        if(i1 == s1.length() || i2 == s2.length()) return 0;
+        return Math.max((s1.charAt(i1) == s2.charAt(i2))? 1 + lcp(s1, s2, i1+1, i2+1) : 0, 
+                    Math.max(lcp(s1, s2, i1 + 1, i2), lcp(s1, s2, i1, i2 + 1)));
+    }
+    class Pair{
+        public int size;
+        public String cp;
+        public Pair(int size, String cp){
+            this.size = size;
+            this.cp = cp;
+        }
+    }
+}
+//["ABCD","ABEF","ACEF"]
+//["ABCD","ABEF","ACEF"]
+
+/*
+    One string has the LCP in it.
+    Use 2 strings, get all LCPs between them
+    Then refine them using the rest of the strings
+    -sort them first
+    -Do not count sequences within LCPs, just get biggest LCPs
+    -list will get smaller as we analyze more strings
+    -list should rank LCDs from biggest to smallest
+    -string compare
+*/
+
+
+
+
+
+//First Implementation: I did some shit all over the place, I thought I understood the problem in the beginning but didnt really so I did stuff I wasnt suppose to
+
+
+
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: The longest common prefix
+     */
+    public String longestCommonPrefix(String[] strs) {
+        if(strs == null || strs.length <= 1) return "";
+        
+        String s1 = strs[0], s2 = strs[1], pre = "";
+        int i1 = 0, i2 = 0, l1 = s1.length(), l2 = s2.length();
+        while(i1 < l1 && i2 < l2 && s1.charAt(i1++) == s2.charAt(i2++)) pre += s1.charAt(i1-1);
+        
+        for(int i = 2, i1 = 0, i2 = 0; i < strs.length; i++){
+            while(i1 < pre.length() && i2 < str[i].length()) if(prefix.charAt(i1++) != strs[i].charAt(i2++)) continue;
+            
+        }
+        
+        return prefix;
+    }
+    
+    public PriorityQueue<Pair> lcpDP(String s1, String s2){
+        if(s1 == null || s2 == null || s1.length() == 0 || s2.length() == 0) return null;
+        
+        PriorityQueue<Pair> heap = new PriorityQueue<Pair>(Math.max(s1.length(), s2.length()), new Comparator<Pair>(){
+          @Override
+          public int compare(Pair a, Pair b){
+              if(a.size < b.size) return 1;
+              else if(a.size > b.size) return -1;
+              else return 0;
+          }
+        });
+        
+        int[][] dp = new int[s1.length()+1][s2.length()+1];
+        for(int i = 0; i < s1.length(); i++){
+            for(int j = 0; j < s2.length(); j++){
+                if(s1.charAt(i) == s2.charAt(j)){
+                    dp[i+1][j+1] = dp[i][j] + 1;
+                    
+                    //Only works for continuous strings
+                    if(i==s1.length()-1 || j==s2.length()-1 || s1.charAt(i+1) != s2.charAt(j+1)){ heap.offer(new Pair(dp[i+1][j+1], s1.substring(i-dp[i][j], i + 1)));
+                        //System.out.println("i-dp[i][j]: "+(i-dp[i][j])+", i + 1: "+(i + 1));
+                    }
+                }
+                else dp[i+1][j+1] = Math.max(dp[i][j+1], dp[i+1][j]);
+            }
+        }
+        return heap;
+    }
+    
+    public int lcp(String s1, String s2, int i1, int i2){
+        if(i1 == s1.length() || i2 == s2.length()) return 0;
+        return Math.max((s1.charAt(i1) == s2.charAt(i2))? 1 + lcp(s1, s2, i1+1, i2+1) : 0, 
+                    Math.max(lcp(s1, s2, i1 + 1, i2), lcp(s1, s2, i1, i2 + 1)));
+    }
+    class Pair{
+        public int size;
+        public String cp;
+        public Pair(int size, String cp){
+            this.size = size;
+            this.cp = cp;
+        }
+    }
+}
+//["ABCD","ABEF","ACEF"]
+
+/*
+    One string has the LCP in it.
+    Use 2 strings, get all LCPs between them
+    Then refine them using the rest of the strings
+    -sort them first
+    -Do not count sequences within LCPs, just get biggest LCPs
+    -list will get smaller as we analyze more strings
+    -list should rank LCDs from biggest to smallest
+    -string compare
+*/

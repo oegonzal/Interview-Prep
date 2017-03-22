@@ -1,0 +1,147 @@
+//First try: 
+Total Runtime: 2743 ms
+100% test cases passed.
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    
+    //Static variables
+    public int count = 0;
+    public ArrayList<TreeNode> answer = new ArrayList<TreeNode>();
+    
+    //Main function
+    public List<TreeNode> generateTrees(int n) {
+        if(n == 0){
+            answer.add(null);
+            return answer;
+        } 
+        
+        boolean[] visited = new boolean[n];
+        int[] order = new int[n];
+
+        allPossibleBSTOrders(visited, order, n);
+        return answer;
+    }
+    
+    //helpers -------
+    public void allPossibleBSTOrders(boolean[] visited, int[] order, int pos){
+        if(pos == 1){
+            for(int i = 0; i < visited.length; i++){
+                if(!visited[i]){
+                    order[order.length - pos] = i+1;
+                    break;
+                }
+            }
+            
+            TreeNode newRoot = makeBST(order);
+            boolean duplicateExists = false;
+            
+            for(TreeNode existingRoot : answer){
+                if(existingRoot.val == newRoot.val){
+                    if(equalBST(newRoot, existingRoot)){
+                        duplicateExists = true;
+                        break;
+                    }
+                }
+                if(existingRoot.val == newRoot.val + 1) break;
+            }
+            
+            if(!duplicateExists) answer.add(newRoot);
+            return;
+        }
+        for(int i = 0; i < visited.length; i++){
+            if(visited[i] == true) continue;
+            visited[i] = true;
+            order[order.length - pos] = i + 1;
+            allPossibleBSTOrders(visited, order, pos - 1);
+            visited[i] = false;
+        }
+    }
+    
+    public TreeNode makeBST(int[] order){
+        TreeNode root = new TreeNode(order[0]);
+        for(int i = 1; i < order.length; i++){
+            addNode(root, order[i]);
+        }
+        return root;
+    }
+    
+    public void addNode(TreeNode root, int val){
+        TreeNode newNode = new TreeNode(val);
+        while(true){
+            if(val > root.val){
+                if(root.right == null){
+                    root.right = newNode;
+                    return;
+                }
+                else root = root.right;
+            }
+            else {
+                if(root.left == null){
+                    root.left = newNode;
+                    return;
+                }
+                else root = root.left;
+            }
+        }
+    }
+    
+    public boolean equalBST(TreeNode r1, TreeNode r2){
+ 
+        LinkedList<TreeNode> queue1 = new LinkedList<TreeNode>();
+        LinkedList<TreeNode> queue2 = new LinkedList<TreeNode>();
+        
+        queue1.addFirst(r1);
+        queue2.addFirst(r2);
+        
+        while(!queue1.isEmpty()){
+            TreeNode temp1 = queue1.removeFirst();
+            TreeNode temp2 = queue2.removeFirst();
+            
+            if(temp1.val != temp2.val) return false;
+            
+            if(temp1.left != null){
+                if(temp2.left == null) return false;
+                queue2.addFirst(temp2.left);
+                queue1.addFirst(temp1.left);
+            }
+            
+            if(temp1.right != null){
+                if(temp2.right == null) return false;
+                queue2.addFirst(temp2.right);
+                queue1.addFirst(temp1.right);
+            }
+        }
+        
+        return true;
+    }
+}
+
+/*  Thoughts and comments---
+
+    Basically, what this problem is asking is how many ways is there 
+    to arrange an increasing list (with binary constraints of course).
+    
+    Think binary list, methods:
+        -ascending order
+        -
+        
+    build a BST iteratively from 1 ... n being root
+        -count each one constructed
+        -Make each one based on BST constrains
+    
+    Prevent Duplicate trees:
+        -One idea is to count vals of all leaf trees and if distinct from all previous add the tree
+
+*/

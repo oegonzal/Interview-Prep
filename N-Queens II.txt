@@ -1,0 +1,263 @@
+//Second Try:
+
+
+
+class Solution {
+    /**
+     * Calculate the total number of distinct N-Queen solutions.
+     * @param n: The number of queens.
+     * @return: The total number of distinct solutions.
+     */
+    
+    public int totalNQueens(int n) {
+        if(n<2) return 1;
+        int LAST_COL = n-1;
+        int LAST_ROW = n-1;
+        
+        LinkedList<Node> stack = new LinkedList<Node>();
+        char[][] A = new char[n][n];
+        int count = 0;
+        
+        stack.addLast(new Node(-1, 0));
+        while(stack.size() > 0){
+            Node node = stack.getLast();
+            if(node.x != -1) A[node.y][node.x] = '\u0000';
+            while(!isValidLocation(A, ++node.x, node.y)){
+                if(node.x > LAST_COL){
+                    if(node.y == 0 ) return count;
+                    stack.removeLast();
+                    node = stack.getLast();
+                    A[node.y][node.x] = '\u0000';
+                }
+            }
+            A[node.y][node.x] = 'O';
+                                        printMatrix(A);
+            if(node.y==LAST_ROW){
+                count++;                //System.out.println("Count: " + count);
+                node = stack.getLast();
+                A[node.y][node.x] = '\u0000';
+            }
+            else if(node.y < LAST_ROW) stack.addLast(new Node(0, ++node.y));
+        }
+        return count;
+    }
+    
+    public boolean isValidLocation(char[][] A, int x, int y){
+        if(x > A[0].length-1 || y > A.length-1) return false;
+        boolean isValid = false;
+        char c = 'O';
+        
+        for(int i = x+1; i < A[0].length; i++)
+            if(A[y][i] == c) return isValid;
+        for(int i = x-1; i >= 0; i--)
+            if(A[y][i] == c) return isValid;
+        for(int i = y+1; i < A.length; i++)
+            if(A[i][x] == c) return isValid;
+        for(int i = y-1; i >= 0; i--)
+            if(A[i][x] == c) return isValid;
+        
+        for(int i = x-1, j = y-1; i >= 0 && j >= 0; i--, j--)
+            if(A[j][i] == c) return isValid;
+        for(int i = x+1, j=y+1; i < A[0].length && j < A.length; i++, j++)
+            if(A[j][i] == c) return isValid;
+        for(int i = x-1, j=y+1; i >= 0 && j < A.length; i--, j++) if(A[j][i] == c) return isValid;
+        for(int i = x+1, j=y-1; i < A[0].length && j >= 0; i++, j--) 
+            if(A[j][i] == c) return isValid;
+            
+        return true;
+    }
+    
+    public void printMatrix(char[][] A){
+        System.out.println();
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                char c = A[i][j];
+                if(A[i][j] == '\u0000') c = 'X';
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }System.out.println();
+    }
+
+    class Node {
+        public int x;
+        public int y;
+        
+        public Node(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+};
+
+/*
+    Do we have to keep into account symmetry??
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+//First Try:
+
+
+class Solution {
+    /**
+     * Calculate the total number of distinct N-Queen solutions.
+     * @param n: The number of queens.
+     * @return: The total number of distinct solutions.
+     */
+    
+    public static int LAST_COL;
+    public static int LAST_ROW;
+    
+    public int totalNQueens(int n) {
+        if(n<2) return 1;
+        LAST_COL = n-1;
+        LAST_ROW = n-1;
+        
+        LinkedList<Node> stack = new LinkedList<Node>();
+        char[][] A = new char[n][n];
+        int count = 0;
+        
+        stack.addLast(new Node(0, 0));
+        while(stack.size() > 0){
+            Node node = stack.getLast();
+            int x = node.col, y = node.row;
+            
+            // if(!isValid(A, node.col, node.row)){
+            //     retrace(A, node.col, node.row);     System.out.println("NOT VALID");
+            //     stack.removeLast();                 printMatrix(A);
+            //     if(stack.size() > 0) node = stack.getLast();
+            //     node.col++;                         System.out.println("RETRACE^ \n");
+            //     continue;
+            // }
+            
+            while(!isValidLocation(A[y][x])){
+                x++;
+                if(x > LAST_COL){
+                    stack.removeLast(); //remove invalid node
+                    node = stack.getLast();
+                    node.col++;
+                    
+                    
+                }
+            }
+            A[y][x] = 'O';
+                                                printMatrix(A);
+            if(y==LAST_ROW){
+                count++;                        System.out.println("Count: " + count);
+                stack.removeLast();
+                node = stack.getLast();
+                node.col++;
+            }
+            else if(y+1 <= LAST_ROW) stack.addLast(new Node(++y, 0));
+        }
+        
+        return count;
+    }
+    
+    public boolean isValidLocation(char[][] A, int x, int y){
+        if(x > A[0].length-1 || y > A.length-1) return false;
+        boolean isValid = false;
+        char c = 'O';
+        
+        for(int i = x+1; i < A[0].length; i++)
+            if(A[y][i] == c) return isValid;
+        for(int i = x-1; i >= 0; i--)
+            if(A[y][i] == c) return isValid;
+        for(int i = y+1; i < A.length; i++)
+            if(A[i][x] == c) return isValid;
+        for(int i = y-1; i >= 0; i--)
+            if(A[i][x] == c) return isValid;
+        
+        for(int i = x-1, j = y-1; i >= 0 && j >= 0; i--, j--)
+            if(A[j][i] == c) return isValid;
+        for(int i = x+1, j=y+1; i < A[0].length && j < A.length; i++, j++)
+            if(A[j][i] == c) return isValid;
+        for(int i = x-1, j=y+1; i >= 0 && j < A.length; i--, j++) if(A[j][i] == c) return isValid;
+        for(int i = x+1, j=y-1; i < A[0].length && j >= 0; i++, j--) 
+            if(A[j][i] == c) return isValid;
+            
+        return true;
+    }
+    
+    public boolean isValid(char[][] A, int x, int y){
+        System.out.println("x: " + x + " y: " + y);
+        while(A[y][x] != '\u0000' && x <= LAST_COL){
+            x++;
+            if(x > LAST_COL) return false;
+        }
+        System.out.println("Placed at x: " + x + " y: " + y);
+        
+        char c = (char)(y+48);
+        
+        A[y][x] = c;
+        for(int i = x+1; i < A[0].length; i++) A[y][i] = c;
+        for(int i = x-1; i >= 0; i--) A[y][i] = c;
+        for(int i = y+1; i < A.length; i++) A[i][x] = c;
+        for(int i = y-1; i >= 0; i--) A[i][x] = c;
+        
+        for(int i = x-1, j = y-1; i >= 0 && j >= 0; i--, j--) A[j][i] = c;
+        for(int i = x+1, j=y+1; i < A[0].length && j < A.length; i++, j++) A[j][i] = c;
+        for(int i = x-1, j=y+1; i >= 0 && j < A.length; i--, j++) A[j][i] = c;
+        for(int i = x+1, j=y-1; i < A[0].length && j >= 0; i++, j--) A[j][i] = c;
+        return true;
+    }
+    
+    public boolean retrace(char[][] A, int x, int y){
+        A[y][x] = '\u0000';
+        char c = (char)(y + 48);
+        
+        for(int i = x+1; i < A[0].length; i++) if(A[y][i] == c)  A[y][i] = '\u0000';
+        for(int i = x-1; i >= 0; i--) if(A[y][i] == c)  A[y][i] = '\u0000';
+        for(int i = y+1; i < A.length; i++) if(A[i][x] == c)  A[i][x] = '\u0000';
+        for(int i = y-1; i >= 0; i--) if(A[i][x] == c)  A[i][x] = '\u0000';
+        
+        for(int i = x-1, j = y-1; i >= 0 && j >= 0; i--, j--) if(A[j][i] == c)  A[j][i] = '\u0000';
+        for(int i = x+1, j=y+1; i < A[0].length && j < A.length; i++, j++) if(A[j][i] == c)  A[j][i] = '\u0000';
+        for(int i = x-1, j=y+1; i >= 0 && j < A.length; i--, j++) if(A[j][i] == c)  A[j][i] = '\u0000';
+        for(int i = x+1, j=y-1; i < A[0].length && j >= 0; i++, j--) if(A[j][i] == c)  A[j][i]= '\u0000';
+        
+        return true;
+    }
+    
+    public void printMatrix(char[][] A){
+        System.out.println();
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                char c = A[i][j];
+                if(A[i][j] == '\u0000') c = 'X';
+                System.out.print(c + " ");
+            }
+            System.out.println();
+        }System.out.println();
+    }
+
+    class Node {
+        public int row;
+        public int col;
+        
+        public Node(int row, int col){
+            this.row = row;
+            this.col = col;
+        }
+    }
+    
+    
+};
+
+/*
+    Do we have to keep into account symmetry??
+
+
+*/

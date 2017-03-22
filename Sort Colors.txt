@@ -1,0 +1,147 @@
+//Second Try:
+Total Runtime: 12410 ms
+100% test cases passed.
+
+class Solution {
+    /**
+     * @param nums: A list of integer which is 0, 1 or 2 
+     * @return: nothing
+     */
+    public void sortColors(int[] A) {
+        if(A == null || A.length < 2) return;
+    
+        int curr = 0, start = 0, end = A.length-1;
+        while(curr <= end){
+            if(A[curr] == 0){
+                A[curr] = A[start];
+                A[start] = 0;
+            }
+            else if(A[curr] == 2){
+                A[curr] = A[end];
+                A[end] = 2;
+            }
+            if(A[start] == 0) start++;
+            if(A[end] == 2) end--;
+            if(A[curr] == 1 || curr < start) curr++;
+        }
+    }
+}
+
+
+
+
+//First Try:
+Wrong Answer
+
+
+public void sortColors(int[] A) {
+        if(A == null || A.length < 2) return;
+    
+        int curr = 0, start = 0, end = A.length-1;
+        while(curr < end){
+            
+            if(A[curr] == 0){
+                A[curr] = A[start];
+                A[start] = 0;
+            }
+            else if(A[curr] == 2){
+                A[curr] = A[end];
+                A[end] = 2;
+            }
+            
+            if(A[start] == 0) start++;
+            if(A[end] == 2) end--;
+            curr++;
+        }
+    }
+
+public void sortColors(int[] A) {
+        if(A == null || A.length < 2) return;
+    
+        int start = 0, pS = 0, end = A.length-1, pE = A.length-1;
+        
+        while(start < A.length && A[start]==0) start++;
+        pS = start;
+        
+        while(start < end && A[end]==2) end--;
+        pE = end;            
+        
+        // System.out.println("len: " + A.length + ", start: " + start + ", end: " + end);
+        
+        while(start <= end){
+            if(A[start] == 0){
+                A[start] = A[pS];
+                A[pS] = 0;
+            }
+            else if(A[start] == 2){
+                //System.out.println(A[pE]);
+                A[start] = A[pE];
+                A[pE--] = 2;
+                
+                if(A[start]==0){
+                    A[start] = A[pS];
+                    A[pS] = 0;
+                }
+                //System.out.println(A[pS]);
+            }
+            
+            if(A[end] == 2){
+                A[end] = A[pE];
+                A[pE] = 2;
+            }
+            else if(A[end] == 0){
+                A[end] = A[pS];
+                A[pS] = 0;
+                
+                if(A[end] == 2){
+                    A[end] = A[pE];
+                    A[pE] = 2;
+                }
+            }
+            
+            // System.out.println();
+            // for(int i = 0; i < A.length; i++) System.out.print(A[i] + ", ");
+            // System.out.println();
+            
+            start++;
+            end--;
+            if(A[pS] == 0) pS++;
+            if(A[pE] == 2) pE--;
+        }
+    }
+
+class Solution {
+    /**
+     * @param nums: A list of integer which is 0, 1 or 2 
+     * @return: nothing
+     */
+    public void sortColors(int[] nums) {
+        if(nums == null || nums.length < 2) return;
+        int start = 0, pS = nums.length - 1, end = nums.length -1, pE = 0;
+        
+        while(start <= end){
+            while(nums[start] != 0){
+                // if(pS < start){
+                //     nums[pS++] = 0;
+                    
+                // }
+                //if(pS > start) pS = start;
+                start++;
+            }
+            while(nums[end] != 2){
+                // if(pE > end) nums[pE--] = 2;
+                //if()
+                end--;
+            }
+            
+            if(nums[start] == 2 && nums[end] == 0){
+                nums[start] = 0;
+                if(pS < start) nums[pS++] = 0;
+                
+                nums[end] = 2
+                if(pE > end) nums[pE--] = 2;
+            }
+            if(nums[start] == 1)
+        }
+    }
+}

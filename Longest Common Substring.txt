@@ -1,0 +1,27 @@
+//First submission: Finished it in 20 mins, and Successful!
+Total Runtime: 2288 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A, B: Two string.
+     * @return: the length of the longest common substring.
+     */
+    public int longestCommonSubstring(String A, String B) {
+        if(A == null || B == null) return 0;
+        int[][] dp = new int[A.length() + 1][B.length() + 1];
+        int aLen = A.length(), bLen = B.length(), max = 0;
+        
+        for(int i = 0; i < aLen; i++){
+            for(int j = 0; j < bLen; j++){
+                if(A.charAt(i) == B.charAt(j)){
+                    dp[i+1][j+1] = (i>0 && j>0 && A.charAt(i-1) == B.charAt(j-1)) ? dp[i][j]+1 : 1;
+                    max = Math.max(max, dp[i+1][j+1]);
+                }
+                else dp[i+1][j+1] = Math.max(dp[i][j+1], dp[i+1][j]);
+            }
+        }
+        return max;
+    }
+}

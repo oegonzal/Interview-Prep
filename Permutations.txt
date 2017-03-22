@@ -1,0 +1,50 @@
+//First attempt:
+Total Runtime: 2057 ms
+100% test cases passed.
+
+
+class Solution {
+    /**
+     * @param nums: A list of integers.
+     * @return: A list of permutations.
+     */
+    public List<List<Integer>> permute(int[] nums) {
+        ArrayList<List<Integer>> list = new ArrayList<List<Integer>>();
+        if(nums == null) return list;
+        
+        ArrayList<Integer> n = new ArrayList<Integer>();
+        if(nums.length == 0){
+            list.add(n);
+            return list;
+        }
+        
+        for(int num : nums) n.add(num);
+        permute(n, list, new ArrayList<Integer>());
+        
+        return list;
+    }
+    
+    public void permute(ArrayList<Integer> A, ArrayList<List<Integer>> list, ArrayList<Integer> item){
+        
+        if(A.size() == 0){
+            ArrayList<Integer> it = new ArrayList<Integer>();
+            for(int num : item) it.add(num);
+            list.add(it);
+            return;
+        }
+        
+        int size = A.size();
+        for(int i = 0; i < size; i++){
+            int num = A.remove(i);
+            item.add(item.size(), num);
+            
+            permute(A, list, item);
+            
+            item.remove(item.size() - 1);
+            A.add(i, num);
+        }
+    }
+}
+
+
+//BackTracking

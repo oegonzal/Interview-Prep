@@ -1,0 +1,66 @@
+//First Submission
+Total Runtime: 2441 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param word1 & word2: Two string.
+     * @return: The minimum number of steps.
+     */
+    public int minDistance(String word1, String word2) {
+        if(word1 == null || word2 == null) return 0;
+        
+        int[][] dp = new int[word1.length() + 1][word2.length() + 1];
+        for(int i = 1; i <= word1.length(); i++) dp[i][0] = i;
+        for(int i = 1; i <= word2.length(); i++) dp[0][i] = i;
+        
+        for(int w1 = 1; w1 <= word1.length(); w1++){
+            for(int w2 = 1; w2 <= word2.length(); w2++){
+                if(word1.charAt(w1-1) == word2.charAt(w2-1)) dp[w1][w2] = dp[w1-1][w2-1];
+                else{
+                    int min = Math.min(dp[w1-1][w2], dp[w1][w2-1]);
+                    dp[w1][w2] = 1 + Math.min(min, dp[w1-1][w2-1]);
+                }
+            }
+        }
+        return dp[word1.length()][word2.length()];
+    }
+    
+    public int minDist(String s1, String s2, int i1, int i2){
+        if(i1 == s1.length() || i2 == s2.length()) {
+            return Math.max(s1.length() - i1, s2.length() - i2);
+        }
+        
+        if(s1.charAt(i1) == s2.charAt(i2)) return minDist(s1, s2, i1 + 1, i2 + 1);
+        int min = Math.min(1 + minDist(s1,s2,i1,i2+1), 1 + minDist(s1,s2,i1+1,i2));
+        
+        return Math.min(min, 1 + minDist(s1, s2, i1+1, i2+1));
+    }
+}
+
+/*
+    4 scenarios:
+    
+    Both letters are equal, so + 0 (taking last min w/o adding 2 extra letters, and adding 1)
+    
+    Both letters are not equal,
+    
+    Min of:
+    1. you look at x-1, y-1 get that number and + 1 (updating a letter)
+    2. x, y-1 get that number and + 1 (adding a letter)
+    3. x-1, y get that number and plus 1 (subtracting a letter)
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+

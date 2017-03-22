@@ -1,0 +1,276 @@
+//Best Solution:
+public void wiggleSort(int[] nums) {
+        int median = findKthLargest(nums, (nums.length + 1) / 2);
+        int n = nums.length;
+
+        int left = 0, i = 0, right = n - 1;
+
+        while (i <= right) {
+
+            if (nums[newIndex(i,n)] > median) {
+                swap(nums, newIndex(left++,n), newIndex(i++,n));
+            }
+            else if (nums[newIndex(i,n)] < median) {
+                swap(nums, newIndex(right--,n), newIndex(i,n));
+            }
+            else {
+                i++;
+            }
+        }
+
+
+    }
+
+    private int newIndex(int index, int n) {
+        return (1 + 2*index) % (n | 1);
+    }
+
+    https://discuss.leetcode.com/topic/41464/step-by-step-explanation-of-index-mapping-in-java/2
+
+
+//Third Try:
+Total Runtime: 2229 ms
+100% test cases passed.
+
+public class Solution {
+    public void wiggleSort(int[] nums) {
+        
+        int length = nums.length;
+        if(length  < 2) return;
+        
+        int temp = 0;
+        for(int i = 0; i < length - 1; i++){
+            
+            //Move duplicates away from eachother
+            if(nums[i] == nums[i + 1]){
+                
+                int j = i + 1;
+                boolean found = false;
+                while(j+1 < length){
+                    j++;
+                    if(nums[i+1]!=nums[j]){
+                        temp = nums[i+1];
+                        nums[i+1] = nums[j];
+                        nums[j] = temp;
+                        found = true;
+                        break;
+                    }
+                }
+                
+                if(!found){
+                    j=i;
+                    while(j-1 >= 0){
+                        j--;
+                        if(nums[i+1]!=nums[j]){
+                            if(j%2==0){
+                                if(nums[i+1] >= nums[j+1]) continue;
+                                if(j-1>=0 && nums[i+1] >= nums[j-1]) continue; 
+                            }
+                            else{
+                                if(nums[i+1] <= nums[j+1]) continue;
+                                if(j-1>=0 && nums[i+1] <= nums[j-1]) continue;  
+                            }
+                            
+                            temp = nums[i+1];
+                            nums[i+1] = nums[j];
+                            nums[j] = temp;
+                            break;
+                        }
+                    }   
+                }
+            }
+            
+            if(i%2 == 0 && nums[i] > nums[i+1]){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+            else if(i%2 == 1 && nums[i] < nums[i+1] ){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+        }
+    }
+}
+
+
+//Testcases:
+//[1,5,1,1,6,4,1,7]
+//[1,3,2,2,3,1]
+//[4,5,5,6]
+
+
+//My Own:
+//[8,4,9,10,8,4,8,6,6,2,8,2,4,8,1,4,8,9,2,6,4,4,8,2,2,4,3,6,10,9,3,8,1,7,7,5,7,6,2,6,10,9,2,3,4,2,8,8,7,2,1,3,2,2,9,7,4,8,8,3,5,10,9,10,8,5,4,9,7,4,2,10,3,5,9,4,7,4,1,10,6,10,3,2,9,1,2,4,2,3,5,3,10,1,7,4,8,8,10,4,8,10,9,2,4,1,5,5,10,10,3,7,4,8,9,4,1,8,10,3,7,2,7,8,3,3,3,6,1,3,6,7,6,10,5,6,3,8,6,2,6,1,6,6,2,6,10,5,7,3,9,9,2,4,9,10,2,6,5,7,1,8,10,2,6,3,4,5,7,7,5,10,6,7,5,3,3,1,8,1,7,10,1,4,5,1,3,1,4,8,3,3,2,5,9,7,5,8,8,7,7]
+
+
+//Second Try: (Different approach)
+Total Runtime: 2344 ms
+93% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums a list of integer
+     * @return void
+     */
+    public void wiggleSort(int[] nums) {
+        
+        int length = nums.length;
+        if(length  < 2) return;
+        //Arrays.sort(nums);
+        
+        int temp = 0;
+        for(int i = 0; i < length - 1; i++){
+            
+            //Move duplicates away from eachother
+            if(nums[i] == nums[i + 1]){
+                
+                int j = i + 1;
+                while(j+1 < length){
+                    j++;
+                    if(nums[i+1]!=nums[j]){
+                        temp = nums[i+1];
+                        nums[i+1] = nums[j];
+                        nums[j] = temp;
+                        break;
+                    }
+                }
+                
+                j=i;
+                while(j-1 >= 0){
+                    j--;
+                    if(nums[i+1]!=nums[j]){
+                        if(j%2==0 && nums[i+1] >= nums[j+1]) continue;
+                        if(j%2==0 && j-1>=0 && nums[i+1] >= nums[j-1]) continue;
+                        if(j%2==1 && nums[i+1] <= nums[j+1]) continue;
+                        if(j%2==1 && j-1>=0 && nums[i+1] <= nums[j-1]) continue;
+                        
+                        temp = nums[i+1];
+                        nums[i+1] = nums[j];
+                        nums[j] = temp;
+                        break;
+                    }
+                }
+            }
+            
+            if(i%2 == 0 && nums[i] > nums[i+1]){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+            else if(i%2 == 1 && nums[i] < nums[i+1] ){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+        }
+    }
+}
+
+
+public class Solution {
+    /**
+     * @param nums a list of integer
+     * @return void
+     */
+    public void wiggleSort(int[] nums) {
+        
+        int length = nums.length;
+        if(length  < 2) return;
+        //Arrays.sort(nums);
+        
+        
+        //System.out.println(Arrays.toString(nums));
+        
+        int temp = 0;
+        for(int i = 0; i < length - 1; i++){
+            
+            //Move duplicates away from eachother
+            if(nums[i] == nums[i + 1]){
+                int j = i + 1;
+                while(j+1 < length){
+                    if(nums[i+1]!=nums[j]){
+                        temp = nums[i+1];
+                        nums[i+1] = nums[j];
+                        nums[j] = temp;
+                        break;
+                    }
+                    j++;
+                }
+                
+                j=i-1;
+                while(j-1 > 0){
+                    if(nums[i+1]!=nums[j]){
+                        temp = nums[i+1];
+                        nums[i+1] = nums[j];
+                        nums[j] = temp;
+                        break;
+                    }
+                }
+                
+            }
+            
+            if(i%2 == 0 && nums[i] > nums[i+1]){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+            else if(i%2 == 1 && nums[i] < nums[i+1] ){
+                temp = nums[i];
+                nums[i] = nums[i+1];
+                nums[i+1] = temp;
+            }
+        }
+    }
+}
+
+
+//Testcases:
+//[1,5,1,1,6,4,1,7]
+//[1,3,2,2,3,1]
+//[4,5,5,6]
+
+
+//First Try: (Failed attempt)
+
+public class Solution {
+    /**
+     * @param nums a list of integer
+     * @return void
+     */
+    public void wiggleSort(int[] nums) {
+        
+        int length = nums.length;
+        if(length  < 2) return;
+        Arrays.sort(nums);
+        System.out.println(Arrays.toString(nums));
+        
+        //switch possible middle val that is not bigger than first half
+        int temp = nums[length/2];
+        if(length%2 == 1 && (length/2)%2 == 0){
+            nums[length/2] = nums[length - 1];
+            nums[length - 1] = temp;
+        }
+
+        System.out.println(Arrays.toString(nums) + "----");
+        
+        for(int i = length/2; i < length; i++){
+            if(i%2 == 1) continue;
+            
+            temp = nums[i];
+            int smallInd = i - length/2;
+            if(smallInd%2 == 0 && smallInd + 1 < length/2) smallInd++;
+            nums[i] = nums[smallInd];
+            nums[smallInd] = temp;
+            
+            System.out.println(Arrays.toString(nums));
+        }
+    }
+}
+
+
+//Testcases:
+//[1,5,1,1,6,4,1,7]
+//[1,3,2,2,3,1]

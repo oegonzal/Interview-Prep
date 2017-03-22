@@ -1,0 +1,120 @@
+//Second Try: 
+Total Runtime: 3069 ms
+100% test cases passed.
+
+
+class Solution {
+    public int nthUglyNumber(int n) {
+        if(n <1) return 0;
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        
+        int indTwo = 0, indThree = 0, indFive = 0, nextMul = 0;
+        while(list.size() < n){
+            int twoMul = list.get(indTwo)*2;
+            int threeMul = list.get(indThree)*3;
+            int fiveMul = list.get(indFive)*5;
+            
+            nextMul = Math.min(twoMul, Math.min(threeMul, fiveMul));        //System.out.println(nextMul);
+            
+            if(nextMul == twoMul) indTwo++;
+            else if(nextMul == threeMul) indThree++;
+            else if(nextMul == fiveMul) indFive++;
+            
+            if(nextMul > list.get(list.size()-1)) list.add(nextMul);
+        }
+        return list.get(list.size() - 1);                                  
+    }
+};
+//1665 expected: 1898437500
+
+
+
+
+//First Try (Time Exceeded):
+
+
+class Solution {
+    /**
+     * @param n an integer
+     * @return the nth prime number as description.
+     */
+    public int nthUglyNumber(int n) {
+        
+        int count = 1, answer = 1, ind = 0;
+        int[] factorsSum = new int[3];
+        
+        factorsSum[0] = 2;
+        factorsSum[1] = 3;
+        factorsSum[2] = 5;
+                                                        //System.out.println(answer);
+        while(count < n){
+            ind = getLowest(factorsSum);
+            answer = factorsSum[ind];
+            
+            if(ind == 0) factorsSum[ind] +=2;
+            else if(ind == 1) factorsSum[ind] +=3;
+            else factorsSum[ind] +=5;
+            removeDup(factorsSum);
+            
+            while(!isValid(answer)){
+                ind = getLowest(factorsSum);
+                answer = factorsSum[ind];
+                if(ind == 0) factorsSum[ind] +=2;
+                else if(ind == 1) factorsSum[ind] +=3;
+                else factorsSum[ind] +=5;
+                removeDup(factorsSum);
+            }
+            count++;                                    //System.out.println(answer);
+        }
+        return answer;                                  
+    }
+    
+    public boolean isValid(int num){
+        boolean answer = true;
+        int[] factors = {2,3,5};
+        while(num!=1){
+            int i;                                      //System.out.print("Num: " + num + " ");
+            for(i = factors.length - 1; i>=0; i--){
+                if(num%factors[i] == 0){
+                    num /= factors[i];
+                    break;
+                }
+            }                                           //System.out.println("Num mod: " + num + ", i: " + i);
+            if(i==-1) return false;                      
+        }
+        return answer;
+    }
+    
+    public int getLowest(int[] A){
+        int min = Integer.MAX_VALUE, index = 0;
+        for(int i = 0; i < A.length; i++){
+            if(A[i] < min){
+                min = A[i];
+                index = i;
+            }
+        }
+        return index;
+    }
+    
+    public void removeDup(int[] A){
+        boolean duplicates = true;
+        while(duplicates){
+            int i;
+            for(i = 0; i < A.length; i++){
+                int j;
+                for(j = i+1; j < A.length; j++){
+                    if(A[i] == A[j]){
+                        if(i == 0) A[i] +=2;
+                        else if(i == 1) A[i] +=3;
+                        else A[i] +=5;
+                    }
+                }
+                if(j!=A.length) break;
+            }
+            if(i==A.length) duplicates = false;
+        }
+    }
+};
+
+//Final testcase i cant pass: 1665

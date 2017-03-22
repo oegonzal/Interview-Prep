@@ -1,0 +1,59 @@
+//First Submission Successful 18/15
+Total Runtime: 2362 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param matrix: a matrix of integers
+     * @return: an array of integers
+     */ 
+    public int[] printZMatrix(int[][] matrix) {
+        if(matrix == null || matrix.length == 0 || matrix[0].length == 0) return new int[]{};
+        
+        int[] ans = new int[matrix.length * matrix[0].length];
+        boolean right = true;
+        int x = 0, y = 0;
+        
+        ans[0] = matrix[0][0];
+        for(int i = 1; i < matrix.length * matrix[0].length; i++){
+            if(right){
+                if(isValid(matrix, x+1, y-1)){
+                    x = x+1; y = y-1;
+                    ans[i] = matrix[y][x];   
+                }
+                else if(isValid(matrix, x+1, y)){
+                    x = x+1;
+                    ans[i] = matrix[y][x];
+                    right = false;
+                } else {
+                    y = y+1;
+                    ans[i] = matrix[y][x];
+                    right = false;
+                }
+                
+            } else {
+                if(isValid(matrix, x-1, y+1)){
+                    x = x-1; y = y+1;
+                    ans[i] = matrix[y][x];   
+                }
+                else if(isValid(matrix, x, y+1)){
+                    y = y+1;
+                    ans[i] = matrix[y][x];
+                    right = true;
+                } else {
+                    x = x+1;
+                    ans[i] = matrix[y][x];
+                    right = true;
+                }
+            }
+        }
+        return ans;
+    }//18mins
+    
+    public boolean isValid(int[][] matrix, int x, int y){
+        if(y < 0 || y >= matrix.length || x < 0 || x >= matrix[y].length) return false;
+        return true;
+    }
+}

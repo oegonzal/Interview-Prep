@@ -1,0 +1,32 @@
+//First Submission while not being drunk, about 30/15 mins
+
+Total Runtime: 1265 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: Given an integers array A
+     * @return: A Long array B and B[i]= A[0] * ... * A[i-1] * A[i+1] * ... * A[n-1]
+     */
+    public ArrayList<Long> productExcludeItself(ArrayList<Integer> A) {
+        if(A == null || A.size() == 0) return null;
+        ArrayList<Long> products = new ArrayList<Long>();
+        
+        int len = A.size(), i = 0;
+        long[] st = new long[len];
+        st[len - 1] = A.get(len - 1);
+        
+        for(i = len - 2; i > 0; i--) st[i] = st[i+1] * A.get(i);
+        
+        long prod = 1;
+        for(i = 0; i < len-1; i++){
+            products.add(i, st[i+1] * prod);
+            prod *= A.get(i);
+            
+        }
+        products.add(i, prod);
+        
+        return products;
+    }
+}

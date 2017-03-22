@@ -1,0 +1,51 @@
+//A lot of submissions attempted: took much longer than it should have around 200/15, little quicksort
+trouble made few changes to fix.
+
+Total Runtime: 3721 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers.
+     * @return: An integer denotes the middle number of the array.
+     */
+    public int median(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        
+        int start = 0, end = nums.length -1, median = (nums.length-1)/2;
+        
+        while(start < end){
+            int t = partition(nums, start, end);
+            
+            if(t == median) return nums[median];
+            else if(t < median) start = t + 1;
+            else end = t - 1;
+        }
+        return nums[median];
+    }
+    
+    public int partition(int[] A, int start, int end){
+        int randNum = (new Random()).nextInt(end - start + 1) + start,
+            st = start, en = end, piv = A[randNum];
+
+        swap(A, st++, randNum);
+        
+        while(st < en){
+            while(st < en && A[st] <= piv) st++; //Always pointing 1 elmt ahead of pivot area
+            while(en > st && A[en] > piv) en--; //Never touches pivot always ahead
+            if(st < en) swap(A, st, en);
+        }
+        
+        if(A[start] > A[st] || A[start] > A[--st]) swap(A, start, st);
+        
+        return st;
+    }
+    
+    public void swap(int[] A, int a, int b){
+        int temp = A[a];
+        A[a] = A[b];
+        A[b] = temp;
+    }
+}
+

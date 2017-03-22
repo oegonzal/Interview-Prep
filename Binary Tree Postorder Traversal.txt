@@ -1,0 +1,47 @@
+//First Try:
+Total Runtime: 1234 ms
+100% test cases passed.
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: Postorder in ArrayList which contains node values.
+     */
+    public ArrayList<Integer> postorderTraversal(TreeNode root) {
+        ArrayList<Integer> postOrder = new ArrayList<Integer>();
+        if(root == null) return postOrder;
+        
+        ArrayList<TreeNode> list = new ArrayList<TreeNode>();
+        list.add(root);
+        
+        while(list.size() > 0){
+            TreeNode node = list.get(list.size() - 1);
+            if(node.left != null){
+                list.add(node.left);
+                node.left = null;
+                continue;
+            }
+            if(node.right != null){
+                list.add(node.right);
+                node.right = null;
+                continue;
+            }
+            
+            postOrder.add(node.val);
+            list.remove(list.size() - 1);
+        }
+        return postOrder;
+    }
+}

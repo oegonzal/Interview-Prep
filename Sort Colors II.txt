@@ -1,0 +1,27 @@
+//First Try:
+Total Runtime: 2496 ms
+100% test cases passed.
+
+
+class Solution {
+    /**
+     * @param colors: A list of integer
+     * @param k: An integer
+     * @return: nothing
+     */
+    public void sortColors2(int[] colors, int k) {
+        if(colors == null || colors.length == 0 || k == 0) return;
+        int currInd = 0;
+        
+        for(int i = 1; i <= k; ++i){
+            for(int j = currInd; j < colors.length; ++j){
+                if(colors[j] == i){
+                    colors[j] = colors[currInd];
+                    colors[currInd++] = i;
+                }
+            }
+        }
+    }
+}
+
+//[3, 2, 2, 1, 4]

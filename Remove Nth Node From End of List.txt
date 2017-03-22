@@ -1,0 +1,41 @@
+//Few submissions with minor tweaks Submission Successful 15/15
+Total Runtime: 4784 ms
+100% test cases passed.
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @param n: An integer.
+     * @return: The head of linked list.
+     */
+    ListNode removeNthFromEnd(ListNode head, int n) {
+        if(head == null || n < 0) return head;
+        
+        ListNode dummy = new ListNode(-1), prev = dummy, back = head, forward = head;
+        dummy.next = head;
+        
+        while(forward != null){
+            forward = forward.next;
+            if(n == 0) {
+                prev = back;
+                back = back.next;
+            } 
+            else n--;
+        }
+        if(n == 0) prev.next = back.next; 
+        
+        return dummy.next;
+    }
+}

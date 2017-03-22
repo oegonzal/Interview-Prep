@@ -1,0 +1,26 @@
+//First Submission:
+Total Runtime: 2713 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * Determine whether s3 is formed by interleaving of s1 and s2.
+     * @param s1, s2, s3: As description.
+     * @return: true or false.
+     */
+    public boolean isInterleave(String s1, String s2, String s3) {
+        if(s1 == null || s2 == null || s3 == null || s1.length() + s2.length() != s3.length()) return false;
+        return isInter(s1, s2, s3, 0, 0, 0);
+    }
+    
+    public boolean isInter(String s1, String s2, String s3, int i1, int i2, int i3){
+        if(i1 + i2 == s3.length() && s3.length() == i3) return true;
+        
+        boolean ans1 = false, ans2 = false;
+        if(i1 < s1.length() && s1.charAt(i1) == s3.charAt(i3)) ans1 = isInter(s1, s2, s3, i1+1, i2, i3+1);
+        if(i2 < s2.length() && s2.charAt(i2) == s3.charAt(i3)) ans2 = isInter(s1, s2, s3, i1, i2+1, i3+1);
+        
+        return ans1 || ans2;
+    }
+}

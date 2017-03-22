@@ -1,0 +1,36 @@
+//Few submissions, was one of the hardest level easy problems I had to solve. prob around 200/15
+Total Runtime: 1279 ms
+100% test cases passed.
+
+
+I respect the problem it was challenging and very intesting.
+I solved it by finding where the smallest index (smallest value in array) is and keeping track of it always.
+I kept swaping last with pt both of which started in the last element of the array and the largest 
+elmt value in the array correspondingly. When pt is out of bound we set that equal to where ever 
+the smallest index is (flag that tracks the smallest value) - 1 and we repeat the swapping until last is 0.
+
+
+public class Solution {
+    /**
+     * @param nums: The rotated sorted array
+     * @return: void
+     */
+    public void recoverRotatedSortedArray(ArrayList<Integer> nums) {
+        if(nums == null || nums.size() == 0 || nums.get(0) < nums.get(nums.size()-1)) return;
+        
+        int minNum = Integer.MAX_VALUE, minInd = 0;
+        for(int i = 0; i < nums.size(); i++){
+            if(nums.get(i) < minNum){
+                minNum = nums.get(i);
+                minInd = i;
+            }
+        }
+        
+        int pt = minInd-1, last = nums.size() - 1;
+        while(last > 0 && minInd != 0){
+            if(pt < 0) pt = minInd-1;
+            if(last == minInd) minInd = pt;
+            Collections.swap(nums, pt--, last--);
+        }
+    }
+}

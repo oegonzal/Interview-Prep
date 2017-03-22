@@ -1,0 +1,74 @@
+//Second Try:
+Total Runtime: 7507 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums an integer array and all positive numbers, no duplicates
+     * @param target an integer
+     * @return an integer
+     */
+    public int backPackVI(int[] nums, int target) {
+        if(nums == null || nums.length == 0 || target == 0) return 0;
+        
+        int[] dp = new int[target + 1];
+        for(int i = 0; i <= target; i++){
+            for(int j = 0; j < nums.length; j++){
+                if(i - nums[j] == 0) dp[i]++;
+                else if(i - nums[j] > 0) dp[i] += dp[i - nums[j]];
+            }
+        }
+        return dp[target];
+    }
+    
+    public int combinations(int[] A, int target, int curr){
+        if(curr > target) return 0;
+        if(curr == target) return 1;
+        
+        int count = 0;
+        for(int i = 0; i < A.length; i++){
+            int combs = combinations(A, target, curr + A[i]);
+            if(combs > 0) count+=combs;
+        }
+        return count;
+    }
+}
+
+//[1,2,4], 4
+//[37,40,28,39,36,20,23,25,31,1,2,3,4], 31
+
+
+
+//First Try:
+Time Limit Exceeded
+
+
+public class Solution {
+    /**
+     * @param nums an integer array and all positive numbers, no duplicates
+     * @param target an integer
+     * @return an integer
+     */
+    public int backPackVI(int[] nums, int target) {
+        if(nums == null || nums.length == 0 || target == 0) return 0;
+        int combinations = combinations(nums, target, 0);
+        
+        return combinations;
+    }
+    
+    public int combinations(int[] A, int target, int curr){
+        if(curr > target) return 0;
+        if(curr == target) return 1;
+        
+        int count = 0;
+        for(int i = 0; i < A.length; i++){
+            int combs = combinations(A, target, curr + A[i]);
+            if(combs > 0) count+=combs;
+        }
+        return count;
+    }
+}
+
+//[1,2,4], 4
+//[37,40,28,39,36,20,23,25,31,1,2,3,4], 31

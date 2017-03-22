@@ -1,0 +1,75 @@
+//Second:
+Total Runtime: 1263 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param A, B: Two strings.
+     * @return: The length of longest common subsequence of A and B.
+     */
+    public int longestCommonSubsequence(String A, String B) {
+
+        int a = A.length() + 1;
+        int b = B.length() + 1;
+        int[][] dp = new int[a][b];
+
+        for(int i = 0; i < a; i++){
+            for(int j = 0; j < b; j++){
+                if(i == 0 || j == 0) dp[i][j] = 0;
+                else if(A.charAt(i-1) == B.charAt(j-1)) dp[i][j] = dp[i-1][j-1] + 1;
+                else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1] );
+            }
+        }
+        
+        return dp[a-1][b-1];
+    }
+}
+
+
+
+//First Try: Failed Submission
+
+
+public class Solution {
+    /**
+     * @param A, B: Two strings.
+     * @return: The length of longest common subsequence of A and B.
+     */
+    public int longestCommonSubsequence(String A, String B) {
+        
+        System.out.println(A.length() + 1);
+        System.out.println(B.length() + 1);
+        int a = A.length() + 1;
+        int b = B.length() + 1;
+        int[][] dp = new int[a][b];
+
+        for(int i = 0; i < a; i++){
+            for(int j = 0; j < b; j++){
+                System.out.print(dp[i][j] + ", ");    
+            }
+            System.out.println();
+        }
+        
+        for(int i = 0; i < a; i++){
+            for(int j = 0; j < b; j++){
+                if(i == 0 || j == 0){
+                    dp[i][j] = 0;
+                    continue;
+                }
+                
+                if(A.charAt(i-1) == B.charAt(j-1)) dp[i][j] = Math.max(dp[i-1][j] + 1, dp[i][j-1] + 1);
+                else dp[i][j] = Math.max(dp[i-1][j], dp[i][j-1] );
+            
+            }
+        }
+        
+        for(int i = 0; i < a; i++){
+            for(int j = 0; j < b; j++){
+                System.out.print(dp[i][j] + ", ");    
+            }
+            System.out.println();
+        }
+        
+        return dp[a-1][b-1];
+    }
+}

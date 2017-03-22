@@ -1,0 +1,164 @@
+//Third Code
+Total Runtime: 8030 ms
+100% test cases passed.
+
+
+public class Solution {
+    /** 
+     *@param A : an integer sorted array
+     *@param target :  an integer to be inserted
+     *return : a list of length 2, [index1, index2]
+     */
+    public int[] searchRange(int[] A, int target) {
+        if(A == null || A.length == 0) return new int[]{-1,-1};
+        int start = 0, end = A.length-1, mid = 0, pivot = 0, tempMid = 0;
+        
+        while(start <= end){
+            mid = (start + end)/2;
+            
+            if(A[mid] == target){
+                tempMid = mid;
+                while(A[start] != target){ //start++;
+                    pivot = (start + tempMid)/2;
+                    if(A[pivot] < target) start = pivot+1;
+                    else tempMid = pivot; //A[pivot == target]
+                }
+                
+                tempMid = mid;
+                while(A[end] != target){ //end--;
+                    pivot = (end + tempMid + 1)/2;
+                    if(A[pivot] > target) end = pivot-1;
+                    else tempMid = pivot; //A[pivot == target]
+                }
+                return new int[]{start, end};
+            }
+            else if (A[mid] < target) start = mid+1;
+            else end = mid-1;
+        }
+        
+        return new int[]{-1,-1};
+    }
+}
+
+
+//Second Code (No submission or attempt yet)
+public class Solution {
+    /** 
+     *@param A : an integer sorted array
+     *@param target :  an integer to be inserted
+     *return : a list of length 2, [index1, index2]
+     */
+    public int[] searchRange(int[] A, int target) {
+        if(A == null || A.length == 0) return new int[]{-1,-1};
+        int start = 0, end = A.length-1, mid = 0, pivot = 0;
+        
+        while(start < end){
+            mid = (start + end)/2;
+            
+            if(A[start] == target && A[end] == target) return new int[]{start, end};
+            else if(A[mid] == target){
+                //start = mid;
+                if(mid-1 >= 0 && A[mid - 1] == target){
+                    pivot = (start + mid)/2;
+                    while(A[pivot] == target && start < pivot){          //loops
+                        pivot = (start + pivot)/2;
+                    }
+                    start = pivot;
+                }
+                
+                //end = mid;
+                if(mid+1 < A.length && A[mid+1] == target){
+                    pivot = (end + mid)/2;
+                    while(A[pivot] == target && pivot < end){          //loops
+                        pivot = (end + pivot + 1)/2;
+                    }
+                    end = pivot;
+                }
+                System.out.println("start: " + start + ", end: " + end);
+            }
+            else if (A[mid] < target) start = mid+1;
+            else end = mid-1;
+        }
+        
+        return new int[]{-1,-1};
+    }
+}
+
+//[], 9
+
+/*
+    binary search
+    
+    if A[mid] is target then get to edges
+    until not target or untiledge of array
+    
+    Have a checker checking if A[start] and A[end] are equal
+
+*/
+
+
+
+//First Code:
+
+
+public class Solution {
+    /** 
+     *@param A : an integer sorted array
+     *@param target :  an integer to be inserted
+     *return : a list of length 2, [index1, index2]
+     */
+    public int[] searchRange(int[] A, int target) {
+        int[] a = {-1,-1};
+        if(A == null || A.length == 0) return a;
+        if(A[0] == target && A[A.length - 1] == target){
+            a = {0,A.length-1};
+            return a;
+        }
+        
+        int start = 0, end = A.length-1, mid = 0, pivot = 0;
+        
+        while(start < end){
+            mid = (start + end)/2;
+            
+            if(A[start] == target && A[end] == target){
+                a = {start, end};
+                return a;
+            }
+            else if(A[mid] == target){
+                start = mid;
+                if(mid-1 >= 0 && A[mid - 1] == target){
+                    pivot = (start + mid)/2;
+                    while(A[pivot] == target){
+                        pivot = (start + pivot)/2;
+                    }
+                    start = pivot;
+                }
+                else if(mid+1 < A.length && A[mid+1] == target){
+                    pivot = (end + mid)/2;
+                    while(A[pivot] == target){
+                        pivot = (end + pivot)/2;
+                    }
+                    end = pivot;
+                }
+                else{
+                    a = {mid, mid};
+                    return a;
+                }
+            }
+            else if (A[mid] < target) end = mid;
+            else start = mid;
+        }
+        
+        return a;
+    }
+}
+
+/*
+    binary search
+    
+    if A[mid] is target then get to edges
+    until not target or untiledge of array
+    
+    Have a checker checking if A[start] and A[end] are equal
+
+*/

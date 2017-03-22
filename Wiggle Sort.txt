@@ -1,0 +1,31 @@
+//First Try:
+Total Runtime: 3291 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums a list of integer
+     * @return void
+     */
+    public void wiggleSort(int[] nums) {
+        
+        if(nums == null || nums.length == 0 || nums.length == 1) return;
+        
+        Arrays.sort(nums);
+        
+        //iterate large vals,
+        for(int i = nums.length - 1; i >= nums.length/2; i--){
+            if(i%2 == 1) continue; //Keep large vals in odd indexes
+            
+            int lowInd = nums.length - 1 - i;
+            if(lowInd%2 == 0) lowInd++;
+            
+            int highNum = nums[i];
+            int lowNum = nums[lowInd];
+            
+            nums[lowInd] = highNum;
+            nums[i] = lowNum;
+        }
+    }
+}

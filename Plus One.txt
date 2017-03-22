@@ -1,0 +1,41 @@
+//First Submission:  Successful and finished in 10 mins!
+Total Runtime: 16285 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param digits a number represented as an array of digits
+     * @return the result
+     */
+    public int[] plusOne(int[] digits) {
+        if(digits == null || digits.length == 0) return digits;
+        
+        int len = digits.length, i = 0;
+        
+        for(i = len-1; i >= 0; i--){
+            if(digits[i] + 1 > 9){
+                digits[i] = 0;
+            }
+            else{
+                digits[i]++;
+                break;
+            }
+        }
+        
+        if(i >= 0) return digits;
+        
+        int[] ans = new int[len+1];
+        ans[0] = 1;
+        return ans;
+        
+    }
+}
+
+/*
+Weird cases to handle:
+    9s, carry overs, and addint an extra position.
+    Keeping something unchanged.
+    
+    If all numbers equal 9, then have 1 extra position in array
+*/

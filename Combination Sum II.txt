@@ -1,0 +1,56 @@
+//First Try:
+Total Runtime: 1393 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param num: Given the candidate numbers
+     * @param target: Given the target number
+     * @return: All the combinations that sum to target
+     */
+    public ArrayList<ArrayList<Integer>> combinationSum2(int[] A, int target) {
+        ArrayList<ArrayList<Integer>> comb = new ArrayList<ArrayList<Integer>>();
+        if(A == null || A.length == 0 || target == 0) return comb;
+        
+        Arrays.sort(A);
+        helper(comb, new ArrayList<Integer>(), A, 0, target);
+        return comb;
+    }
+    
+    public void helper(ArrayList<ArrayList<Integer>> C, ArrayList<Integer> list, int[] A, int sI, int t){
+        if(t < 0) return;
+        if(t == 0){
+            ArrayList<Integer> item = new ArrayList<Integer>();
+            for(int num : list) item.add(num);
+            
+            C.add(item);
+            return;
+        }
+        
+        int dups = 0, dupsT = 0, count = 0;
+        
+        for(int i = sI; i < A.length; i++){
+            if(i < A.length - 1 && A[i] == A[i+1]){
+                dups++;
+                continue;
+            } 
+            else {
+                dupsT = dups;
+                while(dupsT-- >= 0){
+                    count++;
+                    list.add(A[i]);
+                    helper(C, list, A, i+1, t-(A[i]*count));
+                }
+                
+                dupsT = dups;
+                while(dupsT-- >= 0) list.remove(list.size() - 1);
+                dups=0;
+                count = 0;
+            }
+        }
+    }
+}
+
+
+// [10,1,6,7,2,1,5], 8

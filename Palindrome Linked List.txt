@@ -1,0 +1,77 @@
+//First Submission successful! and finished in 17/30 mins which is great!
+Total Runtime: 2202 ms
+100% test cases passed.
+
+Original code:
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param head a ListNode
+     * @return a boolean
+     */
+    public boolean isPalindrome(ListNode head) {
+        boolean isPalin = true;
+        if(head == null || head.next == null) return isPalin;
+        
+        ListNode temp = null, curr = head, forward = head;
+        
+        while(forward != null && forward.next != null){
+            temp = curr;
+            curr = curr.next;
+            forward = forward.next.next;
+        }
+        
+        //Check if crr is in odd or even position by checking val of forward
+        //if odd compare nodes before it and nodes after it
+        //else compare nodes before it to it and nodes after it
+        
+        temp.next = null;
+        
+        //in odd position, curr right in the middle
+        if(forward != null){
+            //temp = curr; //garbage collected
+            curr = curr.next;
+        }
+        
+        //reverse second half of list, first step
+        temp = null;
+        forward = curr.next;
+        curr.next = null;
+        
+        while(forward != null){
+            temp = curr;
+            curr = forward;
+            forward = forward.next;
+            curr.next = temp;
+        }
+        
+        //System.out.println(curr.val + ", " + head.val);
+        
+        //curr now is the head of the reversed list that was the second half of the original list
+        temp = head;
+        while(temp != null){
+            //System.out.println(curr.val + ", " + temp.val);
+            if(temp.val != curr.val) return false;
+            temp = temp.next;
+            curr = curr.next;
+        }
+        
+        return isPalin;
+    }
+}
+
+/**
+ * Possible corner cases:
+ * 
+ * Only 2 nodes in the list.
+ * 
+ * left with 12 mins last
+ * 
+ * **/

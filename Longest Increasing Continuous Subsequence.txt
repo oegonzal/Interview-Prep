@@ -1,0 +1,34 @@
+//First Submission Successful 13/15
+Total Runtime: 6450 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A an array of Integer
+     * @return  an integer
+     */
+    public int longestIncreasingContinuousSubsequence(int[] A) {
+        if(A == null || A.length == 0) return 0;
+        
+        int longestCount = 1, temp = 1;
+        for(int i = 1; i < A.length; i++){
+            if(A[i]> A[i-1]){
+                temp++;
+                if(temp > longestCount) longestCount = temp;
+            }
+            else temp = 1;
+        }
+        
+        temp = 1;
+        for(int i = A.length - 2; i >= 0; i--){
+            if(A[i]> A[i+1]){
+                temp++;
+                if(temp > longestCount) longestCount = temp;
+            }
+            else temp = 1;
+        }
+        
+        return longestCount;
+    }
+}

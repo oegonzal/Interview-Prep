@@ -1,0 +1,88 @@
+//Second Try:
+Total Runtime: 6366 ms
+100% test cases passed.
+
+
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, max;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int max) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.max = max
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param root, start, end: The root of segment tree and 
+     *                         an segment / interval
+     *@return: The maximum number in the interval [start, end]
+     */
+    public int query(SegmentTreeNode root, int start, int end) {
+        if(start == root.start && end == root.end) return root.max;
+        
+        int val = 0, mid = (root.start + root.end)/2;
+        if(start <= mid && end >= mid+1){
+            val = Math.max(query(root.left, start, mid), query(root.right, mid+1, end));
+        } 
+        else if(end <= mid) val = query(root.left, start, end);
+        else if(start >= mid+1) val = query(root.right, start, end); //if(start >= mid+1)
+        
+        return val;
+    }
+}
+
+
+
+Total Runtime: 2141 ms
+61% test cases passed.
+
+
+/**
+ * Definition of SegmentTreeNode:
+ * public class SegmentTreeNode {
+ *     public int start, end, max;
+ *     public SegmentTreeNode left, right;
+ *     public SegmentTreeNode(int start, int end, int max) {
+ *         this.start = start;
+ *         this.end = end;
+ *         this.max = max
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     *@param root, start, end: The root of segment tree and 
+     *                         an segment / interval
+     *@return: The maximum number in the interval [start, end]
+     */
+    public int query(SegmentTreeNode root, int start, int end) {
+        //if(start>end) return 0;
+        if(root.start == start && root.end == end) return root.max;
+        
+        System.out.println(start + " " + end);
+        int mid = (root.start+root.end)/2, val = 0;
+        
+        if(start > mid) val = query(root.right, mid+1, end);
+        else if(end < mid+1) val = query(root.left, start, mid);
+        else if(start == end){
+            if(start <= mid) val = query(root.left, start, end);
+            else val = query(root.right, start, end);
+        }
+        else val = Math.max(query(root.left, start, mid), query(root.right, mid+1, end));
+        
+        //System.out.println(val);
+        return val;
+    }
+}
+
+//"[0,3,max=4][0,1,max=4][2,3,max=3][0,0,max=1][1,1,max=4][2,2,max=2][3,3,max=3]", start=-0, end=0
+//"[0,3,max=4][0,1,max=4][2,3,max=3][0,0,max=1][1,1,max=4][2,2,max=2][3,3,max=3]", start=0, end=1
+//"[0,3,max=4][0,1,max=4][2,3,max=3][0,0,max=1][1,1,max=4][2,2,max=2][3,3,max=3]", start=1, end=2
+//"[0,3,max=4][0,1,max=4][2,3,max=3][0,0,max=1][1,1,max=4][2,2,max=2][3,3,max=3]", start=2, end=2
+//"[0,11,max=99][0,5,max=83][6,11,max=99][0,2,max=83][3,5,max=77][6,8,max=99][9,11,max=67][0,1,max=83][2,2,max=32][3,4,max=77][5,5,max=61][6,7,max=61][8,8,max=99][9,10,max=67][11,11,max=27][0,0,max=83][1,1,max=11][3,3,max=77][4,4,max=22][6,6,max=61][7,7,max=6][9,9,max=67][10,10,max=26]", start=5, end=7

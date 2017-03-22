@@ -1,0 +1,313 @@
+//First Submission
+Total Runtime: 2143 ms
+100% test cases passed.
+
+
+This one was a really tough problem and I figured it out a lot more easily this time because
+I've looked at how the solution works before.
+But basically you have to make 2 arrays.
+One stores the max sum of the array summing forward
+and the other one summing backward.
+
+When you have these max sums you get the max sum of the 2 continuous subarrays
+by find max sum of forward array one index before backward array.
+The one index is essentail because that is essentially what is breaking up
+the two subarrays and making sure they never touch and they're non contiguous.
+Because both arrays store according to total sum listed so far continuosly forward
+or backward of that array, making a 1 index seperation will make we get no overlap
+and we get the highest value in that element and before and the highest value of
+after that element.
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(ArrayList<Integer> A) {
+        if(A==null || A.size() == 0) return 0;
+        
+        int maxSum = Integer.MIN_VALUE, len = A.size(), sum = 0;
+        int[] forward = new int[len], backward = new int[len];
+        
+        forward[0] = sum = A.get(0);
+        for(int i = 1; i < len; i++){
+            sum = Math.max(sum + A.get(i), A.get(i));
+            forward[i] = Math.max(forward[i-1], sum);
+        }
+        
+        backward[len-1] = sum = A.get(len-1);
+        for(int i = 1; i < len; i++){
+            sum = Math.max(sum + A.get(len-1-i), A.get(len-1-i));
+            backward[len-1-i] = Math.max(backward[len-i], sum);
+        }
+        
+        for(int i = 0; i < len-1; i++){
+            if(maxSum < forward[i] + backward[i+1]){
+                maxSum = forward[i] + backward[i+1];
+            }
+        }
+        
+        return maxSum;
+    }
+}
+
+
+
+
+
+
+//Some impolementations
+
+
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(ArrayList<Integer> A) {
+        if(A==null || A.size() == 0) return 0;
+        if(A.size() == 1) return A.get(0);
+        
+        int len = A.size(), 
+            sumReset = A.get(0), sumInd = 0,
+            negReset = 0, negInd = 0,
+            //negReset = Math.max(0, A.get(0)), negInd = (A.get(0) < 0) ? 0 : -1,
+            max1EndInd = -1, max2EndInd = 0,
+            max1 = 0, max2 = A.get(0);
+        
+        //CASES: all negatives or just 2 negatives it breaks
+        for(int i = 1; i < len; i++){
+            
+            //Sum reseter indicator, always positive and always: sumInd to i range
+            if(sumReset <= 0 && sumReset + A.get(i) > 0) sumInd = i;
+            sumReset = Math.max(0, sumReset + A.get(i));
+            
+            // //Negative reseter indicator
+            negReset = (A.get(i) < 0) ? 0 : negReset + A.get(i);
+            negInd =  (A.get(i) < 0) ? i : negInd;
+            
+            if(negInd+1 > max1EndInd && Math.max(max1, max2) + negReset > max1 + max2){
+                max1 = Math.max(max1, max2);
+                max2 = negReset;
+                max1EndInd = max2EndInd;
+                max2EndInd = i;
+                //negReset = 0;
+            }
+            if(sumInd > max1EndInd && Math.max(max1, max2) + sumReset > max1 + max2){
+                max1 = Math.max(max1, max2);
+                max2 = sumReset;
+                max1EndInd = max2EndInd;
+                max2EndInd = i;
+            } 
+            else if(sumInd > max1EndInd && sumReset > max2){
+                max2 = sumReset;
+                max2EndInd = i;
+            }
+            
+            /**/
+        }
+        return max1 + max2;
+    }
+}
+
+//[1,3,-1,2,-1,2]
+//[1,-2]
+//[1,3,-1,2,-1,2,5,6,7,-4,9,1,-17,6,4,44]
+
+/*
+    Think about doing this recursively:
+    DPS on the array, elmt 1 by 1
+    function prototype look like this:
+        public int findMax(int[] A, int ind, int currSum, int maxSum, int low, int high,
+            int secondMax, int lowS, int highS){
+            if(A[i] > 0 && high + 1 == ind) findMax(A, ind+1, Math.max(currSum + A[i], 0), maxSum + A[i], low, high+1, secondMax, lowS, highS);
+            
+        }
+        
+        
+        
+    //Starter: maxContinuous(A, 1, A[0]);
+    public int maxContinuous(int[] A, int ind, int sum){
+        if(ind == A.length) return 0;
+        
+        return  Math.max( A[ind] + maxContinuous(A,ind+1,sum+A[ind]), 
+                            -sum + Math.max(maxContinuous(A,ind+1,0), 0)
+                        );
+    }
+    
+    //Starter: helper(A, 0, 0); //Precondition: A.length > 0
+    public int max = A[0];
+    public void helper(int[] A, int sum, int ind){
+        if(sum + A[ind] > max) max = sum;
+        sum = Math.max(0, sum + A[ind]);
+        helper(A, sum, ind+1);
+    }
+    
+    //Starter: helper(A, 0, 0, A[0]); //Precondition: A.length > 0
+    //Finds maximum subarray only I
+    public int helperSubarray(int[] A, int sum, int ind, int max){
+        if(ind == A.length) return max;
+        if(sum + A[ind] > max) max = sum;
+        sum = Math.max(0, sum + A[ind]);
+        return helperSubarray(A, sum, ind+1, max);
+    }
+    
+    //For 2 subarrays:
+    //Starter: helper(A, 0, 0, 0, A[0], A[1]); //Precondition: A.length > 1
+    public int helper2Subarrays(int[] A, int sum, int ind, int seperator, int max1, int max2, int sumInd){
+        if(ind == A.length) return max + max2;
+        if(sum + A[ind] > sum && sum > max1){
+            max2 = A[ind];
+            max1 = sum;
+            sperator = ind;
+        }
+        if(sum + A[ind] > max1){
+            max1 = sum + A[ind];
+            seperator = ind;
+        }
+        sum = Math.max(0, sum + A[ind]);
+        return helper2Subarrays(A, sum, ind+1, seperator, max1, max2);
+    }
+    
+    The idea: get first 2 vals to be maximums
+    go through array left to right
+    3 options:
+    1. continuous rise (max2 will always be last elmt n so will seperator)
+    2. 2 rises. Max 1 gets the first one, max2 gets the second one
+    3. A third rise happens, combine the first 2 if worth it and make max2 third rise
+    
+    for each rise give it to max2, and combine what max2 was previoiusly with max1
+    max1 and max2 should only change if a bigger item is found,
+    sum will be continuosly changing either lower, upper, or to 0.
+*/
+
+
+
+
+
+//First Submission
+
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer denotes the sum of max two non-overlapping subarrays
+     */
+    public int maxTwoSubArrays(ArrayList<Integer> A) {
+        if(A==null || A.size() == 0) return 0;
+        if(A.size() == 1) return A.get(0);
+        
+        int len = A.size(), 
+            sumReset = A.get(0), sumInd = 0,
+            negReset = Math.max(0, A.get(0)), negInd = (A.get(0) < 0) ? 0 : -1,
+            max1EndInd = -1, max2EndInd = 0,
+            max1 = 0, max2 = A.get(0);
+        
+        //CASES: all negatives or just 2 negatives it breaks
+        for(int i = 1; i < len; i++){
+            
+            //Sum reseter indicator
+            if(sumReset <= 0 && sumReset + A.get(i) > 0) sumInd = i;
+            sumReset = Math.max(0, sumReset + A.get(i));
+            
+            // //Negative reseter indicator
+            // negReset = (A.get(i) < 0) ? 0 : negReset + A.get(0);
+            // negInd =  (A.get(i) < 0) ? i : negInd;
+            
+            // if(negInd+1 > max2EndInd && Math.max(max1, max2) + negReset > max1 + max2){
+            //     max1 = Math.max(max1, max2);
+            //     max2 = negReset;
+            //     max1EndInd = max2EndInd;
+            //     max2EndInd = i;
+            // }
+            if(sumInd > max2EndInd && Math.max(max1, max2) + sumReset > max1 + max2){
+                max1 = Math.max(max1, max2);
+                max2 = sumReset;
+                max1EndInd = max2EndInd;
+                max2EndInd = i;
+            } 
+            else if(sumInd <= max2EndInd && sumReset > max2){
+                max2 = sumReset;
+                max2EndInd = i;
+            }
+            
+            /**/
+        }
+        return max1 + max2;
+    }
+}
+
+//[1,3,-1,2,-1,2]
+//[1,-2]
+//[1,3,-1,2,-1,2,5,6,7,-4,9,1,-17,6,4,44]
+
+/*
+    Think about doing this recursively:
+    DPS on the array, elmt 1 by 1
+    function prototype look like this:
+        public int findMax(int[] A, int ind, int currSum, int maxSum, int low, int high,
+            int secondMax, int lowS, int highS){
+            if(A[i] > 0 && high + 1 == ind) findMax(A, ind+1, Math.max(currSum + A[i], 0), maxSum + A[i], low, high+1, secondMax, lowS, highS);
+            
+        }
+        
+        
+        
+    //Starter: maxContinuous(A, 1, A[0]);
+    public int maxContinuous(int[] A, int ind, int sum){
+        if(ind == A.length) return 0;
+        
+        return  Math.max( A[ind] + maxContinuous(A,ind+1,sum+A[ind]), 
+                            -sum + Math.max(maxContinuous(A,ind+1,0), 0)
+                        );
+    }
+    
+    //Starter: helper(A, 0, 0); //Precondition: A.length > 0
+    public int max = A[0];
+    public void helper(int[] A, int sum, int ind){
+        if(sum + A[ind] > max) max = sum;
+        sum = Math.max(0, sum + A[ind]);
+        helper(A, sum, ind+1);
+    }
+    
+    //Starter: helper(A, 0, 0, A[0]); //Precondition: A.length > 0
+    //Finds maximum subarray only I
+    public int helperSubarray(int[] A, int sum, int ind, int max){
+        if(ind == A.length) return max;
+        if(sum + A[ind] > max) max = sum;
+        sum = Math.max(0, sum + A[ind]);
+        return helperSubarray(A, sum, ind+1, max);
+    }
+    
+    //For 2 subarrays:
+    //Starter: helper(A, 0, 0, 0, A[0], A[1]); //Precondition: A.length > 1
+    public int helper2Subarrays(int[] A, int sum, int ind, int seperator, int max1, int max2, int sumInd){
+        if(ind == A.length) return max + max2;
+        if(sum + A[ind] > sum && sum > max1){
+            max2 = A[ind];
+            max1 = sum;
+            sperator = ind;
+        }
+        if(sum + A[ind] > max1){
+            max1 = sum + A[ind];
+            seperator = ind;
+        }
+        sum = Math.max(0, sum + A[ind]);
+        return helper2Subarrays(A, sum, ind+1, seperator, max1, max2);
+    }
+    
+    The idea: get first 2 vals to be maximums
+    go through array left to right
+    3 options:
+    1. continuous rise (max2 will always be last elmt n so will seperator)
+    2. 2 rises. Max 1 gets the first one, max2 gets the second one
+    3. A third rise happens, combine the first 2 if worth it and make max2 third rise
+    
+    for each rise give it to max2, and combine what max2 was previoiusly with max1
+    max1 and max2 should only change if a bigger item is found,
+    sum will be continuosly changing either lower, upper, or to 0.
+*/

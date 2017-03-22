@@ -1,0 +1,73 @@
+//First Submission:
+Total Runtime: 2408 ms
+77% test cases passed.
+
+
+class Solution {
+    /*
+     * @param k : description of k
+     * @param nums : array of nums
+     * @return: description of return
+     */
+    public int kthLargestElement(int k, int[] nums) {
+        if(nums==null || nums.length==0 || k < 0 || k > nums.length) return 0;
+        
+        // quickSort(nums);
+        // return nums[nums.length - k];
+        shuffle(nums);
+        int start = 0, end = nums.length - 1, ind = 0;
+        Random rand = new Random();
+        
+        while(start < end){
+            int randNum = rand.nextInt(end - start + 1) + start;
+            ind = partition(nums, start, end, randNum);
+            
+            if(nums.length - k == ind) return nums[nums.length - k];
+            else if(nums.length - k < ind) end = ind - 1;
+            else start = ind + 1;
+        }
+        return 0;
+    }
+    
+    public void shuffle(int[] A){
+        Random rand = new Random();
+        int swap = 0, r = 0;
+        for(int i = 0; i < A.length; i++){
+            r = rand.nextInt(A.length);
+            swap = A[i];
+            A[i] = A[r];
+            A[r] = swap;
+        }
+    }
+    
+    public void quickSort(int[] A){
+        quickSort(A, 0, A.length - 1);
+    }
+    
+    public void quickSort(int[] A, int start, int end){
+        if(start >= end) return;
+        
+        Random rand = new Random();
+        int pivotInd = rand.nextInt(end - start + 1) + start;
+        
+        int seperation = partition(A, start, end, pivotInd);
+        quickSort(A, start, seperation - 1);
+        quickSort(A, seperation + 1, end);
+    }
+    
+    public int partition(int[] A, int start, int end, int pivotInd){
+        int pivot = A[pivotInd];
+        while(start < end){
+            while(start < end && A[start] < pivot) start++;
+            while(start < end && A[end] > pivot) end--;
+            
+            if(start < end){
+                int swap = A[start];
+                A[start] = A[end];
+                A[end] = swap;
+            }
+        }
+        return end;
+    }
+    
+};

@@ -1,0 +1,43 @@
+//First Try:
+Total Runtime: 3276 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param board: A list of lists of character
+     * @param word: A string
+     * @return: A boolean
+     */
+    public boolean exist(char[][] A, String word) {
+        if(A == null || A.length == 0 || word == null || word == "") return false;
+        boolean visited[][] = new boolean[A.length][A[0].length];
+        
+        for(int y = 0; y < A.length; y++){
+            for(int x = 0; x < A[0].length; x++){
+                if(A[y][x] == word.charAt(0)){
+                    visited[y][x] = true;
+                    if(helper(A, visited, word, y, x, 1)) return true;
+                    visited[y][x] = false;
+                }
+            }
+        }
+        return false;
+    }
+    
+    public boolean helper(char[][] A, boolean[][] V, String w, int y, int x, int index){
+        if(index == w.length()) return true;
+        int[][] loc = {{0,1},{0,-1},{1,0},{-1,0}};
+        for(int i = 0; i < 4; i++){
+            int nx = x + loc[i][0];
+            int ny = y + loc[i][1];
+            if(ny >= 0 && ny < A.length && nx >= 0 && nx < A[0].length && V[ny][nx]== false && A[ny][nx] == w.charAt(index)) {
+                V[ny][nx] = true;
+                if(helper(A,V,w, ny, nx, index+1)) return true;
+                V[ny][nx] = false;
+            }
+        }
+        return false;
+    }
+}
+
+//["ABCE","SFCS","ADEE"], "SEE"

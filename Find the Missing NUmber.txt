@@ -1,0 +1,30 @@
+//First Submission: 30 mins and successful :)
+Total Runtime: 1819 ms
+100% test cases passed.
+
+The trick here was making a place holder for Nth element and treating that as the missing number. From there on all is was cycling the numbers and putting them where they belong. This is O(n) with maximum runs being around 2n plus operations inside the loops.
+
+public class Solution {
+    /**    
+     * @param nums: an array of integers
+     * @return: an integer
+     */
+    public int findMissing(int[] nums) {
+        if(nums==null || nums.length == 0) return 0;
+        
+        int missingNum = 0, iN = 0, N = nums.length;
+        for(int i = 0; i < N; i++){
+            while(nums[i] != i){
+                if(nums[i] == N){
+                    iN = N;
+                    missingNum = i;
+                    break;
+                }
+                int val = nums[i];
+                nums[i] = nums[val];
+                nums[val] = val;
+            }
+        }
+        return (iN != N)? N : missingNum;
+    }
+}

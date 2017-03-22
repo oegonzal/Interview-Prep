@@ -1,0 +1,64 @@
+//Second Submission: Successful
+Total Runtime: 2366 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param s: a string
+     * @return: an integer 
+     */
+    public int lengthOfLongestSubstring(String s) {
+        if(s == null || s.length() == 0) return 0;
+        
+        int[] cI = new int[256];
+        Arrays.fill(cI, -1);
+        int start = 0, max = 1, i = 0;
+        
+        for(; i < s.length(); i++){
+            char c = s.charAt(i);
+            int prevInd = cI[c];
+            
+            if(i - start > max) max = i - start;
+            if(prevInd != -1 && start <= prevInd) start = prevInd + 1;
+            cI[c] = i;
+        }
+        return (max > i - start) ? max : i - start;
+    }
+}
+
+
+
+//First Submission: Failed a Case
+Total Runtime: 423 ms
+35% test cases passed.
+
+case failed:
+input: "aab"
+output: 1
+correct: 2
+
+public class Solution {
+    /**
+     * @param s: a string
+     * @return: an integer 
+     */
+    public int lengthOfLongestSubstring(String s) {
+        if(s == null || s.length() == 0) return 0;
+        
+        int[] cI = new int[256];
+        Arrays.fill(cI, -1);
+        int start = 0, max = 1;
+        
+        for(int i = 0; i < s.length(); i++){
+            char c = s.charAt(i);
+            int prevInd = cI[c];
+            
+            if(prevInd != -1 && start <= prevInd){  //repeat
+                if(i - start > max) max = i - start;
+                start = prevInd + 1;
+            }
+            cI[c] = i;
+        }
+        return max;
+    }
+}

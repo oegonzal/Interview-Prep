@@ -1,0 +1,111 @@
+//Elegant solution: I didnt do it
+
+
+Use union find when you want to divy stuff up into sets and want to make sure they dont overlap,
+make sure you do this for graph stuff.
+
+int x = find(nums, valx)
+int y = find(nums, valy)
+
+nums[x] = y
+
+find(int[] nums, int i)
+	if(nums[i] == -1){ //root
+		return i;
+	}
+	return find(nums, nums[i]);
+}
+public class Solution {
+    public boolean validTree(int n, int[][] edges) {
+        // initialize n isolated islands
+        int[] nums = new int[n];
+        Arrays.fill(nums, -1);
+        
+        // perform union find
+        for (int i = 0; i < edges.length; i++) {
+            int x = find(nums, edges[i][0]);
+            int y = find(nums, edges[i][1]);
+            
+            // if two vertices happen to be in the same set
+            // then there's a cycle
+            if (x == y) return false;
+            
+            // union
+            nums[x] = y;
+        }
+        
+        return edges.length == n - 1;
+    }
+    
+    int find(int nums[], int i) {
+        if (nums[i] == -1) return i;
+        return find(nums, nums[i]);
+    }
+}
+
+
+//First Code: 
+Total Runtime: 11884 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param n an integer
+     * @param edges a list of undirected edges
+     * @return true if it's a valid tree, or false
+     */
+    public boolean validTree(int n, int[][] edges) {
+        if(n < 0 || edges == null) return false;
+        
+        Node[] nodes = new Node[n];
+        for(int i = 0; i < n; i++) nodes[i] = new Node(i);
+        for(int[] e : edges ){
+            nodes[e[0]].edges.addLast(nodes[e[1]]);
+            nodes[e[1]].edges.addLast(nodes[e[0]]);
+        }
+        
+        LinkedList<Node> stack = new LinkedList<Node>();
+        nodes[0].visited = true;
+        for(int i = 0; i < n; i++){
+            Node nd = nodes[i];
+            stack.addLast(nd);
+            
+            while(stack.size() > 0){
+                Node orig_nd = stack.peekLast();
+                Node edge_nd = (orig_nd.edges.size() > 0)? orig_nd.edges.removeFirst() : null;
+
+                if(edge_nd != null){
+                    if(orig_nd.visited_by == edge_nd.val) continue;
+                    if(edge_nd.visited == true) return false;
+                    edge_nd.visited = true;
+                    edge_nd.visited_by = orig_nd.val;
+                    stack.addLast(edge_nd);
+                }
+                else stack.removeLast();
+            }
+        }
+        for(Node nd : nodes) { if(nd.visited == false) return false; }
+        return true;
+    }
+    
+    class Node{
+        public int val;
+        public boolean visited;
+        public int visited_by;
+        public LinkedList<Node> edges;
+        
+        public Node(int val){
+            this.val = val;
+            this.edges = new LinkedList<Node>();
+            this.visited = false;
+            this.visited_by = -1;
+        }
+    }
+}
+
+//5, [[0,1],[0,2],[0,3],[4,0]
+//5, [[0,1],[0,2],[0,3],[4,0],[3,4]]
+//1, []
+//2, []
+//3, [[0,1]]

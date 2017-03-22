@@ -1,0 +1,132 @@
+//Final Try:
+
+public int maxProfit(int[] A) {
+        
+        if(A==null || A.length < 2) return 0;
+        int firstBuy = Integer.MIN_VALUE, secondBuy = Integer.MIN_VALUE,
+            firstSell = 0, secondSell = 0;
+            
+        for(int currPrice : A){
+            if(firstBuy < -currPrice) firstBuy = -currPrice;
+            if(firstSell < firstBuy + currPrice) firstSell = currPrice + firstBuy;
+            if(secondBuy < firstSell - currPrice) secondBuy = firstSell - currPrice;
+            if(secondSell < secondBuy + currPrice) secondSell = secondBuy + currPrice;
+        }
+        return secondSell;
+    }
+
+
+
+
+//Third Try:
+Failed.
+
+class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] A) {
+        
+        if(A==null || A.length < 2) return 0;
+        int firstBuy = Integer.MIN_VALUE, secondBuy = Integer.MIN_VALUE,
+            firstSell = 0, secondSell = 0;
+            
+        for(int currPrice : A){
+            if(firstBuy < currPrice) firstBuy = currPrice;
+            if(firstSell > currPrice - firstBuy) firstSell = currPrice - firstBuy;
+            if(secondBuy < firstSell - currPrice) secondBuy = firstSell - currPrice;
+            if(secondSell > currPrice - secondBuy) secondSell = currPrice - secondBuy;
+        }
+        return secondSell;
+    }
+};
+
+
+
+//Second Try:
+Total Runtime: 2268 ms
+95% test cases passed.
+
+
+public int maxProfit(int[] A) {
+        
+        if(A==null || A.length < 2) return 0;
+        int left = 0, leftPivot = left, right = A.length - 1, rightPivot = right,
+            min = A[leftPivot], max = A[rightPivot],
+            lRise = 0, rDrop = 0; 
+        
+        while(leftPivot <= rightPivot && left < A.length){
+            if(A[left] < min) min = A[left];
+            if(A[left] - min > lRise && left<=rightPivot){
+                lRise = A[left] - min;
+                leftPivot = left;
+            }
+            left++;
+            
+            if(A[right] > max) max = A[right];
+            if(rDrop < max - A[right] && leftPivot <= right){
+                rDrop = max - A[right];
+                rightPivot = right;
+            }
+            right--;
+        }
+        
+        return lRise + rDrop;
+    }
+
+
+
+
+//First Try:
+Total Runtime: 1986 ms
+66% test cases passed.
+
+
+class Solution {
+    /**
+     * @param prices: Given an integer array
+     * @return: Maximum profit
+     */
+    public int maxProfit(int[] A) {
+        
+        if(A==null || A.length < 2) return 0;
+        int currMin = A[0],
+            smallerRise = 0, biggerRise = 0;
+        
+        for(int i = 1; i < A.length; i++){
+            if(A[i] < currMin) currMin = A[i]; //still fall, smaller curr min
+            else if(A[i] < A[i-1]) currMin = A[i]; //first fall, new curr min
+            else if(i == A.length - 1 || A[i] > A[i+1]){ //on the rise
+                int currRise = A[i] - currMin;
+                
+                if(currRise <= biggerRise && currRise > smallerRise) 
+                    smallerRise = currRise;
+                else if(currRise > biggerRise){
+                    smallerRise = biggerRise;
+                    biggerRise = currRise;
+                }
+                System.out.println(i + ". sR, bR, cR:" + smallerRise + " " + biggerRise+ " " + currRise);
+            }
+        }
+        return smallerRise + biggerRise;
+    }
+};
+
+/*
+    Buy -> Sell = 1 transaction
+    Get 1st highest rise,
+    then get second highest rise 
+    add them and return answer
+    
+    Ideas: 
+    1.  Sort prices with their corresponding index 
+        Then do a front and back traversal, if back has smaller index then found one peak
+        Keep doing until find second
+        Space: O(n) Time: O(nlogn)
+        
+    2. Space: O(1) Time: O(n)
+*/
+//[1,2,4,2,5,7,2,4,9,0] => 13
+//[1,2,4] => 3
+//[4,4,6,1,1,4,2,5] => 6

@@ -1,0 +1,35 @@
+//First Submission:
+Total Runtime: 1244 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     *@param inorder : A list of integers that inorder traversal of a tree
+     *@param postorder : A list of integers that postorder traversal of a tree
+     *@return : Root of a tree
+     */
+    public TreeNode buildTree(int[] inorder, int[] postorder) {
+        if(inorder == null || postorder == null || inorder.length == 0 || inorder.length != postorder.length) return null;
+        
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        int len = inorder.length;
+        for(int n = 0; n < len; n++) map.put(inorder[n], n);
+        TreeNode root = new TreeNode(postorder[len-1]), par = root, n = root;
+        
+        for(int i = len - 2; i >= 0; i--){
+            TreeNode newNode = new TreeNode(postorder[i]);
+            
+            n = root;
+            while(n != null){
+                par = n;
+                if(map.get(postorder[i]) < map.get(n.val)){ n = n.left; }
+                else { n = n.right; }
+            }
+            
+            if(map.get(postorder[i]) < map.get(par.val)){ par.left = newNode; }
+            else { par.right = newNode; }
+        }
+        return root;
+    }
+}

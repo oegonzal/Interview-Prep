@@ -1,0 +1,86 @@
+//First Submission: Successful and about 45mins
+Total Runtime: 1516 ms
+100% test cases passed.
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: a TreeNode, the root of the binary tree
+     * @return: nothing
+     */
+    public TreeNode flatten(TreeNode root) {
+        if(root==null) return null;
+        
+        TreeNode right = root.right;
+        root.right = root.left;
+        root.left = null;
+        
+        TreeNode lastInList = flatten(root.right);
+        if(lastInList==null) lastInList = root;
+        lastInList.right = right;
+        if(right!=null) lastInList = flatten(right);
+    
+        return (lastInList != null)? lastInList : root;
+    }
+
+}
+
+//Other great solution:
+
+//Used reverse preorder concept
+private TreeNode prev = null;
+
+public void flatten(TreeNode root) {
+    if (root == null)
+        return;
+    flatten(root.right);
+    flatten(root.left);
+    root.right = prev;
+    root.left = null;
+    prev = root;
+}
+
+//Used a stack in a nifty way
+public void flatten(TreeNode root) {
+        if (root == null) return;
+        Stack<TreeNode> stk = new Stack<TreeNode>();
+        stk.push(root);
+        while (!stk.isEmpty()){
+            TreeNode curr = stk.pop();
+            if (curr.right!=null)  
+                 stk.push(curr.right);
+            if (curr.left!=null)  
+                 stk.push(curr.left);
+            if (!stk.isEmpty()) 
+                 curr.right = stk.peek();
+            curr.left = null;  // dont forget this!! 
+        }
+    }
+
+
+//Broke it down to a subproblem
+public void flatten(TreeNode root) {
+    TreeNode cur = root;
+    TreeNode prev = null;
+    while(cur != null){
+        if(cur.left == null) cur = cur.right;
+        else {
+            prev = cur.left;
+            while(prev.right != null) prev = prev.right;
+            prev.right = cur.right;
+            cur.right = cur.left;
+            cur.left = null;
+        }
+    }
+}

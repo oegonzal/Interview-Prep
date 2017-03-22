@@ -1,0 +1,54 @@
+//Second Submission successful but 20/15 mins
+Total Runtime: 3490 ms
+100% test cases passed.
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    public int minDepth(TreeNode root) {
+        if(root==null) return 0;
+        return Math.min(1+minDepth(root.right), 1+minDepth(root.left));
+    }
+}
+
+
+//First Submiision: FAil 1/15
+
+
+Fails case where one child is null eg) {1, #, 2, 3}
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    public int minDepth(TreeNode root) {
+        if(root==null) return 0;
+        return Math.min(1+minDepth(root.right), 1+minDepth(root.left));
+    }
+}

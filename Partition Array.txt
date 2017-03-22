@@ -1,0 +1,30 @@
+//First Try: (Second Submission correct, first submission incorrect due to minor error overlooked with index out of bound)
+Total Runtime: 1735 ms
+100% test cases passed.
+
+public class Solution {
+	/** 
+     *@param nums: The integer array you should partition
+     *@param k: As description
+     *return: The index after partition
+     */
+    public int partitionArray(int[] nums, int k) {
+	    if(nums == null || nums.length == 0) return 0;
+	    
+	    int left = 0, right = nums.length - 1;
+	    
+	    while(left < right){
+	        while(right >= 0 && nums[right] >= k) right--;
+	        while(left < nums.length && nums[left] < k) left++;
+	        if(left < right){
+	            int temp = nums[left];
+	            nums[left] = nums[right];
+	            nums[right] = temp;
+	        } 
+	    }
+	    if(left > right) return left; 
+	    return nums.length;
+    }
+}
+
+//[1], 9

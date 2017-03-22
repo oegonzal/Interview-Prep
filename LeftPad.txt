@@ -1,0 +1,31 @@
+//First Submission Successful 4/15 mins
+Total Runtime: 6071 ms
+100% test cases passed.
+
+
+
+public class StringUtils {
+    /**
+     * @param originalStr the string we want to append to with spaces
+     * @param size the target length of the string
+     * @return a string
+     */
+    static public String leftPad(String originalStr, int size) {
+        if(originalStr.length() >= size) return originalStr;
+        return leftPad(originalStr, size, ' ');
+    }
+
+    /**
+     * @param originalStr the string we want to append to
+     * @param size the target length of the string
+     * @param padChar the character to pad to the left side of the string
+     * @return a string
+     */
+    static public String leftPad(String originalStr, int size, char padChar) {
+        if(originalStr.length() >= size) return originalStr;
+        
+        String newString = "";
+        for(int i = 0; i < size - originalStr.length(); i++) newString += padChar;
+        return newString + originalStr;
+    }//4min
+}

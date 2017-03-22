@@ -1,0 +1,28 @@
+//First Submission Successful finished in 12/15 mins
+Total Runtime: 1839 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: a array of integers
+     * @return : return an integer
+     */
+    public int removeDuplicates(int[] nums) {
+        if(nums==null || nums.length == 0) return 0;
+        
+        int[] copy = new int[nums.length];
+        copy[0] = nums[0];
+        
+        int dups = 0, cInd = 1;
+        for(int i = 1; i < nums.length - 1; i++){
+            if(nums[i] == nums[i-1] && nums[i] == nums[i+1]) dups++;
+            else copy[cInd++] = nums[i];
+        }
+        
+        copy[cInd] = nums[nums.length-1];
+        for(int i = 0; i <= cInd; i++) nums[i] = copy[i];
+        
+        return (nums.length - dups);
+    }
+}

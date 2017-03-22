@@ -1,0 +1,85 @@
+//Final Submission: (Third Code)
+Total Runtime: 1711 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] A) {
+        if(A == null || A.length < 3) return true;
+        
+        int n = A.length,
+            second = A[n-1],
+            first = second + A[n-2],
+            sum = first;
+        
+        for(int i = n-3; i >= 0; i--){
+            sum += A[i];
+            
+            int current = sum - Math.min(first, second);
+            second = first;
+            first = current;
+        }
+        
+        return first > (sum - first);
+    }
+}
+//[100,200,400,300,400,800,500,600,1200]
+
+
+//Second Code:
+Total Runtime: 549 ms
+57% test cases passed.
+
+public class Solution {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] A) {
+        if(A == null || A.length < 3) return true;
+        if(A.length == 3) return A[0] + A[1] > A[2];
+        
+        int n = A.length, sum = A[n-1]+A[n-2]+A[n-3], p1 = 0, p2 = 0, ft = 0, st = 0, curMax = 0;
+        for(int i = n - 4; i >= 0; i--){
+            sum+=A[i];
+            
+            p1 = A[i] + A[i+1] + ft; //ft: first_player turn hist. (max for first_player)
+            p2 = A[i] + A[i+3] + st; //st: second_player turn hist. (max for first_player)
+            curMax = Math.max(p1, p2);
+            
+            ft = st + A[i+3];
+            st = ft;
+        }
+        
+        return (curMax > sum/2);
+    }
+}
+
+
+
+
+//First Code:
+
+
+
+public class Solution {
+    /**
+     * @param values: an array of integers
+     * @return: a boolean which equals to true if the first player will win
+     */
+    public boolean firstWillWin(int[] A) {
+        if(A == null || A.length < 3) return true;
+        
+        int n = A.length, sum = A[n-1] + A[n-2] + A[n-3], currMax = sum - A[n-1];
+        for(int i = n - 4; i >= 0; i--){
+            sum+= A[i];
+            currMax = Math.max(currMax + A[i] - A[i+2]), currMax - A[i+1] + A[i+3]);
+        }
+        
+        return (currMax > sum/2);
+    }
+}

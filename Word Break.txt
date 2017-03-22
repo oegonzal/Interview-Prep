@@ -1,0 +1,124 @@
+//Fourth Submission: Passed
+Total Runtime: 3183 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param s: A string s
+     * @param dict: A dictionary of words dict
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        
+        for(int i = 1; i <= s.length(); i++){
+            for(String str: dict){
+                if(str.length() <= i){
+                    if(dp[i - str.length()]){
+                        if(s.substring(i-str.length(), i).equals(str)){
+                            dp[i] = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        
+        return dp[s.length()];
+    }
+}
+
+
+
+
+
+//Third Submission: Time Limit Exceeded
+//Total Runtime: 9229 ms
+//92% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param s: A string s
+     * @param dict: A dictionary of words dict
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for(int end = 1; end <= s.length(); end++){
+            for(int start = end - 1; start >= 0; start--){
+                if(dp[start] && dict.contains(s.substring(start, end))){
+                    dp[end] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
+//"", []
+
+
+
+//Second Submission: Time Limit Exceeded
+//Total Runtime: 8521 ms
+//88% test cases passed.
+
+public class Solution {
+     * @param s: A string s
+    /**
+     * @param dict: A dictionary of words dict
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for(int end = 1; end <= s.length(); end++){
+            for(int start = 0; start < end; start++){
+                String word = s.substring(start, end);
+                if(dp[start] && dict.contains(word)){
+                    dp[end] = true;
+                    break;
+                }
+            }
+        }
+        return dp[s.length()];
+    }
+}
+
+
+
+
+
+//First Submission: Time limit Exceeded
+//Total Runtime: 9182 ms
+//88% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param s: A string s
+     * @param dict: A dictionary of words dict
+     */
+    public boolean wordBreak(String s, Set<String> dict) {
+        if(s.length() == 0) return true;
+        boolean[] dp = new boolean[s.length() + 1];
+        dp[0] = true;
+        
+        for(int start = 0; start < s.length(); start++){
+            for(int end = start + 1; end <= s.length(); end++){
+                String word = s.substring(start, end);
+                if(dp[start] && dict.contains(word)){
+                    dp[end] = true;
+                    if(end == s.length()) return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+//"", []

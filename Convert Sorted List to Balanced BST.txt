@@ -1,0 +1,137 @@
+//First Submission:
+Total Runtime: 4894 ms
+100% test cases passed.
+
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @return: a tree node
+     */
+    public TreeNode sortedListToBST(ListNode head) {  
+        if(head == null) return null;
+        
+        ArrayList<Integer> array = new ArrayList<Integer>();
+        while(head != null){
+            array.add(head.val);
+            head = head.next;
+        }
+        
+        return recGetNode(array, 0, array.size()-1);
+    }
+    
+    public TreeNode recGetNode(ArrayList<Integer> A, int start, int end){
+        if(start > end) return null;
+        
+        int mid = (start + end)/2;
+        TreeNode node = new TreeNode(A.get(mid));
+        node.left = recGetNode(A, start, mid-1);
+        node.right = recGetNode(A, mid+1, end);
+        
+        return node;
+    }
+}
+
+
+//null
+//1->2->3->null
+
+
+
+
+
+
+//First Attempt (No check and No submission)
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @return: a tree node
+     */
+    public TreeNode sortedListToBST(ListNode head) {  
+        if(head == null) return head;
+        
+        ArrayList<Integer> array = new ArrayList<Integer>();
+        TreeNode root = null;
+        recursion(head, root);
+        return root;
+    }
+    
+    public int recursion(ArrayList<Integer> A, ListNode list, TreeNode root){
+        TreeNode r = null;
+        int mid = 0;
+        
+        if(list == null){
+            mid = A.size()/2;
+            r = new TreeNode(A[mid]);
+            A.remove(A[mid]);
+            root = r;
+            return mid;
+        }
+        
+        mid = recursion(A, list.next, root);
+        
+        if(mid < list.size()){
+            r = new TreeNode(A[mid]);
+            A.remove(A[mid]);
+        }
+        else{
+            r = new TreeNode(A[A.size() - 1]);
+            A.remove(A.size() - 1);
+        }
+        
+        TreeNode curr = root, prev = root;
+        while(curr != null){
+            prev = curr;
+            if(r.val < curr.val) curr = curr.left;
+            else curr = curr.right;
+        }
+        
+        if(r.val < prev.val) prev.left = r;
+        else prev.right = r;
+        
+        return mid;
+    }
+}

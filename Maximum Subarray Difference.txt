@@ -1,0 +1,49 @@
+//First Submission (with help)
+Total Runtime: 2339 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: An integer indicate the value of maximum difference between two
+     *          Subarrays
+     */
+    public int maxDiffSubArrays(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        
+        int n = nums.length;
+            
+        int[] leftMin = new int[n], leftMax=new int[n], rightMin=new int[n], rightMax=new int[n];
+                
+        int lMin = nums[0], lMax = nums[0], rMin = nums[n-1], rMax = nums[n-1];
+        leftMin[0] = leftMax[0] = nums[0];
+        rightMin[n-1] = rightMax[n-1] = nums[n-1];
+        
+        for(int i = 1; i < n; i++){
+            lMin = Math.min(nums[i], lMin + nums[i]);
+            leftMin[i] = Math.min(leftMin[i-1], lMin);
+            
+            lMax = Math.max(nums[i], lMax + nums[i]);
+            leftMax[i] = Math.max(leftMax[i-1], lMax);
+            
+            rMin = Math.min(nums[n-1-i], rMin + nums[n-1-i]);
+            rightMin[n-1-i] = Math.min(rightMin[n-i], rMin);
+            
+            rMax = Math.max(nums[n-1-i], rMax + nums[n-1-i]);
+            rightMax[n-1-i] = Math.max(rightMax[n-i], rMax);
+        }
+        
+        int biggestDiff = 0;
+        for(int i = 0; i < n - 1; i++){
+            biggestDiff = Math.max(biggestDiff, Math.max( Math.abs(leftMin[i] - rightMax[i + 1]), Math.abs(leftMax[i] - rightMin[i + 1])));
+        }
+        
+        return biggestDiff;
+    }
+}
+
+/*
+    Find biggest subarray for left side,
+    find smallest for right side (most negative)
+*/

@@ -1,0 +1,54 @@
+//First Try:
+Total Runtime: 2505 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @return: Void
+     */
+    public void rotate(int[][] A) {
+        int nS = 0, nE = A.length -1;
+        while(nS < nE){
+            int x = nE;
+            while(x-- > nS){
+                int temp = A[nS][nS + nE - x];
+                A[nS][nS + nE - x] = A[x][nS];
+                A[x][nS] = A[nE][x];
+                A[nE][x] = A[nS + nE - x][nE];
+                A[nS + nE - x][nE] = temp;
+            }
+            nS++; nE--;
+        }
+    }
+}
+
+
+
+
+public class Solution {
+    /**
+     * @param matrix: A list of lists of integers
+     * @return: Void
+     */
+    public void rotate(int[][] A) {
+        int n = A.length - 1, curr = n + 1;
+        while(curr-- > 0){
+            int x = curr+1;
+            while(x-- > 0){
+                int temp = A[n - curr][n - x];
+                A[n - curr][n - x] = A[n - x][n - curr];
+                A[n - x][n - curr] = A[n][x];
+                A[n][x] = A[n-x][x];
+                A[n-x][x] = swap;
+            }
+            n--; curr--;
+        }
+    }
+}
+
+// A[nS][nS + nE - x] = A[nS + nE - x][nE];
+// A[nS + nE - x][nE] = A[n][x];
+// A[n][x] = A[n-x][x];
+// A[n-x][x] = swap;

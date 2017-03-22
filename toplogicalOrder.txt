@@ -1,0 +1,223 @@
+//100% test cases passed. Total Runtime: 2549 ms
+//Fourth Time
+/**
+ * Definition for Directed graph.
+ * class DirectedGraphNode {
+ *     int label;
+ *     ArrayList<DirectedGraphNode> neighbors;
+ *     DirectedGraphNode(int x) { label = x; neighbors = new ArrayList<DirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */    
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+
+        int length = graph.size();
+        int[] indegree = new int[length];
+        for(int x = 0; x < length; x++){
+            DirectedGraphNode curr = graph.get(x);
+            for(int y = 0; y < curr.neighbors.size(); y++){
+                indegree[curr.neighbors.get(y).label]++;
+            }
+        }
+        
+        ArrayList<DirectedGraphNode> list = new ArrayList<DirectedGraphNode>();
+        LinkedList<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        
+        for(int i = 0; i < length; i++){
+            if(indegree[i] == 0){
+                queue.add(graph.get(i));
+            }
+        }
+        
+        while(queue.size() != 0){
+            DirectedGraphNode curr = queue.remove();
+            list.add(curr);
+            
+            for(int j = 0; j < curr.neighbors.size(); j++){
+                if(--indegree[curr.neighbors.get(j).label] == 0){
+                    queue.add(curr.neighbors.get(j));
+                }
+            }
+        }
+
+        return list;
+    }
+}
+
+
+
+
+//third try: 70% done 3297 ms:
+public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        //System.out.println("");
+        //printGraph(graph);
+        
+        int length = graph.size();
+        boolean[] visited = new boolean[length];
+        int[] indegree = new int[length];
+        for(int x = 0; x < length; x++){
+            DirectedGraphNode curr = graph.get(x);
+            for(int y = 0; y < curr.neighbors.size(); y++){
+                indegree[curr.neighbors.get(y).label]++;
+            }
+        }
+        
+        ArrayList<DirectedGraphNode> list = new ArrayList<DirectedGraphNode>();
+        LinkedList<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        
+        for(int i = 0; i < length; i++){
+            queue.add(graph.get(i));
+            
+            while(queue.size() != 0){
+                DirectedGraphNode curr = queue.remove();
+                
+                if(!visited[curr.label]){
+                    if(indegree[curr.label] == 0){
+                        visited[curr.label] = true;
+                        list.add(curr);
+                        for(int j = 0; j < curr.neighbors.size(); j++){
+                            indegree[curr.neighbors.get(j).label]--;
+                        }
+                    }
+                    for(int j = 0; j < curr.neighbors.size(); j++){
+                        if(!visited[curr.neighbors.get(j).label]) queue.add(curr.neighbors.get(j));
+                    }
+                }
+            }
+            
+        }
+        
+        //printResult(list);
+        return list;
+    }
+
+
+//second try:
+public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        //System.out.println("");
+        //printGraph(graph);
+        
+        int length = graph.size();
+        boolean[] visited = new boolean[length];
+        ArrayList<DirectedGraphNode> list = new ArrayList<DirectedGraphNode>();
+        LinkedList<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        
+        for(int i = 0; i < length; i++){
+            queue.add(graph.get(i));
+            
+            while(queue.size() != 0){
+                DirectedGraphNode curr = queue.remove();
+                if(visited[curr.label]) continue;
+                
+                int numNeigh = curr.neighbors.size();
+                int neighNotVisited = 0;
+                
+                for(int j = 0; j < numNeigh; j++){
+                    DirectedGraphNode currNeigh = curr.neighbors.get(j);
+                    
+                    if(!visited[currNeigh.label]) queue.add(currNeigh);
+                    else neighNotVisited++;
+                }
+                
+                if(neighNotVisited == numNeigh || numNeigh == 0){
+                    list.add(0, curr);
+                    visited[curr.label] = true;
+                } 
+            }
+            
+        }
+        
+        for(int i = 0; i < length; i++){
+            if(!visited[i]) list.add(0, graph.get(i));
+        }
+        
+        //printResult(list);
+        return list;
+    }
+
+
+
+//first try:
+/**
+ * Definition for Directed graph.
+ * class DirectedGraphNode {
+ *     int label;
+ *     ArrayList<DirectedGraphNode> neighbors;
+ *     DirectedGraphNode(int x) { label = x; neighbors = new ArrayList<DirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param graph: A list of Directed graph node
+     * @return: Any topological order for the given graph.
+     */    
+    public ArrayList<DirectedGraphNode> topSort(ArrayList<DirectedGraphNode> graph) {
+        //System.out.println("");
+        //printGraph(graph);
+        
+        int length = graph.size();
+        boolean[] visited = new boolean[length];
+        ArrayList<DirectedGraphNode> list = new ArrayList<DirectedGraphNode>();
+        LinkedList<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        
+        for(int i = 0; i < length; i++){
+            queue.add(graph.get(i));
+            
+            while(queue.size() != 0){
+                DirectedGraphNode curr = queue.remove();
+                
+                if(!visited[curr.label]){
+                    if(curr.neighbors.size() == 0) list.add(curr);
+                    for(int j = 0; j < curr.neighbors.size(); j++){
+                        queue.add(curr.neighbors.get(j));
+                    }
+                }
+                
+                visited[curr.label] = true;
+            }
+            
+        }
+        
+        printResult(list);
+        return list;
+    }
+    
+    public void printGraph(ArrayList<DirectedGraphNode> graph){
+        
+        for(DirectedGraphNode n : graph){
+            System.out.println("label: " + n.label);
+            
+            System.out.print("edges: ");
+            for(DirectedGraphNode edge : n.neighbors){
+                System.out.print(edge.label + ", ");
+            }
+            System.out.println();
+        }
+    }
+    
+    public void printResult(ArrayList<DirectedGraphNode> graph){
+        
+        System.out.print("label: ");
+        for(DirectedGraphNode n : graph){
+            System.out.print( n.label + ", ");
+        }
+        System.out.println();
+    }
+}
+
+    
+
+
+/*
+    I have to strt from no indegree vertex
+    loop through all vertex,
+    Run DPS on each
+    mark visited ones, as visited
+    if terminal place them in a stack
+
+
+*/

@@ -1,0 +1,138 @@
+//Final submission (with help)
+Total Runtime: 4019 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param s a string
+     * @return an integer
+     */
+    public int minCut(String s) {
+        if(s == null || s.length() == 0) return 0;
+        
+        int len = s.length();
+        int[] dp = new int[len+1];
+        boolean[][] isPalin = new boolean[len][len];
+        
+        dp[0] = -1;
+        for(int end = 0; end < len; end++){
+            dp[end+1] = Integer.MAX_VALUE;
+            for(int start = 0; start <= end; start++){
+                if(s.charAt(start) == s.charAt(end) && ((start + 1 > end - 2) || isPalin[start + 1][end - 1])){
+                    isPalin[start][end] = true;
+                    dp[end+1] = Math.min(dp[end+1], 1 + dp[start]);
+                }
+            }
+        }
+        return dp[len];
+    }
+};
+
+
+
+
+
+
+
+My mistake here was that I didnt see that the palindromes needed to be stored in order to make them available to check later.
+
+
+
+
+///Third Try:
+
+
+public int rect(String s1, int i1, int i2){
+        if(i2 == s1.length()) return 0;
+        
+        int a = s1.length() - 1, b = a, minCuts = a;
+        if(s1.charAt(i1) == s1.charAt(i2)){
+            if(i1 != 0) a = rect(s1, i1-1, i2+1);
+            b = rect(s1, i1, i2+1);
+            
+            minCuts = Math.min(a, b);
+        }
+        else minCuts = 1 + rect(s1, i2, i2);
+        
+        return minCuts;
+    }
+
+
+
+//Second Try:
+
+
+
+public class Solution {
+    /**
+     * @param s a string
+     * @return an integer
+     */
+    public int minCut(String s) {
+        if(s == null || isPalindrome(s)) return 0;
+        
+        int[][] dp = new int[s.length()][s.length()];
+        
+        for(int y = 0; y < s.length(); y++){
+            for(int x = y; x >= 0; x--){
+                dp[y][x] = (isPalindrome(s.substring(x,y+1))) ? 0 : 1 + Math.min(dp[y-1][x], dp[y][x+1]);
+            }
+        }
+        
+        return dp[s.length() - 1][0];
+    }
+    
+    public boolean isPalindrome(String s){
+        for(int i = 0; i < s.length()/2; i++){
+            if(s.charAt(i) != s.charAt(s.length() - 1 - i)) return false;
+        }
+        return true;
+    }
+};
+
+
+
+
+//First Try: (Time Limit Exceeded)
+Total Runtime: 5269 ms
+74% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param s a string
+     * @return an integer
+     */
+    public int minCut(String s) {
+        if(s == null || isPalindrome(s)) return 0;
+        
+        int min = s.length() - 1;
+        for(int i = 1; i < s.length(); i++){
+            int cuts = minCut(s.substring(0,i)) + minCut(s.substring(i,s.length()));
+            if(min > cuts) min = 1 + cuts;
+        }
+        
+        return min;
+    }
+    
+    public boolean isPalindrome(String s){
+        for(int i = 0; i < s.length()/2; i++){
+            if(s.charAt(i) != s.charAt(s.length() - 1 - i)) return false;
+        }
+        return true;
+    }
+};
+
+/*
+    Most number of cuts is the number of chars in the string - 1.
+
+    How will i fiure out the minimum amount of cuts to make everything
+    a palindrome?
+    
+    First of all the whole string itself can be a palindrome
+    
+    Secondly if it isnt we have to start considering all other possibilies beyond that.
+    
+    Then, we start cutting down the bigger piece and return the lowest of the cuts to keep that string valid (all palindrome w/ cuts).
+*/

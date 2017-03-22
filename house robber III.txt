@@ -1,0 +1,33 @@
+House Robber III
+
+public int recurse(TreeNode node, boolean levelDown, int sum) {
+        
+        int left = 0, right = 0, leftChildSkip = 0, rightChildSkip = 0, leftTotal = 0, rightTotal = 0, leafVal = 0;
+        
+        if( levelDown ) {
+            //skipped value
+            if(node.left != null) left = recurse(node.left, false, sum );
+            if(node.right != null) right = recurse(node.right, false, sum );
+            
+            return left + right;
+        }
+        else {
+            //Skip child if we include parent value
+            if(node.left != null) {
+                left = recurse(node.left, false, sum );
+                leftChildSkip = recurse(node.left, true, sum + node.val);
+                leftTotal =  (left > leftChildSkip) ? left : leftChildSkip;
+            }
+            
+            if(node.right != null) {
+                right = recurse(node.right, false, sum );
+                rightChildSkip = recurse(node.right, true, sum + node.val);
+                rightTotal = (right > rightChildSkip) ? right : rightChildSkip;
+            }
+            
+            //if(node.left == null && node.right == null) leafVal = node.val;
+            
+            //In this case, leaf node will not have included parent
+            return  sum + leafVal + leftTotal + rightTotal;
+        }
+	}

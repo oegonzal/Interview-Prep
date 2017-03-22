@@ -1,0 +1,31 @@
+//First Try:
+Total Runtime: 1977 ms
+100% test cases passed.
+
+public class Solution {
+    /** 
+     *@param chars: The letter array you should sort by Case
+     *@return: void
+     */
+    public void sortLetters(char[] chars) {
+
+        int upperInd = Integer.MAX_VALUE;
+        for(int i = 0; i < chars.length; i++){
+            int cVal = (int)chars[i];
+            if(cVal >= 97 && cVal <= 122 && i > upperInd){ //lowercase
+                char c = chars[upperInd];
+                chars[upperInd] = chars[i];
+                chars[i] = c;
+
+                while(cVal >= 97 && cVal <= 122){
+                    upperInd++;
+                    if(upperInd == chars.length) break;
+                    cVal = chars[upperInd];
+                }
+            }
+            else if(cVal >= 65 && cVal <= 90 && upperInd > i){ //uppercase
+                upperInd = i;
+            }
+        }
+    }
+}

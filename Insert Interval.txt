@@ -1,0 +1,216 @@
+Third Submission and space optimized! O(n) time and O(1) space
+
+Total Runtime: 2643 ms
+100% test cases passed.
+
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+
+class Solution {
+    /**
+     * Insert nI into ints.
+     * @param ints: Sorted interval list.
+     * @param nI: A new interval.
+     * @return: A new sorted interval list.
+     */
+    public ArrayList<Interval> insert(ArrayList<Interval> ints, Interval nI) {
+        if(ints == null || nI == null || nI.start > nI.end) return ints;
+        
+        int i = 0;
+        for(; i < ints.size(); i++){
+            Interval curInt = ints.get(i);
+            if(areOverlapped(nI, curInt)){
+                nI.start = Math.min(nI.start, curInt.start);
+                nI.end = Math.max(nI.end, curInt.end);
+                ints.remove(i--);
+            }
+        }
+        for(i = 0; i < ints.size(); i++){
+            Interval curInt = ints.get(i);
+            if(nI.end < curInt.start){
+                ints.add(i, nI);
+                break;
+            }
+        }
+        if(i==ints.size()) ints.add(i, nI);
+        
+        return ints;
+    }
+    public boolean areOverlapped(Interval a, Interval b){
+        if( b.start <= a.end && b.end >= a.end   || 
+            b.start >= a.start && b.end <= a.end || 
+            b.end >= a.start && b.end <= a.end   || 
+            b.start <= a.start && b.end >= a.end
+          ) return true;
+        return false;
+    }
+}
+
+
+
+
+Second Submission Successful 120/15
+
+
+Total Runtime: 3861 ms
+100% test cases passed.
+
+Hard problem if you don't think about it carefully.
+Can get really messy and buggy
+
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+
+class Solution {
+    /**
+     * Insert nI into ints.
+     * @param ints: Sorted interval list.
+     * @param nI: A new interval.
+     * @return: A new sorted interval list.
+     */
+    public ArrayList<Interval> insert(ArrayList<Interval> ints, Interval nI) {
+        if(ints == null || nI == null || nI.start > nI.end) return ints;
+        
+        ArrayList<Interval> list = new ArrayList<Interval>();
+        int i = 0;
+        
+        for(; i < ints.size(); i++){
+            Interval curInt = ints.get(i);
+            if(areOverlapped(nI, curInt)){
+                nI.start = Math.min(nI.start, curInt.start);
+                nI.end = Math.max(nI.end, curInt.end);
+            }
+            else list.add(list.size(), curInt);
+        }
+        for(i = 0; i < list.size(); i++){
+            Interval curInt = list.get(i);
+            if(nI.end < curInt.start){
+                list.add(i, nI);
+                break;
+            }
+        }
+        if(i==list.size()) list.add(i, nI);
+        
+        return list;
+    }
+    public boolean areOverlapped(Interval a, Interval b){
+        if( b.start <= a.end && b.end >= a.end   || 
+            b.start >= a.start && b.end <= a.end || 
+            b.end >= a.start && b.end <= a.end   || 
+            b.start <= a.start && b.end >= a.end
+          ) return true;
+        return false;
+    }
+}
+
+//[], [5,7]
+//[[1,5]], [2,3]
+//[[1,5]], [5,7]
+//[[1,5]], [6,8]
+//[[1,5],[6,8]], [2,7]
+
+
+
+
+//First try:
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+
+class Solution {
+    /**
+     * Insert nI into ints.
+     * @param ints: Sorted interval list.
+     * @param nI: A new interval.
+     * @return: A new sorted interval list.
+     */
+    public ArrayList<Interval> insert(ArrayList<Interval> ints, Interval nI) {
+        if(ints == null || nI == null || nI.start > nI.end) return ints;
+        if(ints.size() == 0){
+            ints.add(0, nI);
+            return ints;
+        }
+        
+        //TODO: what if interval is a point, start and end equal?
+        
+        int start = -1, end = -1;
+        Interval insertInt = new Interval(start, end);
+        
+        for(int i = 0; i < ints.size(); i++){
+            Interval curInt = ints.get(i);
+            if(start > -1 && end > -1) break;
+            if(start == -1 && 
+                (nI.start < curInt.start || isWithin(curInt, nI.start))){
+                insertInt.start = start = Math.min(curInt.start, nI.start);
+            }
+            if(end == -1 && 
+                (nI.end > curInt.end || isWithin(curInt, nI.end))){
+                System.out.println(curInt.end + " " + nI.end);
+                insertInt.end = end = Math.max(curInt.end, nI.end);
+            }
+        }
+        if(start == -1 || end == -1) insertInt = nI;
+        
+        for(int i = 0; i < ints.size();){
+            Interval curInt = ints.get(i);
+            if(isWithin(insertInt, curInt.start) || isWithin(insertInt, curInt.end)){
+                ints.remove(i);
+            }
+            else i++;
+        }
+        System.out.println(start + "," + end);
+        for(int i = 0; i < ints.size();i++){
+            Interval curInt = ints.get(i);
+            if(end < curInt.start){
+                ints.add(i, insertInt);
+                break;
+            }
+            if(i == ints.size()-1){
+                ints.add(ints.size(), insertInt);
+                break;
+            }
+        }
+        if(ints.size() == 0) ints.add(ints.size(), insertInt);
+        return ints;
+    }
+    
+    public boolean isWithin(Interval in, int val){
+        if(val >= in.start && val <= in.end) return true;
+        return false;
+    }
+    
+    public boolean overlap(Interval a, Interval b){
+        if( b.start <= a.end && b.end >= a.end   || 
+            b.start >= a.start && b.end <= a.end || 
+            b.end >= a.start && b.end <= a.end   || 
+            b.start <= a.start && b.end >= a.end
+          ) return true;
+        return false;
+    }
+}
+
+//[], [5,7]
+//[[1,5]], [2,3]
+//[[1,5]], [5,7]
+//[[1,5]], [6,8]
+//[[1,5],[6,8]], [2,7]

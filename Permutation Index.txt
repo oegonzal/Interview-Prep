@@ -1,0 +1,60 @@
+//Second: Successful, took me a while more than an 1 hour. I was trying to figure out how to do it in linear time
+
+public class Solution {
+    /**
+     * @param A an integer array
+     * @return a long integer
+     */
+    public long permutationIndex(int[] A) {
+        if(A==null || A.length == 0) return 0;
+        long index = 1, len = A.length, right = len - 1, switches = 0;
+        
+        for(int i=0; i < len; i++){
+            int count = 0;
+            for(int j = i + 1; j < len; j++){
+                if(A[i] > A[j]) count++;
+            }
+            index += (count*factorial(len - 1 - i));
+        }
+        
+        // while(right > 0){
+        //     while(right>0 && A[right-1]<A[right--]);
+        //     switches++;
+        //     index += (switches*factorial(len - right - 1));
+        // }
+        return index;
+    }
+    public long factorial(long n){
+        long a = 1;
+        for(int i = 1; i <= n; i++) a *= i;
+        return a;
+    }
+}
+
+
+
+//First Implementation
+
+
+public class Solution {
+    /**
+     * @param A an integer array
+     * @return a long integer
+     */
+    public long permutationIndex(int[] A) {
+        if(A==null || A.length == 0) return 0;
+        int index = 0, len = A.length, right = len - 1;
+        
+        while(right > 0){
+            if(right>0 && A[right-1]>A[right]){
+                index += factorial(len - right--);
+            }
+        }
+        return index;
+    }
+    public long factorial(long n){
+        int a = 1;
+        for(int i = 1; i <= n; i++) a *= i;
+        return a;
+    }
+}

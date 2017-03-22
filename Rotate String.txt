@@ -1,0 +1,44 @@
+//First Submission
+Total Runtime: 835 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param str: an array of char
+     * @param offset: an integer
+     * @return: nothing
+     */
+    public void rotateString(char[] str, int offset) {
+        if(str == null || str.length == 0 || offset % str.length == 0) return;
+        char tempChar = str[0];
+        int orig = offset % str.length, prevInd = 0, newInd = offset % str.length;
+        
+        for(int i = 0; i < str.length; i++){
+            char c = str[newInd];
+            
+            str[newInd] = tempChar;
+            prevInd = newInd;
+            newInd = (newInd + offset) % str.length;
+            tempChar = c;
+            
+            if(orig == newInd) {
+                prevInd = (prevInd + 1) % str.length;
+                tempChar = str[prevInd];
+                newInd = (prevInd + offset) % str.length;
+                orig = newInd;
+            }
+        }
+    }
+}
+
+//"abccba", 3
+//"abcdefg", 4
+// x o o o x o o o
+
+/*
+    Need to switch out n elements so loop needs to run n times
+    
+    How can we tell when we hit an original element already visited?
+    track first element with a tracker, if hit again in future increment it.
+
+*/

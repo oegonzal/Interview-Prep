@@ -1,0 +1,76 @@
+
+Can only traverse up, down, left, and right (no diagnols)
+
+nums = 
+	[
+		[3,4,5],
+		[3,2,6]
+		[2,2,1]
+	]
+
+	longest increasing path: [1,2,6,9]
+
+
+DFS + Dynamic Programming Problem:
+
+use a 2-D matrix dp[i][j] to store the length of the longest inreasing path starting at matrix[i][j]
+transferring function is: dp[i][j] = max(dp[i][j], dp[x][y] + 1), where dp[x][y] is its neighbor with matrix [x][y] is its neightbor with matrix[x][y] > matrix[i][j]
+
+
+to solve this problem we need a:
+
+
+public class Solution {
+	int[][] dp;
+	int[][] directions = new int[][]{{-1, 0}, {1, 0}, {0,1}, {0, 1}};
+	int m;
+	int n;
+	int[][] mx;
+
+	public int longestIncreasingPath(int[][] matrix){
+		if(matrix==null || matrix.length == 0 || matrix[0].length == 0) return 0;
+		m = matrix.length;
+		n = matrix[0].length;
+		dp = new int[m][n];
+		mx = matrix;
+		int result = 0;
+		for (int i = 0; i < m; i++){
+			for(int j = 0; j < n; j++){
+				dp[i][j] = Integer.MIN_VALUE;
+			}
+		}
+
+		//Run DPS on all current elements in the matrix
+		for (int i = 0; i < m; i++){
+			for(int j = 0; j < n; j++){
+				result = Math.max(result, DPS(i, j));
+			}
+		}
+
+		return result;
+
+	}
+
+	public int DFS(int i, int j){
+		if(dp[i][j] != Integer.MIN_VALUE) return dp[i][j]; //This location has already been processed
+		dp[i][j] = 1; //initial value of anything
+
+		for(int [] dir : directions){
+			int x = i + dir[0]; //getting new x and y coordinates according to direction
+			int y = j + dir[1];
+
+			if(x < 0 || y < 0 || x >= m || y >= n || mx[x][y] <= mx[i][j]) continue; //point cannot be outta scope
+																					//or if pt is nonincreasing on true matrix dont consider it
+			dp[i][j] = Math.max(dp[i][j], DFS(x, y) + 1); //This will make the time complexity really high since
+														//it checks the array n*m * ...
+		}
+
+		return dp[i][j];
+	}
+
+}
+
+
+
+
+

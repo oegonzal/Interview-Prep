@@ -1,0 +1,105 @@
+//Second try Total Runtime: 2586 ms:
+public class Solution {
+    public String minWindow(String source, String target) {
+        HashMap<Character, Integer> hash = new HashMap<Character, Integer>();
+        for(int i = 0; i < target.length(); i++){
+            char c = target.charAt(i);
+            if(hash.containsKey(c)){
+                hash.put(c, hash.get(c) + 1);
+            }
+            else{
+                hash.put(c, 1);
+            } 
+        }
+        
+        String answer = "";
+        int start = 0, end = 0, count = 0;
+        int min = Integer.MAX_VALUE;
+        
+        while(end < source.length()){
+            char c = source.charAt(end);
+            if(hash.containsKey(c)){
+                hash.put(c, hash.get(c) - 1);
+                if(hash.get(c) >= 0) count++;
+            }
+            
+            if(count == target.length()){
+                c = source.charAt(start);
+                while(!hash.containsKey(c) || hash.get(c) < 0){
+                    if(hash.containsKey(c) && hash.get(c) < 0){
+                        hash.put(c, hash.get(c) + 1);
+                    }
+                    start++;
+                    c = source.charAt(start);
+                }
+                
+                if(end - start + 1 < min){
+                    min = end - start + 1;
+                    answer = source.substring(start, end + 1);
+                }
+            }
+            end++;
+        }
+        return answer;
+    }
+}
+
+//First try
+public class Solution {
+    /**
+     * @param source: A string
+     * @param target: A string
+     * @return: A string denote the minimum window
+     *          Return "" if there is no such a string
+     */
+     
+    class Node{
+        int size;
+        LinkedList<Integer> list;
+        
+        public Node(){
+            this.size = 1;
+            this.list = new LinkedList<Integer>();
+        }
+    }
+    public String minWindow(String source, String target) {
+        // write your code
+        
+        int minInd = source.length();
+        int maxInd = -1;
+        boolean first = false;
+        boolean last = false;
+        
+        LinkedList<Character> list = new LinkedList<Character>();
+        HashMap<Character, Node> hash = new HashMap<Character, Node>(500);//CHANGE SIZE IN CASE!!
+        
+        for(int i = 0; i < target.length(); i++){
+            
+            char c = target.charAt(i);
+            if(hash.containsKey(c)){
+                Node temp = hash.get(c);
+                temp.size++;
+            }
+            else{
+                hash.put(c, new Node());
+                list.add(c);
+            } 
+        }
+        
+        for(int i = 0; i < source.length(); i++){
+            char c = source.charAt(i);
+            if(hash.containsKey(c)){
+                Node temp = hash.get(c);
+                temp.size--;
+                temp.list.push(i);
+            }
+        }
+        
+        for(char c : list){
+            Node temp = hash.get(c);
+            if(temp.size > 0) return "";
+        }
+        
+        return "";
+    }
+}

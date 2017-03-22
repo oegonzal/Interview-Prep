@@ -1,0 +1,157 @@
+//My second solution Total Runtime: 2456 ms:
+public class Solution {
+    
+    class Node{
+        public String string;
+        public int visited;
+        
+        public Node(String str, int vis){
+            this.string = str;
+            this.visited = vis;
+        }
+    }
+    
+    public int ladderLength(String start, String end, Set<String> dict) {
+        
+        if(dict.size() == 0) return 0;
+        if(start == "" || start == null || end == "" || end == null) return 0;
+        if(start.equals(end)) return 1;
+        if(offByOne(start, end)) return 2;
+        
+        Node[] array = new Node[dict.size() + 1];
+        array[0] = new Node(end, 0);
+        int i = 1;
+        //Iterator it = dict.iterator();
+        for(String str : dict){
+            array[i] = new Node(str, 0);
+            i++;
+        }
+        
+        int min = 0;
+        boolean first = true;
+        LinkedList<Node> queue = new LinkedList<Node>();
+        queue.add(new Node(start, 1));
+        
+        //visited=0 means unexplored
+        while(queue.size() != 0){
+            Node node = queue.remove();
+            //System.out.println(node.string);
+            
+            for(int j = 0; j < array.length; j++){
+                Node curr = array[j];
+                if(curr.visited == 0 && offByOne(node.string, curr.string)){
+                    if(curr.string.equals(end)){
+                        if(min > node.visited + 1){
+                            min = node.visited + 1;
+                        }
+                        else if(first){
+                            min = node.visited + 1;
+                            first = false;
+                        }
+                    }
+                    
+                    curr.visited = node.visited + 1;
+                    queue.add(curr);
+                }
+            }
+            
+        }
+        
+        return min;
+    }
+}
+
+
+//My first try: Timed out at 2858 ms
+public class Solution {
+    
+    public int ladderLength(String start, String end, Set<String> dict) {
+        String curr = start;
+        
+        if(dict.size() == 0) return 0;
+        if(start == "" || start == null || end == "" || end == null) return 0;
+        if(offByOne(start, end)) return 2;
+        
+        String[] array = Arrays.copyOf(dict.toArray(), dict.size(), String[].class);
+        
+        boolean[] visited = new boolean[dict.size()];
+        //System.out.println("visited: " + visited[0]);
+        //System.out.println("array length: " + array.length);
+        //printArray(array, visited);
+        
+        int val = helper(array, visited, start, end);
+        return (val == 0)? 0: val + 1;
+    }
+    
+    public int helper(String[] dict, boolean[] visited, String source, String target){
+
+        //check source and target first in case terminal node
+        if(offByOne(source, target)){
+            //System.out.println("Returned a path. return 1");
+            return 1;
+        } 
+        
+        //if set is empty then no more words to compare with
+        if(dict.length == 0) return 0;
+        
+        int min = 0;
+        boolean first = true;
+        
+        for(int i = 0; i < dict.length; i++){
+            String str = dict[i];
+            if(offByOne(source, str) && !visited[i]){
+                
+                //dont compare with self in run through
+                visited[i] = true;
+                
+                //printArray(dict, visited);
+                //System.out.println(source);
+                
+                //get current number of steps or no solution
+                int steps = helper(dict, visited, str, target);
+                
+                if(steps != 0 && (steps + 1) < min){
+                    min = steps + 1;
+                }
+                else if(steps != 0 && first){
+                    min = steps + 1;
+                    first = false;
+                }
+                
+                //back track
+                visited[i] = false;
+            }
+        }
+        
+        return min;        
+    }
+    
+    public void printArray(String[] array, boolean[] visited){
+        for(int i = 0; i < array.length; i++){
+            if(visited[i] == false) System.out.print(array[i] + ", ");
+        }
+        System.out.println();
+    }
+    
+    public boolean offByOne(String w1, String w2){
+        
+        assert(w1.length() == w2.length());
+        
+        int differ = 0;
+        for(int i = 0; i < w1.length(); i++){
+            if(w1.charAt(i) != w2.charAt(i)){
+                differ++;
+                if(differ > 1) return false;
+            }
+        }
+        
+        return differ == 1;
+    }
+    
+    public void printDict(Set<String> dict){
+        for(String str : dict){
+            System.out.print(str + ", ");
+        }
+        System.out.print("\n");
+    }
+}

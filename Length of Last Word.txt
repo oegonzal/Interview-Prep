@@ -1,0 +1,54 @@
+//First submission successfull! with 8/15 mins
+
+
+//After submission optimization (much faster!)
+Total Runtime: 9337 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param s A string
+     * @return the length of last word
+     */
+    public int lengthOfLastWord(String s) {
+        if(s==null || s.length() == 0) return 0;
+        
+        int length = (s.charAt(s.length() - 1) == ' ') ? 0 : 1;
+        
+        for(int i = s.length()-2; i >= 0; i--){
+            char c = s.charAt(i), p = s.charAt(i+1);
+            if(c == ' ' && p != ' ') return length;
+            else if(c != ' ') length++;
+        }
+        return length;
+    }
+}
+
+
+//First try
+Total Runtime: 15518 ms
+100% test cases passed.
+public class Solution {
+    /**
+     * @param s A string
+     * @return the length of last word
+     */
+    public int lengthOfLastWord(String s) {
+        if(s==null || s.length() == 0) return 0;
+        
+        int length = 0, last = length;
+        
+        for(int i = 0; i < s.length(); i++){
+            char cCurr = s.charAt(i);
+            if(cCurr != ' '){
+                length++;
+                last = length;
+            }
+            else if(length != 0){
+                last = length;
+                length = 0;
+            }
+        }
+        return last;
+    }
+}

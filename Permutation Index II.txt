@@ -1,0 +1,28 @@
+//First Submission with help and too much time to not be able to solve it
+
+
+
+public class Solution {
+    /**
+     * @param A an integer array
+     * @return a long integer
+     */
+    public long permutationIndexII(int[] A) {
+        if(A==null) return 0;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        long index = 1, fact = 1, multiFact = 1;
+        
+        for(int i = A.length - 1; i >= 0; i--){
+            if(!map.containsKey(A[i])) map.put(A[i], 1);
+            else {
+                map.put(A[i], map.get(A[i]) + 1);
+                multiFact *= map.get(A[i]);
+            }
+            int elmtsBiggerThan = 0;
+            for(int j = A.length - 1; j > i; j--) if(A[i] > A[j]) elmtsBiggerThan++;
+            index+= elmtsBiggerThan * fact / multiFact;
+            fact *= (A.length - i);
+        }
+        return index;
+    }
+}

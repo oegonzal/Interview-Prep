@@ -1,0 +1,58 @@
+//First Try:
+Total Runtime: 12882 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param costs n x 3 cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    public int minCost(int[][] costs) {
+        if(costs == null || costs.length == 0) return 0;
+        int[][] dp = new int [costs[0].length][costs.length+1];
+        for(int i = 0; i < costs.length; i++){
+            for(int j = 0; j < costs[0].length; j++){
+                if(j==0) dp[0][i+1] = Math.min(dp[1][i], dp[2][i]) +costs[i][0];
+                else if(j==1)dp[1][i+1]=Math.min(dp[0][i],dp[2][i])+costs[i][1];
+                else dp[2][i+1] = Math.min(dp[0][i], dp[1][i]) + costs[i][2];
+            }
+        }
+        return Math.min(dp[0][dp[0].length-1], Math.min(dp[1][dp[0].length-1], dp[2][dp[0].length-1]));
+    }
+}
+
+public class Solution {
+    /**
+     * @param costs n x 3 cost matrix
+     * @return an integer, the minimum cost to paint all houses
+     */
+    public int minCost(int[][] costs) {
+        int[][] dp = new int [costs[].length][costs.length+1];
+        for(int i = 0; i < costs.length; i++){
+            for(int j = 0; j < costs[].length; j++){
+                if(j==0) dp[0][i+1] = Math.min(costs[i][1], costs[i][2]) + dp[0][i];
+                else if(j==1) dp[1][i+1] = Math.min(costs[i][0], costs[i][2]) + dp[1][i];
+                else dp[2][i+1] = Math.min(costs[i][0], costs[i][1]) + dp[2][i];
+            }
+        }
+        return Math.min(dp[0][dp.length-1], Math.min(dp[1][dp.length-1], dp[2][dp.length-1]));
+    }
+}
+
+/*
+
+    Here we know that after i+1 neighbor, there is no impact from current 
+    sum and before.
+    
+    Therefore we have to get max of A[i-1] or A[i] + A[i-2]
+    
+    Got It:
+    
+    Make a A[costs[].length][costs.length + 1]
+    We will be using dynamic programming in the way that we are concurrently keeping track
+    of 3 lines of possibilites. 3 types of minimums.
+    The current line cannot have the previous same paint added to it just one of the other 
+    two. 
+
+*/

@@ -1,0 +1,47 @@
+//First Submission: Successful Submission! but with 50 mins down time...
+Total Runtime: 2114 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers that's previous permuation
+     */
+    public ArrayList<Integer> previousPermuation(ArrayList<Integer> nums) {
+		if(nums == null) return new ArrayList<Integer>();
+		if(nums.size() <= 1) return nums;
+		
+		int n = nums.size() - 1, next = n, diff = Integer.MAX_VALUE, ind = n;
+		while(n > 0 && nums.get(n-1) <= nums.get(n--)); //n is first ascending elmt going left
+		
+		if(n == 0 && nums.get(n) < nums.get(n+1)) reverse(nums, 0, nums.size() - 1);
+		else{
+		    while(n < next){
+		        if(nums.get(n) > nums.get(next)){
+		            if(nums.get(n) - nums.get(next) < diff){
+		                diff = nums.get(n) - nums.get(next);
+		                ind = next;
+		            }
+		        }
+		        next--;
+		    }
+		    Collections.swap(nums, n, ind);
+		    reverse(nums, n+1, nums.size() - 1);
+		}
+		return nums;
+    }
+    
+    public void reverse(ArrayList<Integer> A, int start, int end){
+        for(int i = start; i < (start + end + 1)/2; i++) swap(A, i, start + end - i);
+    }
+    public void swap(ArrayList<Integer> A, int i, int j){
+        int first = A.get(i), second = A.get(j);
+        
+        A.remove(i);
+        A.add(i, second);
+        
+        A.remove(j);
+        A.add(j, first);
+    }
+}

@@ -1,0 +1,23 @@
+//First Try:
+Total Runtime: 2911 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param heights: an array of integers
+     * @return: an integer
+     */
+    public int maxArea(int[] A) {
+        if(A == null || A.length < 2) return 0;
+        int start = 0, end = A.length - 1, sum = (end - start)*(Math.min(A[start], A[end]));
+        
+        while(start < end){
+            int tSum = (end - start)*(Math.min(A[start], A[end]));
+            if(sum < tSum) sum = tSum;
+            if(A[start] < A[end]) start++;
+            else end--;
+        }
+        return sum;
+    }
+}

@@ -1,0 +1,152 @@
+import java.io.*;
+import java.util.*;
+import java.text.*;
+import java.math.*;
+import java.util.regex.*;
+
+public class Solution {
+
+    public static void main(String[] args) {
+        new Solution(args);
+    }
+    
+    
+    
+    public Solution(String[] args){
+        
+        //list and initial stack
+        LinkedList<Stack <Integer> > list = new LinkedList<Stack <Integer> >();
+        Stack<Integer> tempStack = new Stack<Integer>();
+        Stack<Integer> notDividedByPrimeStack = new Stack<Integer>();
+        
+        //Stack size and amount of prime iterations
+        Scanner in = new Scanner(System.in);
+        String[] params = in.nextLine().split(" ");
+        int numDishes = Integer.parseInt(params[0]);
+        int numPrimes = Integer.parseInt(params[1]);
+       
+        //Dishes and their nums
+        params = in.nextLine().split(" ");
+        
+        //filling initial stack
+        for(int i = 0; i < numDishes; i++){
+            notDividedByPrimeStack.push(Integer.parseInt(params[i]));
+        }
+        
+        //Make prime list
+        LinkedList<Integer> primes = createPrimeList(numPrimes);
+        //System.out.println( "--" + primes.size() + "--");
+        //printList(primes);
+        
+        //Here we make the piles
+        for(int i = 0; i < numPrimes; i++){
+            int currPrime = primes.poll();
+            //System.out.println(i + ". " + "currPrime " + currPrime);
+            
+            //stack for plates not divisible by P, or Qth stack
+            Stack<Integer> kStack = new Stack<Integer>();
+            tempStack = new Stack<Integer>();
+            
+            int size = notDividedByPrimeStack.size();
+            //System.out.println("Size of nonDivideds: " + size);
+            
+            for(int j = 0; j < size; j++){
+                int currNum = notDividedByPrimeStack.pop();
+                
+                if(currNum % currPrime == 0){
+                    kStack.push(currNum);
+                }
+                else{
+                    tempStack.push(currNum);
+                }  
+            }
+            //printStack(kStack);
+            list.add(kStack);
+            notDividedByPrimeStack = tempStack;
+        }
+       /////////////////////////////////////////////////////////////////////////////////
+
+        //print the stacks
+        int[] dishesInOrder = new int[numDishes];
+        int i = 0;
+        while(!list.isEmpty()){
+            tempStack = list.poll();
+            while(!tempStack.empty()){
+                dishesInOrder[i] = tempStack.pop();
+                i++;
+            }
+        }
+        while(!notDividedByPrimeStack.empty()){
+            dishesInOrder[i] = notDividedByPrimeStack.pop();
+            i++;
+        }
+        
+        for(int j = 0; j < numDishes; j++){
+            System.out.println(dishesInOrder[j]);
+        }  
+    }
+    
+    private LinkedList<Integer> createPrimeList(int listSize){
+        
+        LinkedList<Integer> primeList = new LinkedList<Integer>();
+        if(listSize <= 0) return primeList;
+        
+        primeList.add(2);
+        if(listSize == 1){
+            return primeList;
+        }
+        
+        primeList.add(3);
+        if(listSize == 2){
+            return primeList;
+        }
+        
+        //Fill list with next primes numbers (at this stage we have primes 2 and 3)
+        int primesFound = 2;
+        int currNumCheckingForPrime = 3;
+        while(primesFound < listSize){
+            
+            //System.out.println("(" + primesFound + ")");
+            currNumCheckingForPrime += 2;
+            if(isPrime(currNumCheckingForPrime)){
+                //System.out.println("Prime num: " + currNumCheckingForPrime);
+                primeList.add(currNumCheckingForPrime);
+                //System.out.println("Size: " + primeList.size());
+                primesFound++;
+            }
+            
+        }
+        return primeList;
+    }
+    
+    private boolean isPrime(int num){
+        
+        if(num <= 3 && num > 0) return true;
+        if(num % 2 == 0) return false;
+                
+        for(int i = 3; i < num; i += 2){
+            if(num % i == 0){
+                return false; 
+            }
+        }
+        return true;       
+    }
+    
+    private void printStack(Stack<Integer> stack){
+        Iterator<Integer> iter = stack.iterator();
+        while (iter.hasNext()){
+            System.out.println(iter.next());
+        }
+        System.out.println();
+    }
+    
+    private void printList(LinkedList<Integer> list){
+        Iterator<Integer> iter = list.iterator();
+        while (iter.hasNext()){
+            System.out.println(iter.next());
+        }    
+        System.out.println();
+    }
+    
+    
+}

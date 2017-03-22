@@ -1,0 +1,36 @@
+//First Try:
+Total Runtime: 1760 ms
+100% test cases passed.
+
+
+public int threeSumClosest(int[] A, int target) {
+        if(A == null || A.length < 3) return -1;
+        Arrays.sort(A);
+        
+        int min_dist = Integer.MAX_VALUE, sumOf3Min = -1;
+        for(int i = 0; i + 2 < A.length; ++i){
+            if(i>0 && A[i] == A[i-1]) continue;
+            
+            int left = i + 1, right = A.length - 1;
+            while(left < right){
+                int sum = A[i] + A[left] + A[right],
+                    diff = target - sum, dist = Math.abs(diff);
+                
+                if(dist < min_dist){
+                    min_dist = dist;
+                    sumOf3Min = sum;
+                }
+                
+                if(diff == 0) return target;
+                else if(diff > 0){
+                    left++;
+                    while(left < right && A[left] == A[left-1]) left++;
+                }
+                else{
+                    right--;
+                    while(left < right && A[right] == A[right+1]) right--;
+                }
+            }
+        }
+        return sumOf3Min;
+    }

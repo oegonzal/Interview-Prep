@@ -1,0 +1,225 @@
+//Fourth try:
+
+public class Solution {
+    public int smallestDifference(int[] A, int[] B) {
+        
+        if(A.length == 0 || B.length == 0) return 0;
+        int min = Math.abs(A[0] - B[0]);
+        
+        Arrays.sort(A);
+        Arrays.sort(B);
+        
+        int i = 0, j = 0;
+        
+        for(; i < A.length; i++){
+            for(; j < B.length; j++){
+                int temp = Math.abs(A[i] - B[j]);
+                if( temp < min) min = temp;
+                if(j!= B.length-1 && Math.abs(A[i] - B[j+1]) > temp) break;
+            }
+        }
+        return min;
+    }
+}
+
+
+
+
+
+//Third try:
+Total Runtime: 2880 ms
+85% test cases passed.
+
+
+public class Solution {
+    public int smallestDifference(int[] A, int[] B) {
+        int min = Integer.MAX_VALUE;
+        if(A.length == 0 || B.length == 0) return min;
+        
+        //sort bigger array
+        int[] biggerArr;
+        if(A.length < B.length){
+            Arrays.sort(B);
+            biggerArr = B;
+        }
+        else{
+            Arrays.sort(A);
+            biggerArr = A;
+        }
+        int[] smallerArr = (A.length < B.length)? A : B;
+        
+        //iterate through smaller unsorted array
+        for(int i = 0; i < smallerArr.length; i++){
+            int bstVal = BST(biggerArr, smallerArr[i], 0, biggerArr.length - 1, Integer.MAX_VALUE);//O(log(n))
+            int temp = Math.abs(smallerArr[i] - bstVal);
+            
+            if( temp < min){ //save smallest difference
+               if(temp == 0) return 0;
+               min = temp;
+            }
+        }//O(n)
+        return min;
+    }
+    
+    //Takes a sorted array
+    public int BST(int[] B, int value, int start, int end, int min){
+        if(start >= end){
+            if(Math.abs(value - B[start]) < Math.abs(value - min)) min = B[start];
+            return min;
+        }
+        int mid = (start + end)/2;
+        int val;
+        
+        if(B[mid] == value) return value;
+        else if(B[mid] < value){
+            if(Math.abs(value - B[mid]) < Math.abs(value - min)) min = B[mid];
+            val = BST(B, value, mid+1, end, min);
+        }
+        else{
+            if(Math.abs(value - B[mid]) < Math.abs(value - min)) min = B[mid];
+            val = BST(B, value, start, mid-1, min);
+        }
+        if(Math.abs(value - val) < Math.abs(value - min)) min = val;
+        return min;
+    }
+}
+
+
+public class Solution {
+    public int smallestDifference(int[] A, int[] B) {
+        int min = Integer.MAX_VALUE;
+        if(A.length == 0 || B.length == 0) return min;
+        
+        int[] biggerArr;
+        if(A.length < B.length){
+            Arrays.sort(B);
+            biggerArr = B;
+        }
+        else{
+            Arrays.sort(A);
+            biggerArr = A;
+        }
+        int[] smallerArr = (A.length < B.length)? A : B;
+        
+        for(int i = 0; i < smallerArr.length; i++){
+            int bstVal = BST(biggerArr, smallerArr[i], 0, biggerArr.length - 1, Integer.MAX_VALUE);
+            int temp = Math.abs(smallerArr[i] - bstVal);
+
+            if( temp < min){
+               if(temp == 0) return 0;
+               min = temp; 
+            }
+        }
+        return min;
+    }
+    
+    //A - bigger array, value from smaller - 18, 0-3 index starting
+    public int BST(int[] B, int value, int start, int end, int min){
+        if(start >= end){
+            if(Math.abs(value - B[start]) < Math.abs(value - min)) min = B[start];
+            return min;
+        }
+        int mid = (start + end)/2;
+        int val;
+        
+        if(B[mid] == value) return value;
+        else if(B[mid] < value){
+            if(Math.abs(value - B[mid]) < Math.abs(value - min)) min = B[mid];
+            val = BST(B, value, mid+1, end, min);
+        }
+        else{
+            if(Math.abs(value - B[mid]) < Math.abs(value - min)) min = B[mid];
+            val = BST(B, value, start, mid-1, min);
+        }
+        if(Math.abs(value - val) < Math.abs(value - min)) min = val;
+        return min;
+    }
+}
+
+/*
+    1. get both arrays, and partition both arrays to higher than medium and lower than medium
+    2.compare elements in each using a bst to find smallest difference with this new partition
+    3. return answer
+*/
+
+//test cases:
+//[3,4,6,7], [2,3,8,9]
+//[10,25,55,34], [18,47,46,42] expected 7 but got 8
+//[3], [10,8,16,19,6]
+
+
+
+//Second Try:
+Total Runtime: 758 ms
+39% test cases passed.
+
+public class Solution {
+    public int smallestDifference(int[] A, int[] B) {
+        int min = Integer.MAX_VALUE;
+        if(A.length == 0 || B.length == 0) return min;
+        
+        Arrays.sort(A);
+        Arrays.sort(B);
+        
+        int[] biggerArr = (A.length < B.length)? B : A;
+        int[] smallerArr = (A.length < B.length)? A : B;
+        
+        for(int i = 0; i < smallerArr.length; i++){
+            int temp = Math.abs(smallerArr[i] - BST(biggerArr, smallerArr[i], 0, biggerArr.length - 1));
+            if( temp < min){
+               if(temp == 0) return 0;
+               min = temp; 
+            }
+        }
+        return min;
+    }
+    
+    //A - bigger array, value from smaller - 18, 0-3 index starting
+    public int BST(int[] B, int value, int start, int end){
+        if(start+1 == end || start == end) return (Math.abs(value - B[start]) > Math.abs(value - B[end]))? B[end]: B[start];
+        int mid = (start + end)/2;
+        
+        if(B[mid] == value) return value;
+        else if(B[mid] < value){
+            return BST(B, value, mid+1, end);
+        }
+        else{
+            return BST(B, value, start, mid-1);
+        }
+    }
+}
+
+/*
+    1. get both arrays, and partition both arrays to higher than medium and lower than medium
+    2.compare elements in each using a bst to find smallest difference with this new partition
+    3. return answer
+*/
+
+//test cases:
+//
+//[10,25,55,34], [18,47,46,42] expected 7 but got 8
+
+
+//First Try:
+Total Runtime: 8157 ms
+85% test cases passed.
+
+public class Solution {
+    /**
+     * @param A, B: Two integer arrays.
+     * @return: Their smallest difference.
+     */
+    public int smallestDifference(int[] A, int[] B) {
+        int min = Integer.MAX_VALUE;
+        
+        if(A.length == 0 || B.length == 0) return min;
+        
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j<B.length; j++){
+                if(Math.abs(A[i] - B[j]) < min) min = Math.abs(A[i] - B[j]);
+            }
+        }
+        
+        return min;
+    }
+}

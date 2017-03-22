@@ -1,0 +1,154 @@
+//Second try:
+Total Runtime: 7191 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param A: an integer array.
+     * @param k: a positive integer (k <= length(A))
+     * @param target: a integer
+     * @return a list of lists of integer 
+     */ 
+    public ArrayList<ArrayList<Integer>> kSumII(int[] A, int k, int target) {
+        
+        ArrayList<ArrayList<Integer>> answer = new ArrayList<ArrayList<Integer>>();
+        
+        if(A == null || A.length == 0) return answer;
+        
+        helper(A, answer, new ArrayList<Integer>(), k, target, 0);
+        
+        return answer;
+    }
+    
+    public void helper(int[] A, ArrayList<ArrayList<Integer>> answer, ArrayList<Integer> list, int k, int target, int start){
+        
+        //check if tuple exists, if so add it to answer
+        if(k == 1){
+            
+            int ind = BST(A, target, start, A.length - 1);
+            
+            //if index is positive, tuple exists
+            if(ind != -1 ){
+                list.add(A[ind]);
+            
+                ArrayList<Integer> temp = new ArrayList<Integer>();
+                for(Integer i : list){
+                    temp.add(i);
+                }
+                
+                answer.add(temp);
+                list.remove(list.size() - 1);
+            }
+            
+            return;
+        }
+        
+        for(int i = start; i < A.length; i++){
+            list.add(A[i]);
+            if(target - A[i] > A[i])
+                helper(A, answer, list, k - 1, target - A[i], i + 1);
+            list.remove(list.size() - 1);
+        }
+        
+    }
+    
+    public int BST(int[] A, int target, int start, int end){
+        if(start > end) return -1;
+        
+        int mid = (start + end)/2;
+        
+        if(A[mid] == target) return mid;
+        else if(A[mid] < target) return BST(A, target, mid + 1, end);
+        else return BST(A, target, start, mid - 1);
+        
+    }
+}
+
+/*
+    Try recursion: 
+    where each recursive call will subtract from target
+    for each value chosen
+    
+    There is a clue, array is in n long (n-unique) from 1 to n.
+    Therefore, we can get target and divide it by k to find where the
+    sum k have to averagee down to.
+    
+    Think eliminating options like a binary search    
+
+
+*/
+
+
+
+public class Solution {
+    /**
+     * @param A: an integer array.
+     * @param k: a positive integer (k <= length(A))
+     * @param target: a integer
+     * @return a list of lists of integer 
+     */ 
+    public ArrayList<ArrayList<Integer>> kSumII(int[] A, int k, int target) {
+        // write your code here
+        ArrayList<ArrayList<Integer>> answer = new ArrayList<Integer>();
+        
+        /* 1.Traverse list
+        *       - keep track of how many sums you are making and their indexes
+        *       - check if it adds up to the target
+        *       - if it does than get vals from index and put them in an arraylist        
+        */
+        
+        for(int i1 = 0; i1 < A.length; i1++){
+            for(int i2 = 0; i2 < A.length; i2++){
+                for(int i3 = 0; i3 < A.length; i3++){
+                    if(i3 != i2 && i3 != i1 && i1 != i2 && (i1 + i2 + i3 == target)){
+                        
+                        ArrayList<Integer> temp = new ArrayList<Integer>();
+                        temp.add(i1);
+                        temp.add(i2);
+                        temp.add(i3);
+                        
+                        answer.add(temp);
+                    }
+                }
+            }
+        }
+        
+        return answer;
+    }
+}
+
+
+
+
+Real Answer:
+
+public class Solution{
+    public ArrayList<ArrayList<Integer>> kSumII(int A[], int k, int target){
+        ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+        if(A == null || A.length == 0){
+            return result;
+        }
+
+        helper(A, k, target, result, 0, new ArrayList<Integer>>());
+        return result;
+    }
+
+    private void helper(int A[], int k, int target, ArrayList<ArrayList<Integer>> result, int curIndex, ArrayList<ArrayList<Integer>> curList ){
+    
+        //check if our curList adds up to target //BASE CASE
+        if(curList.size() == k){
+            if(target == 0){
+                ArrayList<integer> temp = new ArrayList<Integer>(curList);
+                result.add(temp);
+            }
+            return;
+        }
+
+        for(int i = curIndex; i < A.length; i++){
+            curList.add(A[i]);
+            helper(A, k, target - A[i], result, i + 1, curList);
+            curList.remove(curList.size() - 1);
+        }
+
+    }
+}

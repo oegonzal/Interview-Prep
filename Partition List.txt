@@ -1,0 +1,120 @@
+//Second Submission Successful but took longer than had to bc of bugs with first implementation, 60/15
+Total Runtime: 2098 ms
+100% test cases passed.
+
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @param x: an integer
+     * @return: a ListNode 
+     */
+    public ListNode partition(ListNode head, int x) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode dummy = new ListNode(-1), smalls = new ListNode(-1), 
+                 tail = smalls, prev = dummy, curr = head, forward = head.next;
+        
+        prev.next = curr;
+        while(forward != null){
+            if(curr.val < x){
+                prev.next = forward;
+                
+                tail.next = curr;
+                tail = curr;
+                
+                curr = forward;
+            } else{
+                prev = curr;
+                curr = forward;
+            }
+            forward = forward.next;
+        }
+        
+        if(curr.val < x){
+            prev.next = forward;
+            
+            tail.next = curr;
+            tail = curr;
+        }
+        
+        tail.next = dummy.next;
+        
+        return smalls.next;
+    }
+}
+
+
+
+//First Implementation
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @param x: an integer
+     * @return: a ListNode 
+     */
+    public ListNode partition(ListNode head, int x) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode dummy = new ListNode(-1), prev = dummy, curr = head,
+                 forward = head.next, splitB = dummy, splitA = head;
+        
+        splitB.next = splitA;
+        while(forward != null){
+            if(curr.val < x){ //&& !prev.equals(split)
+                prev.next = forward;
+                
+                splitB.next = curr;
+                if(!curr.equals(splitA)) curr.next = splitA;
+                splitB = curr;
+                splitA = curr.next;
+                
+                
+                curr = forward;
+            } else {
+                prev = curr;
+                curr = forward;
+            }
+            
+            System.out.println(splitB.val);
+            
+            forward = forward.next;
+        }
+        return dummy.next;
+    }
+}
+
+//3->3->1->2->4->null, 3
+//1->4->3->2->5->2->null, 0
+//1->4->3->2->5->2->null, 3
+
+/**
+ * -Make a difinite split (between head and dummy) and put all above it to right and below it to left
+ * -Make a circular array and keep spinning it until everyting good
+ * -reverse array
+ * 
+ */	

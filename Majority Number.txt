@@ -1,0 +1,46 @@
+//First Try:
+Total Runtime: 2596 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param nums: a list of integers
+     * @return: find a  majority number
+     */
+    public int majorityNumber(ArrayList<Integer> nums) {
+        int half = nums.size()/2, bit = 1, majority = 0;
+        int[] bits = new int[32];
+        
+        for(int i = 0; i < nums.size(); i++){
+            for(int j = 0; j < 32; j++){
+                if((bit<<j & nums.get(i)) != 0) bits[j] += 1;
+            }
+        }
+        
+        for(int j = 0; j < 32; j++){
+            bits[j] -= half;
+            if(bits[j] > 0) majority |= (bit<<j);
+        }
+        
+        return majority;
+    }
+}
+
+
+
+/*
+    Methods:
+    
+    1. Bit Manipulation
+    2. HashMap - easy-peasy
+    3. Modulos
+    4. Removing elements from ArrayList and add them to a self balancing binary tree and at the end check root, first in-order and last-inorder element.
+    5. 
+    
+    Im thinking of using the same array to store repeats,
+    
+    Use modulo, to store in same array as index increases through array.
+    Each time update the places where new counts get added.
+*/

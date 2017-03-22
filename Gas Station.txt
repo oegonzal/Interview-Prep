@@ -1,0 +1,31 @@
+//First Submission: Successful 40 mins.
+Total Runtime: 1754 ms
+100% test cases passed.
+
+
+The way a figured this problem out was by thinking about the problems to this problem by themselves and seeing what each entailed, rather than focusing on the inferences they could give. That is problem breaking down and solving each aspect directly.
+
+Like here I had to think of the problem as a graph and find the absolute minimum. The point after it would be where the index has to start in order for the problem to pass.
+
+
+public class Solution {
+    /**
+     * @param gas: an array of integers
+     * @param cost: an array of integers
+     * @return: an integer
+     */
+    public int canCompleteCircuit(int[] gas, int[] cost) {
+        if(gas == null || cost == null || gas.length != cost.length || gas.length == 0 || cost.length == 0) return -1;
+        
+        int len = gas.length, max = Integer.MAX_VALUE, ind = 0, sum = 0;
+        
+        for(int i = 0; i < len; i++){
+            sum += (gas[i] - cost[i]);
+            if(sum < max){
+                max = sum;
+                ind = (i + 1)%len;
+            }
+        }
+        return (sum < 0)? -1 : ind;
+    }
+}

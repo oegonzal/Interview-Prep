@@ -1,0 +1,21 @@
+//Second Submission: (not including first but similar look) finished in 11 mins, first shot didnt work bc i wasnt incrementing 'ind' variable
+//Total Runtime: 1904 ms
+//100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: a array of integers
+     * @return : return an integer
+     */
+    public int removeDuplicates(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        
+        int dups = 0, ind = 1;
+        for(int i = 1; i < nums.length; i++){
+            if(nums[i] == nums[i-1]) dups++;
+            else nums[ind++] = nums[i];
+        }
+        return nums.length - dups;
+    }
+}

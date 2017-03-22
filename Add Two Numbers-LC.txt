@@ -1,0 +1,120 @@
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;      
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param l1: the first list
+     * @param l2: the second list
+     * @return: the sum list of l1 and l2 
+     */
+    public ListNode addLists(ListNode l1, ListNode l2) {
+        
+        //keep track of heads
+        ListNode l1_head = l1;
+        ListNode l2_head = l2;
+        
+        //get count of each node list
+        int l1_length = 0;
+        int l2_length = 0;
+        
+        while(l1 != null){
+            l1_length++;
+            l1 = l1.next;
+        }
+        
+        while(l2 != null){
+            l2_length++;
+            l2 = l2.next;
+        }
+        
+        //corner cases
+        if(l1_length == 0 && l2_length == 0){
+            return null;
+        }
+        
+        else if(l1_length == 0){
+            return l2;
+        }
+        
+        else if(l2_length == 0){
+            return l1;
+        }
+        
+        //System.out.println("l1 length: " + l1_length);
+        //System.out.println("l2 length: " + l2_length);
+        
+        l1 = l1_head;
+        l2 = l2_head;
+        
+        int first_val = l1.val + l2.val;
+        //System.out.println("first_val: " + first_val);
+        ListNode l3 = new ListNode(first_val);
+        ListNode l3_head = l3;
+        l1 = l1.next;
+        l2 = l2.next;
+        
+        
+        int smaller_num = (l1_length < l2_length) ? l1_length : l2_length;
+        int carry = first_val/10;
+        
+        //System.out.println("smaller num is:" + smaller_num);
+        
+        for(int i = 1; i < smaller_num; i++){
+            int l3_val = l1.val + l2.val + carry;
+            l3.next = new ListNode(l3_val);
+            carry = l3_val/10;
+            //System.out.println("l3_val: " + l3_val);
+            //System.out.println("carry: " + carry);
+            
+            //set to new vals
+            l1 = l1.next;
+            l2 = l2.next;
+            l3 = l3.next;
+        }
+        
+        //append rest of bigger link to l3
+        //l3.next = (l1_length < l2_length) ? l2 : l1;
+        
+        if(l1_length < l2_length){
+            if(carry == 0) l3.next = l2;
+            else{
+                while(l2 != null){
+                    if(carry == 0) l3.next = l2;
+                    
+                    int val = carry + l2.val;
+                    l3.next = new ListNode(val);
+                    carry = val/10;
+                    
+                    l3 = l3.next;
+                    l2 = l2.next;
+                }
+                if(carry != 0) l3.next = new ListNode(carry);
+            }
+        }
+        else{
+            if(carry == 0) l3.next = l1;
+            else{
+                while(l1 != null){
+                    if(carry == 0) l3.next = l1;
+                    
+                    int val = carry + l1.val;
+                    l3.next = new ListNode(val);
+                    carry = val/10;
+                    
+                    l3 = l3.next;
+                    l1 = l1.next;
+                }
+                if(carry != 0) l3.next = new ListNode(carry);
+            }
+        }
+        return l3_head;
+    }
+}

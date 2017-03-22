@@ -1,0 +1,94 @@
+//First Submission: with help
+Total Runtime: 3577 ms
+100% test cases passed.
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {  
+        if(lists==null || lists.size() == 0) return null;
+        
+        ListNode head = new ListNode(-1), tail = head;
+        Queue<ListNode> pq = new PriorityQueue<ListNode>(lists.size(), new Comparator<ListNode>(){
+            @Override
+            public int compare(ListNode o1, ListNode o2){
+                if(o1.val < o2.val) return -1;
+                else if(o1.val > o2.val) return 1;
+                else return 0;
+            }
+        });
+        
+        for(ListNode n : lists) if(n != null) pq.offer(n);
+        while(pq.size() > 0){
+            tail.next = pq.poll();
+            tail = tail.next;
+            if(tail.next != null) pq.offer(tail.next);
+        }
+        return head.next;
+    }
+}
+
+
+
+
+
+//First Try: Fails attempts
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param lists: a list of ListNode
+     * @return: The head of one sorted list.
+     */
+    public ListNode mergeKLists(List<ListNode> lists) {  
+        if(lists==null || lists.size() == 0) return null;
+        
+        ListNode head = new ListNode(-1), tail = head, n = null;
+        while(lists.size() > 0){
+            int min = Integer.MAX_VALUE, ind = 0;
+            for(int i = 0; i < lists.size(); i++){
+                n = lists.get(i);
+                if(n == null) lists.remove(i);
+                else {
+                    if(n.val < min){
+                        min = n.val;
+                        ind = i;
+                    }
+                }
+            }
+            tail.next = new ListNode(min);
+            tail = tail.next;
+            n = lists.get(ind);
+            n = n.next;
+            lists.add(ind, n.next);
+        }
+        
+        return head.next;
+    }
+}
+
+

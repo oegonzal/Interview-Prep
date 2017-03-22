@@ -1,0 +1,31 @@
+
+
+
+
+
+Here we can only take 1 or 2 coins. 2 players are playing. The coins are in a line.
+The player who in the end has the most value in coins after both players have finished the line of coins
+wins.
+
+Return if the first player can force a win.
+
+How do we determine the outcome?
+DP problem
+
+You have to consider all possible situations. 
+How do we store the best of all these situations each time we iterate and make the problem more complex?
+
+P1
+
+vs
+
+P2
+
+Will need 2 arrays, one keeps track of whether P1 wins or loses.
+Other array will track the total value of the spots that player 1 can get
+
+OR
+
+we can add the highest possible sum P1 can get and then subtract that with the total sum of the coins. If the sum is majority
+P1 wins.
+

@@ -1,0 +1,48 @@
+//First Try:
+Total Runtime: 11892 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A an array
+     * @return total of reverse pairs
+     */
+    public long reversePairs(int[] A) {
+        int[] B = new int[A.length];
+        return mergeSort(A, B, 0, A.length-1);
+    }
+    
+    public long mergeSort(int[] A, int[] B, int start, int end){
+        if(start >= end) return 0;
+        
+        int mid = (start + end + 1)/2;
+        return  mergeSort(A, B, start, mid-1) +
+                mergeSort(A, B, mid, end) +
+                merge(A, B, start, mid, end);
+    }
+    
+    public long merge(int[] A, int[] B, int s1, int s2, int end){
+        long count = 0;
+        int s3 = s1, e1 = s2, start = s1;
+        
+        while(s1 < e1 && s2 <= end){
+            if(A[s1] <= A[s2]) B[s3++] = A[s1++];
+            else {
+                count += (e1 - s1);
+                B[s3++] = A[s2++];  
+            }
+        }
+        while(s1 < e1) B[s3++] = A[s1++];
+        while(s2 <= end) B[s3++] = A[s2++];
+        for(int i = start; i <= end; i++) A[i] = B[i];
+        
+        return count;
+    }
+}
+
+
+/*
+    Im thinking of doing mergesort here to count invertix points
+
+*/

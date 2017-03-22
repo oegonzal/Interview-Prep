@@ -1,0 +1,67 @@
+//Second Try:
+Passed.
+
+
+public class Solution {
+	
+	public ArrayList<String> generateParenthesis(int n){
+		ArrayList<String> paren = new ArrayList<String>();
+		if(n==0) return paren;
+
+		helper(paren, "", 0, 0, n);
+		return paren;
+	}
+
+	public void helper(ArrayList<String> par, String s, int low, int high, int max){
+		if(s.length() == 2*max){
+			par.add(s);
+			return;
+		}
+
+		if(high < max) helper(par, s + "(", low, high + 1, max);
+		if(low < high) helper(par, s + ")", low + 1, high, max);
+	}
+
+}
+
+
+
+
+//First Try:
+(Wrong Answer)
+
+
+public class Solution {
+    /**
+     * @param n n pairs
+     * @return All combinations of well-formed parentheses
+     */
+    public ArrayList<String> generateParenthesis(int n) {
+        ArrayList<String> parentheses = new ArrayList<String>();
+        if(n==0) return parentheses;
+        parentheses.add("()");
+        
+        String s = "", item = "";
+        int start = 0, end = 0, cut = 0;
+        while(--n > 0){
+            cut = parentheses.size();
+            s = parentheses.get(start);
+            parentheses.add(s+"()");
+            
+            while(start<=end){
+                s = parentheses.get(start++);
+                for(int i = 0; i < s.length(); i++){
+                    if(s.charAt(i) == '('){
+                        item=s.substring(0, i+1) + "()" + s.substring(i+1, s.length());
+                        parentheses.add(item); 
+                        if(item.equals("(()(()))")) System.out.println(s);
+                    }
+                }
+            }
+            start = 0;
+            end = parentheses.size() - cut - 1;
+            for(int i = 0; i < cut; i++) parentheses.remove(0);
+        }
+        return parentheses;
+    }
+}

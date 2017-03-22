@@ -1,0 +1,41 @@
+//Fourth Submission:  120/30
+Total Runtime: 2952 ms
+100% test cases passed.
+
+
+This problem was really hard to do because I oculd not think of a way to get modulas when we are
+dealing with the ceiling int. No matter how we divide there will always be a smaller number so mod
+we be generated. Any number above it would be an int overflow. 
+So I decided to be careful with this and use a long instead to prevent the int overflows
+I still wonder if there was is a way to do it with out the long type??
+
+
+class Solution {
+    /*
+     * @param a, b, n: 32bit integers
+     * @return: An integer
+     */
+    public int fastPower(int a, int b, int n) {
+        if(n<0) return 1;
+        
+        long holder = 1, aC = a, nI = n;
+        
+        while(nI > 1){
+            while(aC >= b) aC %= b;
+            //now expand a and make even pairs of it
+            
+            //if n is odd
+            if(nI%2 == 1){
+                holder = (holder*aC) % b;
+                nI--;
+            }
+            
+            //double value of a
+            aC *= aC;
+            nI /= 2;
+        }
+        
+        while(aC >= b) aC %= b;
+        return (n == 0) ? 1 % b : (int)((holder * aC) % b);
+    }
+};

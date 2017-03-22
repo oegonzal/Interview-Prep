@@ -1,0 +1,42 @@
+public class Solution {
+
+// 	public void addPQ(LinkedList<Integer> queue, Integer n){
+// 	    if(queue.size() == 0) queue.addLast(n);
+// 	    else if(queue.peekLast().val < n){
+// 	        Integer val = queue.removeLast();
+// 	        addPQ(queue, n);
+// 	        queue.addLast(val);
+// 	    }
+// 	    else{
+// 	        queue.addLast(n);
+// 	    }
+// 	}
+	
+    public int singleNumberII(int[] A) {
+        
+        int[] bitState = new int[32];
+        for(int i=0; i<A.length; i++){
+            int num = A[i];
+            for(int j=0; j<32; j++){
+                int bit = (num >> j) & 1;
+                if(bit == 1){
+                    bitState[j] = bitState[j] == 2 ? 0 : bitState[j] + 1;
+                }
+            }
+        }
+        
+        int res = 0;
+        for(int i=0; i<32; i++){
+            if(bitState[i] != 0){
+                res |= (1 << i);
+            }
+        }
+        return res;
+        // int one = -1, two = -1;
+        // for(int i = 0; i < A.length; i++){
+        //     one = (one ^ A[i]) & (~two);
+        //     two = (two ^ A[i]) & (~one);
+        // }
+        // return one;
+    }
+}

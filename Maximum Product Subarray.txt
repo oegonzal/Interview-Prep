@@ -1,0 +1,51 @@
+//Online Solution:
+
+public int maxProduct(int[] A) {
+    if (A.length == 0) {
+        return 0;
+    }
+    
+    int maxherepre = A[0];
+    int minherepre = A[0];
+    int maxsofar = A[0];
+    int maxhere, minhere;
+    
+    for (int i = 1; i < A.length; i++) {
+        maxhere = Math.max(Math.max(maxherepre * A[i], minherepre * A[i]), A[i]);
+        minhere = Math.min(Math.min(maxherepre * A[i], minherepre * A[i]), A[i]);
+        maxsofar = Math.max(maxhere, maxsofar);
+        maxherepre = maxhere;
+        minherepre = minhere;
+    }
+    return maxsofar;
+}
+
+
+
+
+//First submission:
+Total Runtime: 2418 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param nums: an array of integers
+     * @return: an integer
+     */
+    public int maxProduct(int[] nums) {
+        if(nums == null || nums.length == 0) return 0;
+        int[] A = new int[nums.length];
+        Arrays.fill(A, 1);
+        
+        int max = Integer.MIN_VALUE;
+        for(int i = 0; i < nums.length; i++){
+            for(int j = 0; j <= i; j++){
+                A[j] *= nums[i];
+                if(A[j] > max) max = A[j];
+            }
+        }
+        return max;
+    }
+}

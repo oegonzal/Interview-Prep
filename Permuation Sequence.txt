@@ -1,0 +1,34 @@
+//First try:
+
+
+class Solution {
+    /**
+      * @param n: n
+      * @param k: the kth permutation
+      * @return: return the k-th permutation
+      */
+    public String getPermutation(int n, int k) {
+        String ans = "";
+        ArrayList<Integer> a = new ArrayList<Integer>();
+        for(int i = 1; i <= n; i++) a.add(i);
+        k--;
+        
+        while(n-- > 0){
+            int pos = 1;
+            for(int i = 1; i <= n; i++) pos *= i;
+            ans +=  Integer.toString(a.remove((k/pos)));
+            k -= ((k/pos)*pos);
+        }
+        return ans;
+    }
+}
+
+
+/*
+    Here is the plan, I cannot concentrate too well but I will try
+    
+    If we have n numbers we know that for each 1 * 2 * .... * n we will have (n-1)!
+    
+    Each level of 1...n will have (n-1)! possibilites in front of it,
+    so total = 1_1 * (n-1)! + 1_2 * (n-1)! + ... + 1_n * (n-1)! = total possibilies
+*/

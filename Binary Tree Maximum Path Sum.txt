@@ -1,0 +1,192 @@
+//Fifth Attempt:
+
+
+
+
+
+//Fourth Attempt
+Total Runtime: 3680 ms
+90% test cases passed.
+
+
+public int maxPathSum(TreeNode root) {
+        if(root == null) return Integer.MIN_VALUE;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        map.put(0, root.val);
+        
+        recurse(map, root, 0);
+        return map.get(0);
+    }
+    
+    public void recurse(HashMap<Integer, Integer> map, TreeNode node, int index){
+        if(node == null){
+            map.put(index, 0);
+            return;
+        }
+        
+        recurse(map, node.left, index * 2 + 1);
+        recurse(map, node.right, index * 2 + 2);
+        
+        int val = 
+            Math.max(node.val, Math.max(map.get(index*2 + 1) + node.val, map.get(index*2 + 2) + node.val));
+        
+        if(index != 0) map.put(index, val);
+        
+        if(map.get(0) < val){
+            map.put(0, val);
+        } 
+        if(map.get(0) < node.val + map.get(index*2 + 1) + map.get(index*2 + 2)){
+            map.put(0, node.val + map.get(index*2 + 1) + map.get(index*2 + 2));
+        }
+    }
+
+
+//Third Attempt
+(Unfinished)
+
+
+public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        if(root.left == null || root.right == null) return root.val;
+        ArrayList<Integer> dp = new ArrayList<Integer>();
+        LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
+        TreeNode node = null;
+        queue.addFirst(root);
+        
+        while(queue.size() > 0){
+            node = queue.removeFirst();
+            dp.add(0);
+            dp.add(0);
+            
+            if(node.left != null);
+        }
+        
+        
+        int pathSum = recurse(root);
+        
+        return pathSum;
+    }
+    
+    public int recurse(TreeNode node){
+        if(node == null) return  0;
+        
+        int leftChild = recurse(node.left),
+            rightChild = recurse(node.right);
+          
+        return 0;
+        
+    }
+
+
+
+
+
+
+
+//Second Try:
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        if(root.left == null || root.right == null) return root.val;
+        
+        int pathSum = recurse(root);
+        
+        return pathSum;
+    }
+    
+    public int recurse(TreeNode node){
+        if(node == null) return  0;
+        
+        int leftChild = recurse(node.left),
+            rightChild = recurse(node.right);
+          
+        return Math.max(
+                Math.max(node.val, node.val + leftChild + rightChild),
+                Math.max(
+                    Math.max(leftChild, rightChild),
+                    Math.max(node.val + leftChild, node.val + rightChild))
+                );
+        
+    }
+}
+
+
+
+//First Try:
+
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: An integer.
+     */
+    public int maxPathSum(TreeNode root) {
+        if(root == null) return 0;
+        if(root.left == null || root.right == null) return root.val;
+        
+        int pathSum = recurse(root);
+        
+        return pathSum;
+    }
+    
+    public int recurse(TreeNode node){
+        int curr = node.val, childValLeft = 0, childValRight = 0,
+            childMax = 0;
+            
+        if(node.left != null) {
+            childValLeft = recurse(node.left);
+            if(curr + childValLeft > curr)
+                curr += childValLeft;
+            else childMax = childValLeft;                
+        }
+        
+        if(node.right != null){
+            childValRight = recurse(node.right);
+            if(curr - childValLeft + childValRight > curr)
+                curr = curr - childValLeft + childValRight;
+            else if(childValRight > childMax) childMax = childValRight;
+        }
+        
+        return Math.max(curr, childMax);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+

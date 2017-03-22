@@ -1,0 +1,52 @@
+//First Submission failed because of time out. 28/30
+Total Runtime: 10588 ms
+55% test cases passed.
+
+
+
+
+/**
+ * Definition of Interval:
+ * public classs Interval {
+ *     int start, end;
+ *     Interval(int start, int end) {
+ *         this.start = start;
+ *         this.end = end;
+ *     }
+ */
+
+class Solution {
+    /**
+     * @param intervals: An interval array
+     * @return: Count of airplanes are in the sky.
+     */
+    public int countOfAirplanes(List<Interval> airplanes) { 
+        if(airplanes == null || airplanes.size() == 0) return 0;
+        return maxAirplanesInSky(airplanes, 0, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+    public int maxAirplanesInSky(List<Interval> airplanes, int c, int min, int max){
+        int maxCount = c;
+        for(int i = 0; i < airplanes.size(); i++){
+            Interval in = airplanes.remove(i);
+            
+            if(areOverlapped(in, min, max)){
+                int v=
+                maxAirplanesInSky(airplanes, c+1, Math.max(min, in.start), Math.min(max, in.end));
+                if(v > maxCount) maxCount = v;
+            }
+        
+            airplanes.add(i, in);
+        }
+        return maxCount;
+    }
+    
+    public boolean areOverlapped(Interval a, int start, int end){
+        if( a.start == start && a.end == end  ||
+            a.start > start && a.start < end  ||
+            a.start < start && a.end > end    ||
+            a.start > start && a.end < end    ||
+            a.start < end && a.end > end ) return true;
+        return false;
+    }
+}

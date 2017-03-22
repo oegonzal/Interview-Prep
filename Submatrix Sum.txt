@@ -1,0 +1,184 @@
+//Third Try: (cheated, I had to look it up)
+Total Runtime: 9219 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param matrix an integer matrix
+     * @return the coordinate of the left-up and right-down number
+     */
+    public int[][] submatrixSum(int[][] A) {
+        int rowI = 0, colI = 0;
+        int[][] array = new int[A.length+1][A[0].length+1];
+        
+        for(int i = 0; i <= A[0].length; ++i) array[0][i] = 0;
+        for(int i = 1; i <= A.length; ++i) array[i][0] = 0;
+        
+        for(int i = 0; i < A[0].length; ++i){
+            for(int j = 0; j < A.length; ++j){
+                array[j+1][i+1] = array[j+1][i] + array[j][i+1] + A[j][i] - array[j][i];
+            }
+        }
+            
+        
+        int[][] answer = new int[2][2];
+        for(int row = 0; row < A.length; ++row){
+            for(int upperRow = row+1; upperRow <= A.length; ++upperRow){
+                HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+                for(int col = 0; col <= A[0].length; ++col){
+                    int diff = array[upperRow][col] - array[row][col];
+                    if(map.containsKey(diff)){
+                        int lowerCol = map.get(diff);
+                        int[][] ans = {{row, lowerCol}, {upperRow-1, col-1}};
+                        return ans;
+                    }
+                    else{
+                        map.put(diff, col);
+                    }
+                }
+            }
+            
+        }
+        return answer;
+    }
+}
+
+//[[1,5,7],[3,7,-8],[4,-8,9]]
+//[[1,1,1,1,1,1,1,1,1,1,1,-10,1,1,1,1,1,1,1,1,1,1,1]]
+
+
+
+//Second Try: (Time Limit Exceeded)
+Total Runtime: 5338 ms
+61% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param matrix an integer matrix
+     * @return the coordinate of the left-up and right-down number
+     */
+    public int[][] submatrixSum(int[][] matrix) {
+        
+        int[][] answer= new int[2][2];
+        if(matrix.length == 0 || matrix[0].length == 0) return answer;
+        
+        int row = 0, col = 0;
+        while(row < matrix.length || col < matrix[0].length){
+            answer = helper(matrix, row, col);
+            if(answer != null) return answer;
+            else answer= new int[2][2];
+            
+            if(col == matrix.length-1 && row == matrix[0].length-1) break;
+            if(row + 1 < matrix.length) row++;
+            if(col + 1 < matrix[0].length) col++;
+        }
+        
+        return answer;
+    }
+    
+    public int[][] helper(int[][] A, int i, int j){
+        if(A[i][j] == 0) { int[][] answer = {{i, j}, {i, j}}; return answer; }
+        int[][] array = new int[A.length - i][A[0].length - j];
+        array[0][0] = A[i][j];
+        
+        for(int row = 0; row < A.length - i; row++){
+            for(int col = 0; col < A[0].length - j; col++){
+                int temp;
+                if(row == 0){
+                    if(col == 0) continue;
+                    temp =  A[i + row][j + col] + 
+                            array[row][col - 1];
+                            
+                    if(temp==0){ int[][] answer = {{i, j}, {i+row, j+col}}; return answer; }
+                    array[row][col]=temp;
+                }
+                else if(col == 0){
+                    if(row == 0) continue;
+                    temp =  A[i + row][j + col] +                       
+                            array[row - 1][col];    
+                            
+                    if(temp==0){ int[][] answer = {{i, j}, {i+row, j+col}}; return answer; }
+                    array[row][col]= temp;
+                }
+                else {
+                    temp =  array[row - 1][col] + 
+                            array[row][col - 1] - array[row-1][col-1] + 
+                            A[i+row][j+col];
+                            
+                    if(temp==0){ int[][] answer = {{i, j}, {i+row, j+col}}; return answer; }
+                    array[row][col] = temp;
+                }
+            }
+        }
+        return null;
+    }
+}
+
+//[[1,5,7],[3,7,-8],[4,-8,9]]
+//[[1,1,1,1,1,1,1,1,1,1,1,-10,1,1,1,1,1,1,1,1,1,1,1]]
+
+
+//First Try: (Wrong Answer)
+Total Runtime: 3430 ms
+46% test cases passed.
+
+public class Solution {
+    /**
+     * @param matrix an integer matrix
+     * @return the coordinate of the left-up and right-down number
+     */
+    public int[][] submatrixSum(int[][] matrix) {
+        
+        int[][] answer= new int[2][2];
+        if(matrix.length == 0 || matrix[0].length == 0) return answer;
+        for(int i = 0; i < matrix.length; i++){
+            if(i < matrix[0].length){                               //System.out.println("iteration i: " + i);
+                answer = helper(matrix, i);
+                if(answer != null) return answer;
+                else answer= new int[2][2];
+            }
+        }
+        return answer;
+    }
+    
+    public int[][] helper(int[][] A, int i){
+        if(A[i][i] == 0) { int[][] answer = {{i, i}, {i, i}}; return answer; }
+        int[][] array = new int[A.length - i][A[0].length - i];
+        array[0][0] = A[i][i];                                              //System.out.println(array[0][0]);
+        
+        for(int row = 0; row < A.length - i; row++){
+            for(int col = 0; col < A[0].length - i; col++){
+                int temp;
+                if(row == 0){
+                    if(col == 0) continue;
+                    temp =  A[i + row][i + col] + 
+                            array[row][col - 1];
+                            
+                    if(temp==0){ int[][] answer = {{i, i}, {i+row, i+col}}; return answer; }
+                    array[row][col]=temp;
+                }
+                else if(col == 0){
+                    if(row == 0) continue;
+                    temp =  A[i + row][i + col] +                       
+                            array[row - 1][col];    //System.out.println("*"+array[i + row - 1][i + col]);
+                                                                //System.out.println("*"+A[i + row][i + col]);
+                    if(temp==0){ int[][] answer = {{i, i}, {i+row, i+col}}; return answer; }
+                    array[row][col]= temp;
+                }
+                else {
+                    temp =  array[row - 1][col] + 
+                            array[row][col - 1] - array[row-1][col-1] + 
+                            A[i+row][i+col];
+                            
+                    if(temp==0){ int[][] answer = {{i, i}, {i+row, i+col}}; return answer; }
+                    array[row][col] = temp;
+                }                                                                   //System.out.println(temp);
+            }
+        }
+        return null;
+    }
+}
+
+//[[1,5,7],[3,7,-8],[4,-8,9]]

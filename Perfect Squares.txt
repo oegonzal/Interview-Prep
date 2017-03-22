@@ -1,0 +1,126 @@
+//Third try:
+Total Runtime: 10436 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param n a positive integer
+     * @return an integer
+     */
+    public int numSquares(int n) {
+        int[] dp = new int[n + 1];
+        Arrays.fill(dp, Integer.MAX_VALUE);
+        dp[0] = 0;
+        
+        for(int i = 1; i <= n; i++){
+            int j = 1, min = Integer.MAX_VALUE;
+            while(i - (j*j) >= 0){
+                min = Math.min(min, 1 + dp[i - (j*j)]);
+                j++;
+            }
+            dp[i] = min;
+        }
+        return dp[n];
+    }
+}
+
+    
+
+/*  
+    I have no idea how to solve this efficiently....
+    Im thinking solving it recursively
+
+
+*/
+
+
+
+
+//Second Try: (unfinished implemenntation)
+
+
+
+public class Solution {
+    /**
+     * @param n a positive integer
+     * @return an integer
+     */
+    public int numSquares(int n) {
+        if(n < 2) return 1;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        
+        return leastSquaresSum(n, map);
+    }
+    
+    public int leastSquaresSum(int n, HashMap<Integer, Integer> map){
+        if(n==0) return 0;
+        if(n==1) return 1;
+        
+        int min = Integer.MAX_VALUE;
+        for(int i = 1; i < n/2; i++){
+            int num = n - (i*i), val = 0;
+            if(num < 0) break;
+            else {
+                if(map.containsKey(num)) val = map.get(num);
+                else {
+                    
+                    System.out.println("n: " + n + ", num: " + num);
+                    val = 1 + leastSquaresSum(num, map);
+                    map.put(num, val);
+                }
+                if(min > val) min = val;
+            }
+        }
+        return min;
+    }
+}
+
+
+//First Try:
+
+
+
+public class Solution {
+    /**
+     * @param n a positive integer
+     * @return an integer
+     */
+    public int numSquares(int n) {
+        if(n < 2) return 1;
+        int n1 = 1, n2 = 1, num = n;
+        HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+        
+        while(num > 0){
+            num /= 2;
+            if(n1 < n2) n1 *= 2;
+            else n2 *= 2;
+        }
+        return leastSquaresSum(n, map, 1, Math.max(n1, n2));
+    }
+    
+    public int leastSquaresSum(int n, HashMap<Integer, Integer> map,int low,int high){
+        if(map.containsKey(n)) return map.get(n);
+        
+        int min = Integer.MAX_VALUE;
+        for(int i = high; i >= low; i-- ){
+            int num = n - (i * i);
+            if(num > 0 ){
+                int squareSum = 1 + leastSquaresSum(num, map, low, high);
+                if(squareSum < min) min = squareSum;   
+            }
+            else if(num == 0) return 1;
+        }
+        
+        map.put(n, min);
+        return min;
+    }
+}
+
+
+/*  
+    I have no idea how to solve this efficiently....
+    Im thinking solving it recursively
+
+
+*/

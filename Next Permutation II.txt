@@ -1,0 +1,51 @@
+//Third Submission with minor changes from first 2. Took about 35 mins
+Total Runtime: 2584 ms
+100% test cases passed.
+
+
+The trick to this one of course is knowing how permuations are updated to the next one.
+Look for the first descending number. Swap it with the last of the next increasing int to the right of it,
+then reverse everything to the right of that element. The trick was getting the swap right bc you have
+to swap with the LAST of the next increasing number to the right of the first descening number from end of the array.
+A mouthful to say I know but every single word is important.
+
+
+
+public class Solution {
+    /**
+     * @param nums: an array of integers
+     * @return: return nothing (void), do not return anything, modify nums in-place instead
+     */
+    public void nextPermutation(int[] nums) {
+        if(nums==null || nums.length <= 1) return;
+        
+        int right = nums.length - 1;
+        while(right > 0 && nums[right-1] >= nums[right--]);
+        
+        if(right == 0 && nums[right] > nums[right+1]) reverse(nums, 0, nums.length - 1);
+        else {
+            int temp = right, nextBiggest = nums[right+1], switchInd = right + 1;
+            for(int i = right + 2; i < nums.length; i++){
+                if(nums[i] <= nextBiggest && nums[i] > nums[right]){
+                    nextBiggest = nums[i];
+                    switchInd = i;
+                }
+            }
+            swap(nums, right, switchInd);
+            reverse(nums, right + 1, nums.length - 1);
+        }
+    }
+    public void reverse(int[] A, int start, int end){
+        for(int i = start; i < (end + start + 1)/2; i++) swap(A, i, end + start - i);
+    }
+    public void swap(int[] A, int i, int j){
+        int val = A[i];
+        A[i] = A[j];
+        A[j] = val;
+    }
+}
+
+//1,2
+//1,2,2
+//2,1
+//1,7,6,5,4,3,2

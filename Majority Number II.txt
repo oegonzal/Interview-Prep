@@ -1,0 +1,108 @@
+//First Try:
+Passed.
+
+
+public int majorityNumber(ArrayList<Integer> nums, int k) {
+        // write your code
+        if (nums == null || nums.size() == 0) {
+			return -1;
+		}
+		//map <number, #votes>
+		HashMap<Integer, Integer> map = new HashMap<Integer, Integer>();
+		for (int n : nums) {
+			if (!map.containsKey(n)) {
+				if (map.size() > k - 1) {
+					//if all slots occupied, vote negative to all elements
+					voteNegative(map);
+				} else { 
+					//get an available slot and vote positive
+					map.put(n, 1);
+				}
+			} else {
+				//vote positive
+				map.put(n, map.get(n) + 1);
+			}
+		}
+		int maxKey = 0;
+		int maxCount = 0;
+		for (int key : map.keySet()) {
+			if (map.get(key) > maxCount) {
+				maxCount = map.get(key);
+				maxKey = key;
+			}
+		}
+		return maxKey;
+    }
+    
+    private void voteNegative(Map<Integer, Integer> map) {
+        Set<Integer> keySet = map.keySet();
+        List<Integer> removeList = new ArrayList<>();
+        for (Integer key : keySet) {
+            if (map.get(key) == 1) {
+                removeList.add(key);
+            }
+            else {
+                map.put(key, map.get(key) - 1);
+            }
+        }
+        //remove candidates with 0 votes and free the slot
+        for (Integer key : removeList) {
+            map.remove(key);
+        }
+    }
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: The majority number that occurs more than 1/3
+     */
+    public int majorityNumber(ArrayList<Integer> nums) {
+        int bit = 1, third = nums.size()/3, majority = 0;
+        int[] bits = new int[32];
+        
+        for(int i = 0; i < nums.size(); i++){
+            for(int j = 0; j < 32; j++){
+                if((bit<<j & nums.get(i)) != 0) bits[j]+=1; //bits[j]-=1;
+            }
+        }
+        
+        // for(int i = 0; i < 32; i++){
+        //     if(bits[i] > third) bits[i] -= third;
+        //     else bits[i] = 0;
+        // }
+        // for(int i = 0; i < 32; i++) if(bits[i] > 0) bits[i] *= -1;
+        
+        // for(int i = 0; i < 32; i++) System.out.print(bits[i] + ", ");
+        // System.out.println();
+        
+        // for(int i = 0; i < nums.size(); i++){
+        //     for(int j = 0; j < 32; j++){
+        //         if((bit<<j & nums.get(i)) > 0) bits[j]+=1; //bits[j]-=1;
+        //     }
+        // }
+        
+        // for(int i = 0; i < 32; i++) System.out.print(bits[i] + ", ");
+        // System.out.println();
+        
+        // for(int i = 0; i < 32; i++){
+        //     if(bits[i] < 0) bits[i] += third;
+        //     if(bits[i] > 0) bits[i] = 0;
+        // }
+        
+        // for(int i = 0; i < nums.size(); i++){
+        //     for(int j = 0; j < 32; j++){
+        //         if((bit<<j & nums.get(i)) > 0) bits[j]+=1;
+        //     }
+        // }
+        
+        for(int i = 0; i < 32; i++){
+            if(bits[i] - third > 0) majority |= (bit<<i);
+        }
+        return majority;
+    }
+}
+
+
+//[2,2,5,1]
+//[99,2,99,2,99,3,3]

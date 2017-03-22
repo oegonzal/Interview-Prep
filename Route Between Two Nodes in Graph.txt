@@ -1,0 +1,48 @@
+//First Try:
+Total Runtime: 2384 ms
+100% test cases passed.
+
+/**
+ * Definition for Directed graph.
+ * class DirectedGraphNode {
+ *     int label;
+ *     ArrayList<DirectedGraphNode> neighbors;
+ *     DirectedGraphNode(int x) {
+ *         label = x;
+ *         neighbors = new ArrayList<DirectedGraphNode>();
+ *     }
+ * };
+ */
+public class Solution {
+   /**
+     * @param graph: A list of Directed graph node
+     * @param s: the starting Directed graph node
+     * @param t: the terminal Directed graph node
+     * @return: a boolean value
+     */
+    public boolean hasRoute(ArrayList<DirectedGraphNode> graph, 
+                            DirectedGraphNode s, DirectedGraphNode t) {
+        if(s == null || t == null || graph.size() < 1) return false;
+        if(s.label == t.label) return true;
+        
+        HashSet<Integer> visited = new HashSet<Integer>();
+        LinkedList<DirectedGraphNode> queue = new LinkedList<DirectedGraphNode>();
+        
+        queue.addFirst(s);
+        while(queue.size() > 0){
+            DirectedGraphNode currN = queue.removeFirst();
+            int neighborsLen = currN.neighbors.size();
+            for(int i = 0; i < neighborsLen; i++){
+                DirectedGraphNode neigh = currN.neighbors.get(i);
+                if(visited.add(neigh.label) == true){
+                    queue.addFirst(neigh);
+                }
+                if(neigh.label == t.label) return true;
+            }
+        }
+        return false;
+    }
+}
+
+
+//{0,1,4,5,7,8,9#1,3,4,6#2,8,3,4,5,7#3,6#4,3,6#5,1,3,4,6,9#6#7,9,3,4,5,1#8,9,3,4,6#9,3,4,6}, 3, 3

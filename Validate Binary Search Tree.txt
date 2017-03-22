@@ -1,0 +1,45 @@
+//First Try:
+Total Runtime: 3135 ms
+100% test cases passed.
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+    public boolean isValidBST(TreeNode root) {
+        if(root == null) return true; //in case start with no nodes
+        
+        return helper(root, root.val);
+        
+    }
+    
+    public boolean helper(TreeNode root, int parent_val){
+        if(root.right != null){
+            if(root.right.val <= root.val) return false;
+            if(root.val < parent_val && root.right.val >= parent_val) return false;
+            if(!helper(root.right, root.val)) return false;
+        }
+        
+        if(root.left != null){
+            if(root.left.val >= root.val) return false;
+            if(root.val > parent_val && root.left.val <= parent_val) return false;
+            if(!helper(root.left, root.val)) return false;
+        }
+        
+        return true;
+    }
+}
+
+//{10,5,15,#,#,6,20} //answer is false but got true

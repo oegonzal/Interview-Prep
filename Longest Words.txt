@@ -1,0 +1,32 @@
+//First Submission successful 5/15 mins
+Total Runtime: 2019 ms
+100% test cases passed.
+
+
+
+class Solution {
+    /**
+     * @param dictionary: an array of strings
+     * @return: an arraylist of strings
+     */
+    ArrayList<String> longestWords(String[] dictionary) {
+        ArrayList<String> ans = new ArrayList<String>();
+        if(dictionary == null || dictionary.length == 0) return ans;
+        
+        int curMax = 0;
+        for(int i = 0; i < dictionary.length; i++){
+            if(dictionary[i].length() == curMax){
+                ans.add(ans.size(), dictionary[i]);
+            }
+            else if(dictionary[i].length() > curMax){
+                curMax = dictionary[i].length();
+                ans = new ArrayList<String>();
+                ans.add(ans.size(), dictionary[i]);
+            }
+        }
+        
+        return ans;
+    }//5mins
+};
+
+//["dog","google","facebook","internationalization","blabla"]

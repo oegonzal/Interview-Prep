@@ -1,0 +1,211 @@
+//Third Try:
+Total Runtime: 8873 ms
+100% test cases passed.
+
+public class Solution {
+    
+    //Global variables
+    static final int[][] dim = {{1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+    static char A[][]=null, B[][]=null;
+    
+    public void surroundedRegions(char[][] board) {
+        if(board.length == 0 || board[0].length == 0) return;
+        A = board;
+        B = new char[A.length][A[0].length];
+        
+        for(int row = 0; row < A.length; row++){
+            for(int col = 0; col < A[0].length; col++){
+                B[row][col] = 'X';
+            }
+        }
+
+        for(int row = 0; row < A.length; row++){
+            if(A[row][0] == 'O') BSTsearch(A, B, row, 0);
+            if(A[row][A[0].length - 1] == 'O') BSTsearch(A, B, row, A[0].length - 1);
+        }
+        
+        for(int col = 0; col < A[0].length; col++){
+            if(A[0][col] == 'O') BSTsearch(A, B, 0, col);
+            if(A[A.length - 1][col] == 'O') BSTsearch(A, B, A.length - 1, col);
+        }
+        
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                A[i][j] = B[i][j]; 
+            }
+        }
+    }
+    
+    public void BSTsearch(char[][] A, char[][] B, int row, int col){
+        
+        LinkedList<Node> queue = new LinkedList<Node>();
+        Node n = new Node(row, col);
+        queue.addFirst(n);
+        B[n.x][n.y] = 'O';
+        
+        int x = 0, y = 0;
+        while(queue.size() != 0){
+            n = queue.removeFirst();
+            
+            for(int i = 0; i < 4; i++){
+                x = n.x + dim[i][0];
+                y = n.y + dim[i][1];
+                
+                if(x < 0 || x >= B.length || y < 0 || y >= B[0].length) continue;
+                else if(A[x][y] == 'O' && B[x][y] == 'X'){ B[x][y] = 'O'; queue.addFirst(new Node(x, y));}
+            }
+        }
+    }
+    
+    class Node{
+        public int x;
+        public int y;
+        
+        public Node(int x, int y){
+            this.x = x;
+            this.y = y;
+        }
+    }
+}
+
+
+
+
+//Second Try:
+Total Runtime: 5420 ms
+81% test cases passed.
+
+public class Solution {
+    
+    //Global variables
+    static final int[][] dim = {{1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+    static boolean answer = false;
+    static int x =0, y=0;
+    static char c = 'X';
+    static char A[][] = null, B[][] = null;
+    
+    public void surroundedRegions(char[][] board) {
+        if(board.length == 0 || board[0].length == 0) return;
+        A = board;
+        B = new char[A.length][A[0].length];
+        
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                if(A[i][j] == 'X') B[i][j] = 'X';
+                else if(A[i][j] == 'O' && B[i][j] != '\u0000') continue;
+                else{ isValid(i, j); changeChars(i, j); } 
+            }
+        }
+        
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                A[i][j] = B[i][j]; 
+            }
+        }
+    }
+    
+    public void isValid(int i, int j){
+        answer = false;
+        x =0; y=0;
+        B[i][j] = 'V';
+        
+        for(int ind = 0; ind < 4; ind++){
+            //get new coordinate values
+            x = i + dim[ind][0];
+            y = j + dim[ind][1];
+            
+            //recurse and check
+            if(x < 0 || x >= A.length || y < 0 || y >= A[0].length){ answer = true; return; }
+            else if(A[x][y] == 'O' && B[x][y] == '\u0000'){
+                isValid(x, y);
+                if(answer) return;
+            }
+        }
+    }
+    
+    public void changeChars(int i, int j){
+        x =0; y=0;
+        c = 'X';
+        if(answer) c = 'O';
+        B[i][j] = c;
+        
+        for(int ind = 0; ind < 4; ind++){
+            //get new coordinate values
+            x = i + dim[ind][0];
+            y = j + dim[ind][1];
+            
+            //recurse and check
+            if(x < 0 || x >= B.length || y < 0 || y >= B[0].length) continue;
+            else if(B[x][y] == 'V'){
+                changeChars(x, y);
+            }
+        }
+    }
+}
+
+//["XXXXX","XXXOX","XXXOX","XXOOX","XXOXX"]
+//["XXXXX","XXXOX","XXXOX","XXXOX","XXXXX"]
+//["XXXX","XOOX","XXOX","XOXX"]
+
+
+
+
+
+//First Try:
+Total Runtime: 5420 ms
+81% test cases passed.
+
+public class Solution {
+    public int[][] dim = {{1, 0}, {-1, 0}, {0, 1}, {0, -1} };
+    
+    public void surroundedRegions(char[][] A) {
+        char[][] B = new char[A.length][A[0].length];
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < A[0].length; j++){
+                if(A[i][j] == 'X') B[i][j] = 'X';
+                else if(A[i][j] == 'O' && B[i][j] != '\u0000') continue;
+                else changeChars(B, i, j, isValid(A, B, i, j)); 
+            }
+        }
+        A = B;
+    }
+    
+    public boolean isValid(A, B, i, j){
+        boolean answer = false;
+        int x =0, y=0;
+        B[i][j] = 'V';
+        
+        for(int ind = 0; ind < 4; ind++){
+            //get new coordinate values
+            x = i + dim[ind][0];
+            y = j + dim[ind][1];
+            
+            //recurse and check
+            if(x < 0 || x >= A.length || y < 0 || y >= A[0].length) return true;
+            else if(A[x][y] == 'O'){
+                if(B[x][y] == 'V') continue;
+                if(isValid(A, B, x, y)) return true;
+            }
+        }
+        return answer;
+    }
+    
+    public void changeChars(char[][] B, int i, int j, boolean isValid){
+        int x =0, y=0;
+        char c = 'X';
+        if(isValid) c = 'O';
+        
+        for(int ind = 0; ind < 4; ind++){
+            //get new coordinate values
+            x = i + dim[ind][0];
+            y = j + dim[ind][1];
+            
+            //recurse and check
+            if(x < 0 || x >= A.length || y < 0 || y >= A[0].length) continue;
+            else if(B[x][y] == 'V'){
+                B[x][y] = c;
+                changeChars(B, x, y, isValid);
+            }
+        }
+    }
+}

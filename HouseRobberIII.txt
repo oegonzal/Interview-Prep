@@ -1,0 +1,236 @@
+//Third Try:
+Total Runtime: 2799 ms
+100% test cases passed.
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public int houseRobber3(TreeNode root) {
+        if(root == null) return 0;
+        int sum = 0;
+        
+        int[] values = new int[2];
+        helper(root, values);
+        //printTree(root);
+        
+        return Math.max(values[0], values[1]);
+    }
+    
+    public void helper(TreeNode node, int[] values){
+        if(node.left == null && node.right == null){
+            values[0]=0;
+            values[1]=(node.val < 0)? 0 : node.val;
+            return;
+        }
+        
+        int childL = 0, grandChildL = 0, childR = 0, grandChildR = 0;
+        //boolean terminalChildL, terminalChildR;
+        
+        if(node.left != null){
+            helper(node.left, values);
+            childL= values[1];
+            grandChildL = values[0];
+        }
+        
+        if(node.right != null){
+            helper(node.right, values);
+            childR = values[1];
+            grandChildR = values[0];
+        }
+        
+        int val = (node.val < 0)? 0 : node.val;
+        int child = childL + childR, grandChild = grandChildL + grandChildR + val;
+        
+        if(child < grandChild){
+            values[0] = child;
+            values[1] = grandChild;
+        }
+        else{
+            values[0] = child;
+            values[1] = child;
+        }
+    }
+}
+
+//Second Try:
+Total Runtime: 2336 ms
+67% test cases passed.
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: The maximum amount of money you can rob tonight
+     */
+     
+    public int count = 0; 
+    
+    public int houseRobber3(TreeNode root) {
+        if(root == null) return 0;
+        int sum = 0;
+        
+        int[] values = new int[2];
+        helper(root, values);
+    
+        return Math.max(values[0], values[1]);
+    }
+    
+    public void helper(TreeNode node, int[] values){
+        if(node.left == null && node.right == null){
+            values[0]=0;
+            values[1]=node.val;
+            return;
+        }
+        
+        int childL = 0, grandChildL = 0, childR = 0, grandChildR = 0;
+        
+        if(node.left != null){
+            helper(node.left, values);
+            childL= values[1];
+            grandChildL = values[0];
+        }
+        
+        if(node.right != null){
+            helper(node.right, values);
+            childR = values[1];
+            grandChildR = values[0];
+        }
+        
+        int child = childL + childR, grandChild = grandChildL + grandChildR + node.val;
+        
+        if(child < grandChild){
+            values[0] = child;
+            values[1] = grandChild;
+        }
+        else{
+            values[0] = child;
+            values[1] = child;
+        }
+            
+    }
+    
+    public void printTree(TreeNode node){
+        count++;
+        System.out.println(node.val);
+        if(node.left == null && node.right == null){
+            System.out.println(node.val + " Terminal node and going up");
+            return;
+        }
+        
+        if(node.left != null){
+            System.out.println(node.val + " To left");
+            printTree(node.left);
+        }
+        
+        if(node.right != null){
+            System.out.println(node.val + " To right");
+            printTree(node.right);
+        }
+        
+        System.out.println(node.val + " Going up");
+    }
+    
+}
+
+
+
+//First Try:
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: The maximum amount of money you can rob tonight
+     */
+    public int houseRobber3(TreeNode root) {
+        // write your code here
+        int sum = 0;
+        
+        if(root == null) return 0;
+        sum = robber3Solution(root);
+        
+        return sum;
+    }
+    
+    public int recurse(TreeNode node, int levelDown) {
+        
+        int left = 0, right = 0, leftChildSkip = 0, rightChildSkip = 0, leftTotal = 0, rightTotal = 0, leafVal = 0;
+        
+        if( levelDown > 0 ) {
+            //Skip child if we include parent value
+            if(node.left != null) {
+                left = recurse(node.left, 0);
+                leftChildSkip = recurse(node.left, 1);
+                leftTotal =  (left > leftChildSkip) ? left : leftChildSkip;
+            }
+            
+            if(node.right != null) {
+                right = recurse(node.right, 0);
+                rightChildSkip = recurse(node.right, 1);
+                rightTotal = (right > rightChildSkip) ? right : rightChildSkip;
+            }
+            
+            //Skip this node value
+            return leftTotal + rightTotal;
+        }
+        else {
+            //Skip child nodes
+            if(node.left != null) left = recurse(node.left, 1);
+            if(node.right != null) right = recurse(node.right, 1);
+            
+            //Count node value
+            return node.val + left + right;
+        }
+    }
+    
+    public int robber3Solution(TreeNode root) {
+        //Initializations
+        int sum = 0;
+        
+        //dummy node
+        TreeNode dummy = new TreeNode(0);
+        dummy.left = root;
+        
+        return sum = recurse(dummy, 1);
+    }
+    
+    //idea is to compare to parent val and 2 levels below
+    //The point is to always keep track of cumulative 2 sums from below
+    //and to make decision for each last level based on parent value
+    public int[] helper(TreeNode node, int parentVal) {
+        
+        int temp = new int[2];
+        
+        //return array of 2 levels deep values, BASE CASE
+        if(node.left == null && node.right == null) return new int[]{0,0};
+        if(node.left != null) {
+            temp = helper(node.left, node.val) ;
+            
+            //corner cases (4 of them)
+            if(node.val < parentVal && node.val) ;
+            if(node.val < parentVal ) ;
+            if(node.val >= parentVal && node.val > temp[0]) return int[]{node.val + temp[1], temp[0]} ;
+            if(node.val >= parentVal ) ;
+        }
+        if(node.right != null) {
+            
+            temp = helper(node.right, node.val) ;
+        }
+        
+        return new int[]{0,0};
+    }
+    
+    
+}

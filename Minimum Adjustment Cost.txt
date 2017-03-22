@@ -1,0 +1,78 @@
+//Third Submission: 
+Total Runtime: 1265 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param A: An integer array.
+     * @param target: An integer.
+     */
+    
+    public int min = Integer.MAX_VALUE;
+    public int MinAdjustmentCost(ArrayList<Integer> A, int target) {
+        if(A == null || A.size() == 0) return 0;
+        
+        int minCost = Integer.MAX_VALUE, len = A.size();
+        int[][] scores = new int[len][100];
+        
+        for(int i = 1; i <= 100; i++) scores[0][i-1] = Math.abs(A.get(0) - i);
+        for(int i = 1; i < len; i++){
+            int iVal = A.get(i);
+            for(int j = 1; j <= 100; j++){
+                int cost = Math.abs(iVal - j);
+                scores[i][j-1] = Integer.MAX_VALUE;
+                for(int k = Math.max(1, j-target); k <= Math.min(100, j+target); k++){
+                    scores[i][j-1] = Math.min(scores[i][j-1], scores[i-1][k-1] + cost);
+                }
+            }
+        }
+        for(int i = 0; i < 100; i++) if(scores[len-1][i] < minCost) minCost = scores[len-1][i];
+        return minCost;
+    }
+}
+
+//For first solution:
+//Running time O(n*100*2k)
+//Memory O(100*n) - since it is a DFS it only ever goes n deep into the tree at a time.
+
+
+
+
+//First Submission: 30 mins		Time Limit Exceeded
+Total Runtime: 2588 ms
+44% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: An integer array.
+     * @param target: An integer.
+     */
+    
+    public int min = Integer.MAX_VALUE;
+    public int MinAdjustmentCost(ArrayList<Integer> A, int target) {
+        if(A== null || A.size() == 0) return 0;
+        
+        for(int i = 1; i <= 100; i++){
+            getLowestScore(A, target, i, 1, Math.abs(A.get(0) - i));
+        }
+        return min;
+    }
+    
+    public void getLowestScore(ArrayList<Integer> A, int target, int prevVal, int ind, int curSum){
+        
+        if(ind == A.size()) { if(curSum < min) min = curSum; }
+        else {
+            if(curSum >= min) return;
+            int iVal = A.get(ind);
+            for(int i = Math.max(prevVal-target, 0); i <= Math.min(prevVal + target, 100); i++){
+                getLowestScore(A, target, i, ind+1, curSum + Math.abs(iVal- i));
+            }
+        }
+    }
+}
+
+
+//For first solution:
+//Running time O(100*n^k) - HUGE!
+//Memory O(n) - since it is a DFS it only ever goes n deep into the tree at a time.

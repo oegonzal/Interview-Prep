@@ -1,0 +1,35 @@
+//First Submission: Successful Submission, did not finish within the first 15 mins of it, I did in 20 buts that's bc the problem misleded me and I did it wrong the first time.
+Total Runtime: 3112 ms
+100% test cases passed.
+
+
+public class Solution {
+    /** 
+     *@param A: A list of integers
+     *@param elem: An integer
+     *@return: The new length after remove
+     */
+    public int removeElement(int[] A, int elem) {
+        if(A==null || A.length == 0) return 0;
+        
+        int len = A.length, count = 0, right = len - 1;
+        for(int i = 0; i < len; i++){
+            if(A[i] == elem){
+                int temp = i + 1;
+                while(temp < len && A[temp] == elem) temp++;
+                
+                if(temp < len){
+                    int s = A[temp];
+                    A[temp] = A[i];
+                    A[i] = s;
+                }
+            }
+        }
+        
+        while(right >= 0 && A[right--] == elem){
+            count++;
+        }
+        
+        return len - count;
+    }
+}

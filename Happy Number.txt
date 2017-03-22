@@ -1,0 +1,37 @@
+//Second Submission but first was pretty similar. In the second submission I added the HashSet and return false in the end.
+Took me about 20 mins to complete which was past the 15 min given time.
+Total Runtime: 9661 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param n an integer
+     * @return true if this is a happy number or false
+     */
+    public boolean isHappy(int n) {
+        if(n < 1) return false;
+        HashSet<Integer> set = new HashSet<Integer>();
+        
+        while(!set.contains(n)){
+            set.add(n);
+            LinkedList<Integer> nums = new LinkedList<Integer>();
+            while(n/10 != 0 || n%10 != 0){
+                int temp = n%10;
+                nums.addLast(temp);
+                n /= 10;
+            }
+            
+            n=0;
+            for(int i = 0; i < nums.size(); i++) n += (nums.get(i) * nums.get(i));
+            //printStack(nums, n);
+            if(n==1) return true;
+        }
+        return false;
+    }
+    
+    public void printStack(LinkedList<Integer> stack, int sum){
+        for(int n : stack) System.out.print(n + " ");
+        System.out.print(sum);
+        System.out.println();
+    }
+}

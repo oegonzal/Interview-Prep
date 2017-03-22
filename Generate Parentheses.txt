@@ -1,0 +1,23 @@
+//First Submission: took me about 5 mins (I've seen this probelm before)
+Total Runtime: 3527 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param n n pairs
+     * @return All combinations of well-formed parentheses
+     */
+    public ArrayList<String> generateParenthesis(int n) {
+        ArrayList<String> allFormations = new ArrayList<String>();
+        if(n < 1) return allFormations;
+        
+        getAllParantheseFormations(allFormations, n, "", 0, 0);
+        return allFormations;
+    }
+    
+    public void getAllParantheseFormations(ArrayList<String> list, int n, String s, int i1, int i2){
+        if(i1 == n && i2 == n) list.add(s);
+        if(i1 < n) getAllParantheseFormations(list, n, s + "(", i1+1, i2);
+        if(i2 < i1) getAllParantheseFormations(list, n, s + ")", i1, i2+1);
+    }
+}

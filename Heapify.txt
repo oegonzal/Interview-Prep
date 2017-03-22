@@ -1,0 +1,54 @@
+public class Solution {
+    /**
+     * @param A: Given an integer array
+     * @return: void
+     */
+    public void heapify(int[] A) {
+        if(A.length == 0) return;
+        
+        int[] B = new int[A.length];
+        int curr = 0, parent = 0, swap = 0;
+        
+        B[0] = A[0];
+        for(int i = 1; i < A.length; i++){
+            int val = A[i];
+            
+            curr = i;
+            parent = (curr-1)/2;
+            
+            B[curr] = val;
+            while(val < B[parent]){
+                swap = B[parent];
+                B[parent] = val;
+                B[curr] = swap;
+                
+                if(parent-1 < 0) break;
+                curr = parent;
+                parent = (parent-1)/2;
+            }
+        }
+        for(int i = 0; i < A.length; i++) A[i] = B[i];
+    }
+    
+    /*
+        At first thought I believed that this has to be done in nLogn time because
+        it seems like we have to sort the array and the example also made it seem like it
+        needs to be sorted from smallest to biggest.
+        However it does not have to be sorted just parent nodes have to be higher than
+        child roots.
+    
+        Heap:
+        
+        Keep adding elements as they come to the heap.
+        1. if element is smaller,replace with current parent. place that pareent at the 
+        very bottom of the heap. And keep moving it up until if finds its spot.
+            - go to step 1.
+        
+        Else:
+        2. If element is bgger then keep make it child of smaller parent, make it child of
+        child that is null or right child and make the prev noe of that be its right child node
+        
+        lastly do an in order traversal and place elements in array.
+    
+    */
+}

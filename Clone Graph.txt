@@ -1,0 +1,71 @@
+//Second submission: Improved Version! Tail recursive enhanced! (I think)
+Total Runtime: 1901 ms
+100% test cases passed.
+
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param node: A undirected graph node
+     * @return: A undirected graph node
+     */
+    private HashMap<Integer, UndirectedGraphNode> s = new HashMap<Integer, UndirectedGraphNode>();
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode n) {
+        if(n == null) return n;
+        
+        UndirectedGraphNode nn = new UndirectedGraphNode(n.label);
+        s.put(nn.label, nn);
+        for(int i = 0; i < n.neighbors.size(); i++){
+            UndirectedGraphNode item = n.neighbors.get(i); 
+            if(item != null && !s.containsKey(item.label)) cloneGraph(item);
+            nn.neighbors.add(s.get(item.label));
+        }
+        return nn;
+    }
+}
+
+
+
+
+
+First submission: Success! 45mins....
+Total Runtime: 2626 ms
+100% test cases passed.
+
+
+/**
+ * Definition for undirected graph.
+ * class UndirectedGraphNode {
+ *     int label;
+ *     ArrayList<UndirectedGraphNode> neighbors;
+ *     UndirectedGraphNode(int x) { label = x; neighbors = new ArrayList<UndirectedGraphNode>(); }
+ * };
+ */
+public class Solution {
+    /**
+     * @param node: A undirected graph node
+     * @return: A undirected graph node
+     */
+    private HashMap<Integer, UndirectedGraphNode> s = new HashMap<Integer, UndirectedGraphNode>();
+    public UndirectedGraphNode cloneGraph(UndirectedGraphNode node) {
+        if(node == null) return node;
+        return buildGraphClone(node);
+    }
+    
+    public UndirectedGraphNode buildGraphClone(UndirectedGraphNode n){
+        UndirectedGraphNode nn = new UndirectedGraphNode(n.label);
+        s.put(nn.label, nn);
+        for(int i = 0; i < n.neighbors.size(); i++){
+            UndirectedGraphNode item = n.neighbors.get(i); 
+            if(item != null && !s.containsKey(item.label)) buildGraphClone(item);
+            nn.neighbors.add(s.get(item.label));
+        }
+        return nn;
+    }
+}	

@@ -1,0 +1,114 @@
+//Second Try: 
+
+
+
+
+//First Try: (not done)
+
+public class Solution {
+    /**
+     * @param heights: an array of integers
+     * @return: a integer
+     */
+    public int trapRainWater(int[] heights) {
+        
+        if(heights == null || heights.length == 0) return 0;
+        
+        int answer = 0;
+        int currCeiling = 0;
+        int blackSum = 0
+        int blueSum = 0;
+        
+        int i;
+        for(i = 0; i < heights.length; i++){
+            if(heights[i] != 0){
+                currCeiling = heights[i];
+                i++;
+                break;
+            }
+        }
+        
+        for(; i < heights.length; i++){
+            if(heights[i]<currCeiling){
+                answer += (currCeiling - heights[i]);
+            }
+            else{
+                currCeiling = heights[i];
+            }
+        }
+        
+        return answer;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+// int max = heights[0];
+        // int maxInd = 1;
+        // int numInc = 0;
+        // for(int i = 1; i < heights.length; i++){
+        //     if(heights[i]> max){
+        //         max = heights[i];
+        //         maxInd = i;
+        //     }
+        //     if(heights[i] > heights[i - 1]){
+        //         numInc++;
+        //     }
+        // }
+
+
+class Solution {
+public:
+    int trap(int A[], int n) {
+        int left=0; int right=n-1;
+        int res=0;
+        int maxleft=0, maxright=0;
+        while(left<=right){
+            if(A[left]<=A[right]){
+                if(A[left]>=maxleft) maxleft=A[left];
+                else res+=maxleft-A[left];
+                left++;
+            }
+            else{
+                if(A[right]>=maxright) maxright= A[right];
+                else res+=maxright-A[right];
+                right--;
+            }
+        }
+        return res;
+    }
+};
+
+
+//Best solution:
+Total Runtime: 1530 ms
+100% test cases passed.
+
+public class Solution {
+    public int trap(int[] heights) {
+        
+        if ( heights.length <= 2 ) { return 0; }
+        
+        int left = 0, right = heights.length-1, totalArea = 0;
+        int leftMaxHeight = heights[left], rightMaxHeight = heights[right];
+        
+        while ( left < right ) {
+            if ( heights[left] < heights[right] ) {
+                leftMaxHeight = Math.max(leftMaxHeight, heights[++left]);
+                totalArea += leftMaxHeight-heights[left];
+            } else {
+                rightMaxHeight = Math.max(rightMaxHeight, heights[--right]);
+                totalArea += rightMaxHeight-heights[right];
+            } 
+        }
+        return totalArea;
+    }
+}

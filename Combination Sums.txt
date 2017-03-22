@@ -1,0 +1,52 @@
+//First Try:
+Total Runtime: 2615 ms
+100% test cases passed.
+
+
+
+public class Solution {
+    /**
+     * @param candidates: A list of integers
+     * @param target:An integer
+     * @return: A list of lists of integers
+     */
+    public ArrayList<ArrayList<Integer>> combinationSum(int[] A, int target) {
+        ArrayList<ArrayList<Integer>> comb = new ArrayList<ArrayList<Integer>>();
+        if(A==null || A.length == 0 || target == 0) return comb;
+        
+        Arrays.sort(A);
+        recurse(comb, new ArrayList<Integer>(), A, 0, target);
+        
+        return comb;
+    }
+    
+    public void recurse(ArrayList<ArrayList<Integer>> comb, ArrayList<Integer> sumK, int[] A, int startInd, int target){
+        if(target == 0){
+            ArrayList<Integer> item = new ArrayList<Integer>();
+            for(int num : sumK) item.add(num);
+            comb.add(item);
+            return;
+        }
+        if(target < 0) return;
+        
+        for(int i = startInd; i < A.length; i++){
+            if(i > 0 && A[i] == A[i-1]) continue;
+            int num = A[i];
+            sumK.add(num);
+            recurse(comb, sumK, A, i, target - num);
+            sumK.remove(sumK.size() - 1);
+        }
+    }
+}
+
+/*
+    Keep ordering as non-descending
+    Don't have duplicate pairings
+
+*/
+
+//[2], 1
+//[1], 2
+//[1], 1
+//[2,3,6,7], 7
+//[2,2,3], 7

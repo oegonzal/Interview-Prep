@@ -1,0 +1,63 @@
+//First Try:
+Total Runtime: 1922 ms
+100% test cases passed.
+
+
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param root: The root of the binary search tree.
+     * @param k1 and k2: range k1 to k2.
+     * @return: Return all keys that k1<=key<=k2 in ascending order.
+     */
+    public ArrayList<Integer> searchRange(TreeNode root, int k1, int k2) {
+        ArrayList<Integer> range = new ArrayList<Integer>();
+        if(root == null) return range;
+        
+        LinkedList<TreeNode> stack = new LinkedList<TreeNode>();
+        stack.addLast(root);
+        
+        while(stack.size() > 0){
+            TreeNode n = stack.peekLast();
+            
+            if(n.val >= k1 && n.val <= k2){
+                if(n.left != null){
+                    stack.addLast(n.left);
+                    n.left = null;
+                    continue;
+                }
+                range.add(n.val);
+                stack.removeLast();
+                if(n.right != null) stack.addLast(n.right);
+                continue;
+            }
+            else if(n.val < k1 && n.right != null){
+                stack.addLast(n.right);
+                n.right = null;
+                continue;
+            }
+            else if(n.val > k2 && n.left != null){
+                stack.addLast(n.left);
+                n.left = null;
+                continue;
+            }
+            stack.removeLast();
+        }
+        return range;
+    }
+}
+
+
+//{}, 1, 10
+//{20,8,22,4,12}, 10, 22
+

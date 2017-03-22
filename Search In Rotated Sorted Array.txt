@@ -1,0 +1,152 @@
+//Third Try:
+Total Runtime: 1875 ms
+100% test cases passed.
+
+public class Solution {
+    /** 
+     *@param A : an integer rotated sorted array
+     *@param target :  an integer to be searched
+     *return : an integer
+     */
+    public int search(int[] A, int target) {
+        
+        if(A == null || A.length == 0) return -1;
+        int start = 0, end = A.length - 1, n = A.length, mid = 0;
+        
+        if(A[start] > A[end]){
+            while(start + 1 < end){
+                mid = start + (end - start)/2;
+                if(A[start] > A[mid]) end = mid;
+                else if(A[end] < A[mid]) start = mid;
+            } //System.out.println("Start: " + start + ", End: " + end);
+            if(target >= A[end] && target <= A[A.length-1]){start = end; end = A.length-1; }
+            else { end = start; start = 0;  }
+        }
+        
+        while(start + 1 < end ){
+            mid = start + (end - start)/2;  
+            if(A[mid] == target) return mid;
+            else if(target < A[mid]) end = mid;
+            else start = mid;
+        }
+        
+        if(A[end] == target) return end;
+        if(A[start] == target) return start;
+        return -1;
+    }
+    
+    public void print(String s){
+        System.out.println(s);
+    }
+}
+
+//[1,2,3], 1
+//[4,5,1,2,3], 7
+//[4,5,6,7,0,1,2,3], 7
+
+
+
+//Second Try:
+
+
+public class Solution {
+    /** 
+     *@param A : an integer rotated sorted array
+     *@param target :  an integer to be searched
+     *return : an integer
+     */
+    public int search(int[] A, int target) {
+        
+        if(A == null || A.length == 0) return -1;
+        int start = 0, end = A.length - 1, n = A.length, mid = 0;
+        
+        if(A[start] > A[end]){
+            while(start + 1 < end){
+                mid = start + (end - start)/2;
+                if(A[start] > A[mid]) end = mid;
+                else if(A[end] < A[mid]) start = mid;
+            } System.out.println("Start: " + start + ", End: " + end);
+        }
+        
+        int x = n - end;
+        
+        print("(start + 1 + x)%n : " + (start + 1 + x)%n);
+        print("(end + x)%n : " + (end + x)%n);
+        
+        while( (start + 1 + x)%n < (end + x)%n ){
+            mid = (start + x)%n + ((end+x)%n - (start+x)%n)/2;  print("Mid: " + mid);
+            if(A[mid] == target) return mid;
+            else if(target < A[mid]) end = mid;
+            else start = mid;
+        }
+        
+        if(A[end] == target) return end;
+        if(A[start] == target) return start;
+        return -1;
+    }
+    
+    public void print(String s){
+        System.out.println(s);
+    }
+}
+
+//[1,2,3], 1
+//[4,5,1,2,3], 7
+//[4,5,6,7,0,1,2,3], 7
+
+
+
+//First Try: (Wrong Answer)
+Total Runtime: 278 ms
+20% test cases passed.
+
+public class Solution {
+    /** 
+     *@param A : an integer rotated sorted array
+     *@param target :  an integer to be searched
+     *return : an integer
+     */
+    public int search(int[] A, int target) {
+        
+        if(A == null || A.length == 0) return -1;
+        int start = 0, end = A.length - 1;
+        
+        while(start + 1 < end){
+            int mid = start + (end - start)/2;
+            
+            if(A[mid] == target) return mid;
+            else if(target < A[mid] && target <= A[end]) start = mid;
+            else if(target > A[mid] && target >= A[start]) end = mid;
+            else if(target < A[mid]) end = mid;
+            else if(target > A[mid]) start = mid;
+        }
+        
+        if(A[end] == target) return end;
+        if(A[start] == target) return start;
+        return -1;
+    }
+}
+
+//[1,2,3], 1
+
+
+
+public int search(int[] A, int target) {
+        
+    if(A == null || A.length == 0) return -1;
+    int start = 0, end = A.length - 1;
+    
+    while(start + 1 < end){
+        int mid = start + (end - start)/2;
+        
+        if(A[mid] == target) return mid;
+        else if(target < A[mid] && target < A[start]) start = mid;
+        else if(target > A[mid] && target > A[end]) end = mid;
+        else if(target < A[mid]) end = mid;
+        else if(target > A[mid]) start = mid;
+    }
+    
+    if(A[end] == target) return end;
+    if(A[start] == target) return start;
+    return -1;
+}

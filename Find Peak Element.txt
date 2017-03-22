@@ -1,0 +1,189 @@
+//Sixth optimized try:
+Total Runtime: 1673 ms
+100% test cases passed.
+
+class Solution {
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+
+        int lowInd  = 1,
+            highInd = A.length - 2;
+        
+        while(lowInd+1 < highInd){
+            int mid = (lowInd + highInd)/2;
+            if(A[mid] < A[mid+1]) lowInd = mid;
+            else if(A[mid] < A[mid-1]) highInd = mid;
+            else return mid;
+        }
+        
+        if(A[lowInd] > A[highInd]) return lowInd;
+        return highInd;
+    }
+}
+
+
+//Fifth try:
+Total Runtime: 1642 ms
+100% test cases passed.
+
+class Solution {
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+
+        int lowInd  = 1,
+            highInd = A.length - 2;
+        
+        while(lowInd+1 < highInd){
+            int mid = (lowInd + highInd)/2;
+            
+            if(A[mid] > A[mid-1] && A[mid] > A[mid+1]) return mid;
+            else if(A[mid] <= A[highInd]){
+                while(A[mid+1] < A[mid]) mid++;
+                lowInd = ++mid;
+            }
+            else if(A[mid] <= A[lowInd]){
+                while(A[mid-1] > A[mid]) mid--;
+                highInd = ++mid;
+            }
+            else { highInd--; lowInd++; }
+        }
+        
+        if(A[highInd] > A[highInd-1] && A[highInd] > A[highInd+1]) return highInd;
+        return lowInd;
+    }
+}
+
+//Fourth Try:
+Total Runtime: 1267 ms
+70% test cases passed.
+
+class Solution {
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+
+        int lowInd  = 1,
+            highInd = A.length - 2;
+        
+        if(A[lowInd] > A[highInd]){
+            while(lowInd+1 < highInd){
+                int mid = (lowInd + highInd)/2;
+                
+                if(A[lowInd] > A[lowInd-1] && A[lowInd] > A[lowInd+1]) return lowInd;
+                else if(A[mid] <= A[lowInd]) highInd = mid;
+                else { lowInd++; highInd--; }
+            }
+        }
+        else{
+            while(lowInd+1 < highInd){
+                int mid = (lowInd + highInd)/2;
+                
+                if(A[highInd] > A[highInd-1] && A[highInd] > A[highInd+1]) return highInd;
+                else if(A[mid] <= A[highInd]) lowInd = mid;
+                else { lowInd++; highInd--; }
+            }
+        }
+        
+        if(A[highInd] > A[highInd-1] && A[highInd] > A[highInd+1]) return highInd;
+        return lowInd;
+    }
+}
+
+
+
+//Third Try:
+
+
+class Solution {
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+
+        int lowInd  = 1,
+            highInd = A.length - 2;
+        
+        while(lowInd+1 < highInd){
+            int mid = (lowInd + highInd)/2;
+            if(A[mid] > A[mid-1] && A[mid] > A[mid+1]) return mid;
+            else if(A[mid] <= A[highInd]) lowInd = mid;
+            else if(A[mid] <= A[lowInd]) highInd = mid;
+            else { lowInd++; highInd--; }
+        }
+        
+        
+        if(A[highInd] > A[highInd-1] && A[highInd] > A[highInd+1]) return highInd;
+        return lowInd;
+    }
+}
+
+//System.out.println("Low Ind: " + lowInd + ", High Ind: " + highInd + ", Mid Ind: " + mid + " , A[lowInd]: " + A[lowInd] + " , A[highInd]: " + A[highInd] + " , A[mid]: " + A[mid]);
+//System.out.println("Array Length: " + A.length);
+//System.out.println("High Ind: " + highInd + "Low Ind: " + lowIn);
+//[1,2,1,3,4,5,7,6]
+//[1,10,9,8,7,6,5,4]
+//[683,800,926,1710,99,1939,1186,690,595,180,200,992,502,921,191,38,717,817,368,551,950,618,915,40,452,266,416,991,44,946,261,829,8,460,118,883,418,209,483,500,492,912,421,347,233,50,33,781,277,282,700,786,987,831,964,82,153,827,289,47,451,967,622,202,429,268,42,682,857,41,412,427,909,699,214,519,758,12,57,193,961,724,40,857,532,183,75,688,764,729,718,929,6,13,878,788,15,862,227,619,104]
+
+
+//Second Try: (Failed Submission, time exceeded)
+Total Runtime: 2986 ms
+64% test cases passed.
+
+
+class Solution {
+    /**
+     * @param A: An integers array.
+     * @return: return any of peek positions.
+     */
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+        
+        int lowInd  = 1,
+            highInd = A.length - 2;
+        
+        while(lowInd < highInd){
+            int mid = (lowInd + highInd)/2;
+            
+            if(A[mid] <= A[highInd]) lowInd = mid;
+            else if(A[mid] <= A[lowInd]) highInd = mid;
+            else { lowInd++; highInd--; }
+
+            if(A[highInd] > A[highInd-1] && A[highInd] > A[highInd+1]) break;
+        }
+        return highInd;
+    }
+}
+
+
+//First Try: (Failed Submission, time exceeded)
+Total Runtime: 2000 ms
+0% test cases passed.
+
+class Solution {
+    /**
+     * @param A: An integers array.
+     * @return: return any of peek positions.
+     */
+    public int findPeak(int[] A) {
+        if(A.length < 3) return -2;
+        
+        int lowInd  = 1,
+            highInd = A.length - 2,
+            last = 1,
+            mid = (lowInd + highInd)/2;
+        
+        while(lowInd < highInd){
+            //if(mid == last) break;
+            mid = (lowInd + highInd)/2;
+            //last = mid;
+            
+            if(A[mid] <= A[highInd]) lowInd = mid;
+            else if(A[mid] <= A[lowInd]) highInd = mid;
+            else { lowInd++; highInd--; }
+            
+            // if(A[mid] > A[highInd]) highInd = mid;
+            // else lowInd = mid;
+        }
+        return highInd;
+    }
+}
+
+//[1,2,1,3,4,5,7,6]
+//[1,10,9,8,7,6,5,4]

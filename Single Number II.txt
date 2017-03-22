@@ -1,0 +1,253 @@
+//Sixth Try:
+Total Runtime: 2820 ms
+100% test cases passed.
+
+
+public class Solution {
+
+// 	public void addPQ(LinkedList<Integer> queue, Integer n){
+// 	    if(queue.size() == 0) queue.addLast(n);
+// 	    else if(queue.peekLast().val < n){
+// 	        Integer val = queue.removeLast();
+// 	        addPQ(queue, n);
+// 	        queue.addLast(val);
+// 	    }
+// 	    else{
+// 	        queue.addLast(n);
+// 	    }
+// 	}
+	
+    public int singleNumberII(int[] A) {
+        
+        int[] bitState = new int[32];
+        for(int i=0; i<A.length; i++){
+            int num = A[i];
+            for(int j=0; j<32; j++){
+                int bit = (num >> j) & 1;
+                if(bit == 1){
+                    bitState[j] = bitState[j] == 2 ? 0 : bitState[j] + 1;
+                }
+            }
+        }
+        
+        int res = 0;
+        for(int i=0; i<32; i++){
+            if(bitState[i] != 0){
+                res |= (1 << i);
+            }
+        }
+        return res;
+        // int one = -1, two = -1;
+        // for(int i = 0; i < A.length; i++){
+        //     one = (one ^ A[i]) & (~two);
+        //     two = (two ^ A[i]) & (~one);
+        // }
+        // return one;
+    }
+}
+
+
+//Fifth Try:
+
+public class Solution {
+
+// 	public void addPQ(LinkedList<Integer> queue, Integer n){
+// 	    if(queue.size() == 0) queue.addLast(n);
+// 	    else if(queue.peekLast().val < n){
+// 	        Integer val = queue.removeLast();
+// 	        addPQ(queue, n);
+// 	        queue.addLast(val);
+// 	    }
+// 	    else{
+// 	        queue.addLast(n);
+// 	    }
+// 	}
+	
+    public int singleNumberII(int[] A) {
+        if(A == null || A.length == 0) return 0;
+        
+        PriorityQueue<Integer> arrHeap = new PriorityQueue<Integer>();
+        PriorityQueue<Integer> bucketHeap = new PriorityQueue<Integer>();
+        
+        int k = A[0], b1 = 0, b2 = 0, b3 = 0, smallest = 0, medium = 0, biggest = 0, count = 0;
+        
+        //System.out.println("s: " + b1 + " , m: " + b2 + " , b: " + b3);
+        for(int i = 2; i < A.length; i=i+3, count++){
+            
+            arrHeap.add(A[i-2]);
+            arrHeap.add(A[i-1]);
+            arrHeap.add(A[i]);
+            
+            smallest = arrHeap.remove();
+            medium = arrHeap.remove();
+            biggest = arrHeap.remove();
+            
+            bucketHeap.add(b1);
+            bucketHeap.add(b2);
+            bucketHeap.add(b3);
+            
+            b1 = bucketHeap.remove() + biggest;
+            b2 = bucketHeap.remove() + medium;
+            b3 = bucketHeap.remove() + smallest;
+            
+            // System.out.println("+  "+biggest + " , +  " + medium + " , +  " + smallest + '\n');
+            // System.out.println("s: " + b1 + " , m: " + b2 + " , b: " + b3);
+        }
+        
+        if(b1==b2 && b2==b3) return A[A.length - 1];
+        
+        bucketHeap.add(b1);
+        bucketHeap.add(b2);
+        bucketHeap.add(b3);
+        
+        System.out.println("s: " + b1 + " , m: " + b2 + " , b: " + b3);
+    
+        b1 = bucketHeap.remove() + A[A.length - 1];
+        b2 = bucketHeap.remove();
+        b3 = bucketHeap.remove();
+    
+        System.out.println("s: " + b1 + " , m: " + b2 + " , b: " + b3);
+        // System.out.println("x: " + (count*3));
+        
+        //k = Math.max(b1, Math.max(b2, b3)) - Math.min(b1, Math.min(b2, b3));
+        
+        //int x = count*3;
+        //k = (b1 - x) + (b2 - x) + (b3 - x);
+        
+        k = 3*A[A.length - 1] + (Math.max(b1, Math.max(b2, b3)) - Math.min(b1, Math.min(b2, b3)));
+        return k;
+    }
+}
+
+//[1,8,7,8,8,12,9,7,9,7,9,1,2,12,3,3,3,2,2,4,1,12]
+//
+//
+
+/*
+    Either use a hashmap 
+    
+    OR
+    
+    A min heap
+    
+    OR 
+    
+    XOR
+    
+    OR
+    
+    Division By 3
+    
+    OR
+    
+    Mapping within array
+    
+    OR
+    
+    3 stacks
+*/
+
+
+
+//Fourth Try:
+
+
+public class Solution {
+
+	public void addPQ(LinkedList<Integer> queue, Integer n){
+	    if(queue.size() == 0) queue.addLast();
+	    else if(queue.peekLast().val < n){
+	        Integer val = queue.removeLast();
+	        addPQ(queue, n);
+	        queue.addLast(val);
+	    }
+	    else{
+	        queue.addLast(n);
+	    }
+	}
+	
+    public int singleNumberII(int[] A) {
+        
+        LinkedList<Integer> lowerBound = new LinkedList<Integer>();
+        for(int i = 0; i < 3; i++) lowerBound.addLast(0);
+        
+        LinkedList<Integer> upperBound = new LinkedList<Integer>();
+        Integer n = 0;
+        
+        for(int i = 0; i < A.length; i++){
+            n = lowerBound.removeLast() + A[i]; //n += A[i];
+            addPQ(upperBound, n);
+            
+            if(uppBound.size() == 3){
+                for(int i = 0; i < 3; i++) lowerBound.addLast(upperBound.removeFirst());
+            }
+        }
+        
+        return 0;
+    }
+}
+
+
+//Third Method:
+
+public class Solution {
+	/**
+	 * @param A : An integer array
+	 * @return : An integer 
+	 */
+    public int singleNumberII(int[] A) {
+        int sum = 0, div = 0, i = 0;
+        for(; i < A.length - 1; i++){
+            sum += A[i];
+        }                                   //System.out.println("Sum: " + sum);
+        div = sum%3;                        //System.out.println("Div: " + div);
+        
+        return A[i] + div;
+    }
+}
+
+
+//Second Try:
+
+public class Solution {
+	/**
+	 * @param A : An integer array
+	 * @return : An integer 
+	 */
+    public int singleNumberII(int[] A) {
+        int a = 0, b = 0, c = 0, temp = 0, k = 0;
+        for(int i = 0; i < A.length; i++){
+            temp = Math.min(a, Math.min(b, c));
+            if(temp == a) a += Math.abs(A[i]);
+            else if(temp == b) b += Math.abs(A[i]);
+            else c += Math.abs(A[i]);
+        }
+        
+        //System.out.println("a: " + a + ", b: " + b + ", c: " + c);
+        
+        k = Math.max(a, Math.max(b, c)) - Math.min(a, Math.min(b, c));
+        return k;
+    }
+}
+
+
+
+
+//First Try:
+
+
+public class Solution {
+	/**
+	 * @param A : An integer array
+	 * @return : An integer 
+	 */
+    public int singleNumberII(int[] A) {
+        float sum = 0;
+        for(int i = 0; i < A.length; i++){
+            sum += ((float)A[i]/3);             System.out.println(sum);
+        }
+        
+        int num = (int)sum;                     System.out.println(num);
+        return (int)(sum - num)*3;
+    }
+}

@@ -1,0 +1,30 @@
+//First Try:
+Total Runtime: 2097 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param A: A list of lists of integers
+     * @return: An integer
+     */
+    public int jump(int[] A) {
+        int[] dp = new int[A.length];
+        
+        dp[A.length-1] = 0;
+        for(int i = A.length-2; i >= 0; i--){
+            int ind = i + A[i];
+            if(ind > A.length-1) ind = A.length-1;
+            
+            dp[i] = dp[ind--] + 1;
+            for(int j = ind; j >= i; j--){
+               dp[i] = Math.min(dp[i], dp[j] + 1); 
+            }
+        }
+        return dp[0];
+    }
+}
+//[3]
+//[1,4]
+//[13,52,42,21,58]
+//[3,0,0,3,0,0,67]

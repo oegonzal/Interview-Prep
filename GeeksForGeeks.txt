@@ -1,0 +1,485 @@
+Find Equal (or Middle) Point in a sorted array with duplicates
+
+
+public int solution(int[] A){
+	int index = -1;
+	if(A==null || A.length == 0) return index;
+
+	LinkedList<Integer> stack = new LinkedList<Integer>();
+	stack.addLast(A[0]);
+
+	for(int i = 1; i < A.lenght; i++){
+		if(A[i] != A[i-1]) stack.push(A[i]);
+	}
+
+	if(stack.size()% == 2) return index;
+	else {
+		int middle = stack.size()/2 + 1;
+		while(middle-->0){
+			index = stack.removeLast():
+		}
+	}
+
+	return index;
+}
+
+
+//OR
+
+public int solution(int[] A){
+	if(A==null || A.length == 0) return -1;
+	int count = 1, middle = 0;
+
+	for(int i = 1; i < A.lenght; i++){
+		if(A[i] != A[i-1]) count++;
+	}
+	if(count%2 == 0) return -1; 
+	while(count/2 - 1 > 0){
+		if(A[++middle] != A[middle-1]) count--;
+	}
+	return middle;
+}
+
+
+//Sum of maximum elements of all subsets
+
+public int solution(int[] A){
+	int sum = 0;
+	if(A==null || A.length == 0) return sum;
+	//Arrays.sort(A);
+
+	ArrayList<Integer> nums = new ArrayList<Integer>();
+	nums.addLast(A[0]);
+
+	for(int i = 1; i < A.length; i++){
+		int size = nums.size();
+		while(size-->0){
+			if(nums.get(size) < A[i]) nums.add(A[i]);
+			else nums.add(nums.get(size));
+		}
+	}
+	for(int n : nums) sum += n;
+	return sum;
+}
+
+
+Find Maximum Sum Strictly Increasing Subarray
+
+
+
+
+
+Find the element that appears once in a sorted array
+
+public int solution(int[] A){
+	if(A==null || A.length == 0) return 0;
+
+	int start = 0, end = A.length - 1;
+
+	while(start < end && end != 0){
+		int mid = (start + end)/2;
+		if(A[mid] == A[mid+1]) start = mid + 1;
+		else end = mid;
+	}
+	return A[end];
+}
+
+
+//Size of array has to be odd
+
+
+
+
+Find if an array of strings can be chained to form a circle | Set 2
+
+We have to check first and last letter of each String.
+
+Assume we have thousands of Strings what do we do there to keep track if they can be chainged in a circle?
+
+What makes a circle happen?
+It needs to have even connections.
+Ending and beginning need to be even in total count and must be divisible by 2;
+
+I can make a n nodes with beginning and end the letter of a specific word.
+
+Do recursion and chain all possible possibilites. 
+
+Return true if there is an option that continues traversing list after everything has been chained up.
+
+Is there anything more efficient bc this would take 2^(n-1)
+
+We would need to have a list of the strings, or array to mark visited
+
+
+public boolean solution(String[] A){
+	if(A==null || A.length == 0 || ) return false;
+	boolean[] visited = new boolean[A.length];
+	char c = A[0].charAt(A[0].length() - 1);
+
+	visited[0] = true;
+	for(int i = 1; i < A.length; i++){
+		if(visited[i] == true) continue;
+
+		if(visited.charAt(0) == c){
+			c = A[i].charAt(A[i].length() - 1);
+			visited[i] == true;
+			i = 1;
+		}
+	}
+	if(c==A[0].charAt(0)) return true;
+	return false;
+}
+//Above is wrong solution bc it is possible that wrong parings are made
+//Doing it recursively might work instead, but the time complexity would be extremely high. 
+would be O(2^n)
+
+Better solution is to view this as a graph problem, where there will be the same number of in bound and out bound degrees for each letter.
+Once we check if this is true, we then check a dfs and make sure the graph is connected.
+This should take O(n) time
+
+
+
+
+
+
+
+Minimum number of operation required to convert number x into y
+
+Should we subtract or double the number?
+
+Consider all possibilites that can go wrong or affect problem
+The main issue to solve is if doubling the number will cause more subtractions then not doubling?
+Would doubling then subtracting shorten the problem? would doubling then subtracting by a few and doubling at a certain point affect the problem?
+
+We know that doubling has much more impact/movement than a subtraction will have. always bc 1<= x, y <= 1000
+
+-1. count = 0;
+0. while x is not equal to Y
+1. if x is equal to Y return
+2. if x is smaller than Y then double
+3. if x bigger then suptract
+
+OTHER:
+
+if x*2 
+
+What we have to do is keep dividing y by 2
+then try numbers that can get to that number as soon as possible
+And add up all counts
+
+
+Two possibilies subtract then multiply
+OR
+multipy then subtract
+
+We use these to get to the minimum path.
+So it seems like  a greedy approach.
+
+So with our current x we should try these 2 things only.
+
+curr x 	-> subtract by 1
+		-> multiply by 2
+		store these results in set
+
+Keep going, keep track of min that gets to x == y
+
+Rules: 
+	Base cases: 
+	-Dont multiply nums bigger than y
+	-Dont subtract numbers 1 or smaller
+	-if currX count is bigger than minCount than stop that line.
+	OR 
+	-subtract y - x and that count is the maximum that could happen
+	OR
+	Both (start minCount with y-x and update as we find a new min)
+
+Didnt see:
+	already obtained outcomes (keep a visited array)
+
+Use a BFS because it will store the most recent levels in the front to look at next.
+
+
+Minimum edges to reverse to make path from a source to a destination
+
+I feel like for this one you have to turn the directed graph to an undirected
+
+Then find all the paths that lead from source to destination no greater than n to preven cycles
+
+sort these paths from smallest to biggest
+
+check in directed whcih need to be reversed and how many times
+
+return lowest count.
+
+Solution:
+
+The idea is to make another graph based off of the edges given.
+
+Make a graph with the original edges and then add a returning edge to the pair of points.
+
+When adding a return edge, add a cost of 1 (while the original edges have a cost of 0) 
+-returning edges have a cost of one bc we are trying to get the min number of returning edges to get from dest to source.
+
+Then run djikras algorithm to find min cost
+
+Djkstras agorithm is working like this:
+
+ a distance array with space for all Makevertices
+
+Use starting point
+iterate through all its edges
+git min point vertic next, 
+keep going until run out of unvisited vertices through this path, while traversing update this path.
+
+
+
+
+
+
+
+//Find if there is a pair in root to a leaf path with sum equals to root’s data
+
+Traverse through each node in the tree
+For each node run a recursion method carring that nodes curr value.
+
+As the recursion goes down ssubtract value of that orignal node and keep going until that new sum is equal to 0.
+
+OR
+
+use a hashmap for this.
+Same logic as above but instead as we recurse down, check if target - curr.val node is in the map, if so return true
+else add curr.val to hash and recurse left and right.
+
+
+//Minimum number of swaps required to sort an array
+
+Approach problem as if it were a graph problem
+Store all vals and their corresponding index value in a map as the value
+
+Then sort the original unsorted Array.
+iterate through it and if current ind has the val that is stored for that val in the map then continue
+
+else
+
+make a while loop that goes until val is cycled once through the hash
+
+total counts it took to go through the cycle - 1 is the amount of swaps it will take to move those element to place.
+
+
+
+//Count all pairs with given XOR
+
+iterate through array and XOR each element by X, store answer in a map
+
+if we get to an element that is already in the map increate count by one
+
+
+
+
+//Dynamic Programming | Set 13 (Cutting a Rod)
+
+We have a rod that can be cut into so many pieces. (prob seems like napsack prob)
+
+In this problem we want to have an array of space the total of the size of the rod + 1
+
+then we iterate through the prices array,
+as we do that we are going to look at A[i] and A[i - P[j]] + P[j] biggest of those gets stored in A[i]
+
+The reason we need to look at A[i - P[j]] if i - P[j]] is bigger than 0 is because every index we are using to represnt a unit of size in the rod. So as we gown that rod we want to see what the maximum if we were to use that, P[j], of size/cost. Once we compare the 2 vals we take the bigger one because we want the higher cost.
+
+
+For any problem check if the same subproblem is being solved a lot of times! This will happen when we are not specifically trying to make value as unique not duplicates as possible but we are computing possible repeating values.
+
+
+//Maximum sum alternating subsequence
+
+How do u go about solving this?
+
+
+We check if the next is decreasing if current is increasing, and vice versa.
+If consecurtive we increment count.
+
+For each spot in the dp array we store the max up to that point.
+
+if the pattern breaks then just keep the max up to that point and turn count to 0 and keep iterating through array until another pattern emerges. Keep that count going and add that to the most previous count of the pattern.
+
+Pattern should start with the starting element.
+
+Potential Problems:
+That one pattern may prevent you from getting another pattern that is worse in the beginning but overall better from the continuation.
+
+So first we find all the possible lines.
+starting with S, find next lowest, then make a version that find next lowest after that, and so on...
+For high do the same for val currVal and keep going until array is over.
+
+We will store the max of this calculations in a dp[] array.
+
+UP to index i, what path is the highest??
+
+
+
+//Maximum sum of pairs with specific difference
+
+1. sort input array
+2. Start from top and traverse array to bottom, if highest minest next highest is less than k than make that a pair and increment down twice.
+otherwise, decrement both once
+
+Focus is on big numbers because they will provide the biggest sum no matter what so they should be included into total sum
+
+
+
+//Recursively break a number in 3 parts to get maximum sum
+
+We divide the number by 2,3, and 4.
+
+If were to recursively do this we would get the currNum divide by 2,3, and 4. and for each result recurse on the same function and do the same for the result until currNum == 0 then return 0
+
+There will be a lot of subproblems here that are the same.
+So we make a dashboard to store this data.
+
+our array will be an array of size orignalVal/2 and it will store all the values as they are made.
+recursion will check array element if its 0 then we calculate it and then store the value, if not then we jsut take the val for that number instead of calculating all its sub problems.
+
+
+
+
+// Recursively break a number in 3 parts to get maximum sum
+
+int[] dp = new int[sum+1];
+
+for(int i = 0; i < dp.length; i++){
+	dp[i] = Math.max(dp[i/4] + dp[i/3] + dp[i/2], i);
+}
+
+return dp[sum];
+
+
+
+//Count All Palindromic Subsequence in a given String
+
+Get all possible palindromes in a string, they dont have to be continuous eg) aaaa has 15. abcd has 4, etc
+
+We need to get palindromes in this problem. If two letters are equal then they are palindromes in a string.
+
+//LINTCODE:
+Construct Binary Tree from Preorder and Inorder Traversal
+
+If you have the preorder you know what should go first and what should go later
+
+
+For each array,
+put all its elements in its own map.
+val will be the key, index the value.
+(just postorder now that i think about it)
+
+
+Then we will itereate through preorder one by one starting at index 1 to preorder.length -1
+
+For each element,
+get it in preordermap,
+get it in post order map (or just get it from postorder)
+
+
+while loop bag on the preorder array currInd >= 0
+
+if(postorder index is smaller than current index.)
+
+
+
+
+Lintcode: Coins in a Line II
+
+How is this problem solved?
+
+We need to take care of 3 things:
+-We need to make sure ordering follows 2 consecutive for each of player 1 and player 2
+-We need to maximize count of player 1
+-We need to consider if all possibilites will make it so player 1 wins
+
+How do we do this?
+
+We have 3 variables we are saving.
+The current top score, the previous, and the prevPrevious
+
+the latest top score will always have an extra integer from the nums array:
+
+What do we see here? what's being done?
+
+We can see that for each new integer that is added from nums, we will choose to add that new integer to  
+
+------------------------------------------------
+7 6 5 4 3 2 1
+
+sum:	2 1
+
+first: 	2 1	
+second:	1
+
+sum:	3 2 1
+
+first:	3 2
+second:	2 1
+
+sum:	4 3 2 1
+
+first:	4 3
+second:	3 2
+
+sum:	5 4 3 2 1
+
+first:	5 4 1
+second:	4 3
+
+sum:	6 5 4 3 2 1
+
+first:	6 5 2 1
+second:	5 4 1
+
+sum:	7 6 5 4 3 2 1
+
+first:	7 6 3 2
+second: 6 5 2 1
+
+return first > (sum - first)
+
+Why does this work?
+
+
+------------------------------------------------
+3 6 2 1 5 7 4
+
+sum:	7 4
+
+first: 7 4	
+second:	4
+
+sum:	5 7 4
+
+first:	5 7
+second:	7 4
+
+sum:	1 5 7 4
+
+first:	1 5 
+second:	5 7
+
+sum:	2 1 5 7 4
+
+first:	2 7 4
+second:	1 5
+
+sum:	6 2 1 5 7 4
+
+first:	6 2 7 4
+second:	2 7 4
+
+sum:	3 6 2 1 5 7 4
+
+first:	3 6 1 5
+second: 6 2 7 4
+
+return first > (sum - first)
+
+Sum: 28
+
+-1.50% Nat Gas --> DGAZ $4.42 and +4.48% in account bal

@@ -1,0 +1,110 @@
+//Second Try:
+Total Runtime: 1713 ms
+100% test cases passed.
+
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param ListNode head is the head of the linked list 
+     * @oaram m and n
+     * @return: The head of the reversed ListNode
+     */
+    public ListNode reverseBetween(ListNode head, int m , int n) {
+        if(head == null || m < 0 || n < 0) return head;
+        
+        ListNode first = null, prev = null, curr = head, next = head;
+        
+        while(curr != null){
+            if(m < 1) curr.next = prev;
+            if(m-- == 0) first = prev;
+            
+            if(n-- == 0){
+                if(first.next.val == first.val) first = null;
+                if(first != null){
+                    (first.next).next = next;
+                    first.next = curr;
+                }
+                else {
+                    head.next = next;
+                    head = curr;
+                }
+                break;
+            }
+            prev = curr;
+            curr = next;
+            next = next.next;
+        }
+        return head;
+    }
+}
+
+//3760->2881->7595->3904->5069->4421->8560->8879->8488->5040->5792->56->1007->2270->3403->6062->null, 2, 7
+
+
+//5705->5275->1064->9413->778->2255->7055->8037->2061->2070->1631->6836->958->1235->9843->8231->5204->2575->8748->4468->7434->2068->7276->8359->7467->836->5302->3696->9841->7588->3457->5938->9077->89->2045->6774->null, 35, 36
+
+
+
+
+//First Try: Failed Attempt
+
+/**
+ * Definition for ListNode
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    /**
+     * @param ListNode head is the head of the linked list 
+     * @oaram m and n
+     * @return: The head of the reversed ListNode
+     */
+    public ListNode reverseBetween(ListNode head, int m , int n) {
+        if(head == null || m < 0 || n < 0) return head;
+        
+        ListNode first = head, prev = null, curr = head, next = head;
+        
+        while(curr != null){
+            if(m < 1) curr.next = prev;
+            
+            if(m-- == 1){
+                first = prev;
+                if(first == null) curr.next = null;
+            }
+            
+            if(n-- == 0){
+                if(first != null){
+                    (first.next).next = next;
+                    first.next = curr;
+                }
+                else head = curr;
+                
+                break;
+            }
+            
+            prev = curr;
+            curr = next;
+            next = next.next;
+        }
+        return head;
+    }
+}
+
+//3760->2881->7595->3904->5069->4421->8560->8879->8488->5040->5792->56->1007->2270->3403->6062->null, 2, 7
+

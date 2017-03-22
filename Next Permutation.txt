@@ -1,0 +1,224 @@
+//Third Submission: After lots of failed submissions and more than 1 hour and half (improved from version 2)
+Total Runtime: 2725 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param nums: an array of integers
+     * @return: return nothing (void), do not return anything, modify nums in-place instead
+     */
+    public int[] nextPermutation(int[] nums) {
+        if(nums == null || nums.length <= 1) return nums;
+        int n = nums.length - 1, next = n, diff = Integer.MAX_VALUE, ind = n;
+        while(n>0 && nums[n-1] >= nums[n--]);
+        
+        if(n==0 && nums[0] == nums.length) Arrays.sort(nums);
+        else{
+            while(n < next){
+                if(nums[next] > nums[n] && nums[next] - nums[n] < diff){
+                    diff = nums[next] - nums[n];
+                    ind = next;
+                } 
+                next--;
+            }
+            swap(nums, n, ind);    
+            reverseArray(nums, n+1, nums.length-1);
+        }  
+        return nums;
+    }
+    public void swap(int[] A, int i1, int i2){
+        if(A[i1] != A[i2]){
+            A[i1] ^= A[i2];
+            A[i2] ^= A[i1];
+            A[i1] ^= A[i2];   
+        }
+    }
+    public void reverseArray(int[] A, int start, int end){
+        for(int i = start; i < (end + start + 1)/2; i++) swap(A, i, start + end - i);
+    }
+    public void quicksort(int[] A, int lo, int hi){
+        if(lo>=hi) return;
+        int pivot = partition(A, lo, hi);
+        quicksort(A, lo, pivot-1);
+        quicksort(A, pivot+1, hi);
+    }
+    public int partition(int[] A, int lo, int hi){
+        int i = lo, j = hi+1;
+        while(true){
+            while(i < hi && A[++i] < A[lo]);
+            while(j > lo && A[--j] > A[lo]);
+            if(i >= j) break;
+            swap(A, i, j);
+        }
+        swap(A, lo, j);
+        return j;
+    }
+}
+//i: [2,1,3], o: [2,1,3] e: [2,3,1]
+//[1,2,1]
+//[2,3,1]
+
+/*
+    Analyze from right and move in to left
+
+    int n = A.length -1;
+    
+    while(A[n-1] > A[n--]); //stops when n-1 is smaller than n, n = n-1;
+    
+    //n needs to swap with its next biggest self from the elements to its right
+    //after swap, sort elements to right to it.
+    //return it; done.
+    
+    corner cases:
+    
+    when 
+*/
+
+
+
+//Second Submission: After lots of failed submissiona
+Total Runtime: 3440 ms
+100% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param nums: an array of integers
+     * @return: return nothing (void), do not return anything, modify nums in-place instead
+     */
+    public int[] nextPermutation(int[] nums) {
+        if(nums == null || nums.length <= 1) return nums;
+        int n = nums.length - 1, next = n, diff = Integer.MAX_VALUE, ind = n;
+        while(n>0 && nums[n-1] >= nums[n--]);
+        
+        if(n==0 && nums[0] == nums.length) Arrays.sort(nums);
+        else{
+            while(n < next){
+                if(nums[next] > nums[n] && nums[next] - nums[n] < diff){
+                    diff = nums[next] - nums[n];
+                    ind = next;
+                } 
+                next--;
+            }
+            swap(nums, n, ind);    
+            quicksort(nums, n+1, nums.length-1);
+        }  
+        return nums;
+    }
+    public void swap(int[] A, int i1, int i2){
+        if(A[i1] != A[i2]){
+            A[i1] ^= A[i2];
+            A[i2] ^= A[i1];
+            A[i1] ^= A[i2];   
+        }
+    }
+    public void quicksort(int[] A, int lo, int hi){
+        if(lo>=hi) return;
+        int pivot = partition(A, lo, hi);
+        quicksort(A, lo, pivot-1);
+        quicksort(A, pivot+1, hi);
+    }
+    public int partition(int[] A, int lo, int hi){
+        int i = lo, j = hi+1;
+        while(true){
+            while(i < hi && A[++i] < A[lo]);
+            while(j > lo && A[--j] > A[lo]);
+            if(i >= j) break;
+            swap(A, i, j);
+        }
+        swap(A, lo, j);
+        return j;
+    }
+}
+//i: [2,1,3], o: [2,1,3] e: [2,3,1]
+//[1,2,1]
+//[2,3,1]
+
+/*
+    Analyze from right and move in to left
+
+    int n = A.length -1;
+    
+    while(A[n-1] > A[n--]); //stops when n-1 is smaller than n, n = n-1;
+    
+    //n needs to swap with its next biggest self from the elements to its right
+    //after swap, sort elements to right to it.
+    //return it; done.
+    
+    corner cases:
+    
+    when 
+*/
+
+
+//First Submission : Fail (Timeout)
+
+
+
+public class Solution {
+    /**
+     * @param nums: A list of integers
+     * @return: A list of integers that's previous permuation
+     */
+    public ArrayList<Integer> previousPermuation(ArrayList<Integer> nums) {
+		ArrayList<Integer> ans = new ArrayList<Integer>();
+		if(nums == null || nums.size() == 0) return ans;
+		
+		int[] arr = new int[nums.size()];
+		for(int i = 0; i < arr.length; i++) arr[i] = nums.get(i);
+		Arrays.sort(arr);
+		
+		getPrev(nums, arr, ans, 0);
+		
+		return ans;
+    }
+    
+    public boolean getPrev(ArrayList<Integer> nums, int[] A, ArrayList<Integer> ans, int ind){
+        
+        //System.out.println("Before for loop. ind: " + ind + ", A.length: " + A.length );
+        if(ind == A.length){
+            //System.out.println("In base case");
+            boolean flag = true;
+            ArrayList<Integer> newPerm = new ArrayList<Integer>();
+            
+            for(int i = 0; i < A.length; i++){
+                newPerm.add(A[i]);
+                if(A[i] != nums.get(i)) flag = false;
+            }
+            
+            if(flag) return true;
+            
+            //System.out.println(Arrays.toString(A));
+            
+            // ans = newPerm;
+            // System.out.println(ans.get(0) + ", " + ans.get(1) + ", " + ans.get(2) + ", " + ans.get(3));
+            //ans= new ArrayList<Integer>();
+            for(int i = 0; i < nums.size(); i++){
+                ans.add(i, newPerm.get(i));   
+            }
+            
+            return false;
+        }
+        
+        
+        for(int i = ind; i < A.length; i++){
+            
+            if(A[ind] == A[i] && ind != i) continue;
+            int v1 = A[ind];
+            
+            A[ind] = A[i];
+            A[i] = v1;
+            
+            if(getPrev(nums, A, ans, ind+1)){
+               // System.out.println(ans.get(0) + ", " + ans.get(1) + ", " + ans.get(2) + ", " + ans.get(3));
+                //System.out.println("Hello");
+                return true;
+            } 
+            
+            A[i] = A[ind];
+            A[ind] = v1;
+        }
+        return true;
+    }
+    
+}

@@ -1,0 +1,87 @@
+//Second Try:
+Total Runtime: 9920 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param n a positive integer
+     * @param primes the given prime list
+     * @return the nth super ugly number
+     */
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        
+        if(n < 1) return 0;
+        
+        int[] indexes = new int[primes.length];
+        
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        
+        while(list.size() < n){
+            int min = Integer.MAX_VALUE;
+            int[] currVals = new int[primes.length];
+            for(int i = 0; i < primes.length; i++){
+                int temp = list.get(indexes[i])*primes[i];              //System.out.println("temp: " + temp);
+                if(min > temp){
+                    min = temp;
+                    currVals[i] = temp;
+                }
+            }
+            for(int i = 0; i < primes.length; i++){
+                if(min == currVals[i]) indexes[i]++;
+            }
+            
+            if(min > list.get(list.size() - 1)) list.add(min);
+        }
+        return list.get(list.size() - 1);
+    }
+}
+
+//41, [103,59,139,197,73] got: 1,410,433 expected: 1,197,169
+//30, [2,7,13,19]
+
+
+
+//First Try:
+Total Runtime: 4428 ms
+50% test cases passed.
+
+
+public class Solution {
+    /**
+     * @param n a positive integer
+     * @param primes the given prime list
+     * @return the nth super ugly number
+     */
+    public int nthSuperUglyNumber(int n, int[] primes) {
+        
+        if(n < 1) return 0;
+        
+        int[] indexes = new int[primes.length];
+        int[] currVals = new int[primes.length];
+        
+        ArrayList<Integer> list = new ArrayList<Integer>();
+        list.add(1);
+        
+        while(list.size() < n){
+            int min = Integer.MAX_VALUE;
+            for(int i = 0; i < primes.length; i++){
+                int temp = list.get(indexes[i])*primes[i];              //System.out.println("temp: " + temp);
+                if(min > temp){
+                    min = temp;
+                    currVals[i] = temp;
+                }
+            }
+            for(int i = 0; i < primes.length; i++){
+                if(min == currVals[i]) indexes[i]++;
+            }
+            
+            if(min > list.get(list.size() - 1)) list.add(min); 
+            
+            System.out.println("Min: " + min +" Last Elmnt: "+ list.get(list.size() - 1) + " list size: " + list.size());
+        }
+        return list.get(list.size() - 1);
+    }
+}
+
+//41, [103,59,139,197,73]

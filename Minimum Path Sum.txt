@@ -1,0 +1,75 @@
+//Second Submission: Idk why it took me 65/15. Really was brain fog and I wasn't thinking straight at the end, but i figured it out so fuck it.
+
+But why is the second solution better than the first??
+For sure the second solution is time complexity O(y*x) and space O(x)
+while first solution was... exponential: time complexity O((x+y)^2) and space O(y + x)
+
+
+The reason it did not seem exponential was because there is a limit into how far the recursion
+can go for each step. Each step it takes it limits its span a little more therefore making less work
+possible for each step.
+However, the reason it is exponential is because for each step it is calling 2 more recursions of work
+that have the same Big O time complexity time to play (even if it is less steps). The real inefficiency
+can be explained in how the recursive method has to count every path in grid[y > 0][x > 0] twice, whereas
+the dynamic program way only does it once.
+
+
+Total Runtime: 2467 ms
+100% test cases passed.
+
+public class Solution {
+    /**
+     * @param grid: a list of lists of integers.
+     * @return: An integer, minimizes the sum of all numbers along its path
+     */
+    public int minPathSum(int[][] grid) {
+        if(grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        
+        int[] dp = new int[grid[0].length];
+        dp[0] = grid[0][0];
+        for(int x = 1; x < grid[0].length; x++) dp[x] = dp[x-1] + grid[0][x];
+        
+        for(int y = 1; y < grid.length; y++){
+            for(int x = 0; x < grid[y].length; x++){
+                dp[x] = (x==0) ? dp[x]+grid[y][x] : Math.min(dp[x-1]+grid[y][x], dp[x]+grid[y][x]);
+            }
+        }
+        
+        return dp[dp.length - 1];
+        
+        //return getMinPathSum(grid, 0, 0, 0, Integer.MAX_VALUE);
+    }
+    
+    public int getMinPathSum(int[][] A, int x, int y, int pathSum, int minPathSum){
+        if(x == A.length || y == A[x].length) return minPathSum;
+        if(x == A.length - 1 && y == A[x].length - 1) return pathSum + A[x][y];
+        return Math.min(getMinPathSum(A, x + 1, y, pathSum + A[x][y], minPathSum),
+                        getMinPathSum(A, x, y + 1, pathSum + A[x][y], minPathSum)
+                       );
+    }
+}
+
+
+//First submission fail: 35/15 bc I tried to do it as terse as possible but I coulda finished a lot faster
+Time Limit Exceeded
+
+Total Runtime: 2501 ms
+46% test cases passed.
+public class Solution {
+    /**
+     * @param grid: a list of lists of integers.
+     * @return: An integer, minimizes the sum of all numbers along its path
+     */
+    public int minPathSum(int[][] grid) {
+        if(grid == null || grid.length == 0 || grid[0].length == 0) return 0;
+        return getMinPathSum(grid, 0, 0, 0, Integer.MAX_VALUE);
+    }
+    
+    public int getMinPathSum(int[][] A, int x, int y, int pathSum, int minPathSum){
+        if(x == A.length || y == A[x].length) return minPathSum;
+        if(x == A.length - 1 && y == A[x].length - 1) return pathSum + A[x][y];
+        return Math.min(getMinPathSum(A, x + 1, y, pathSum + A[x][y], minPathSum),
+                        getMinPathSum(A, x, y + 1, pathSum + A[x][y], minPathSum)
+                       );
+    }
+}

@@ -1,0 +1,49 @@
+//First Submission Successful 20/15
+Total Runtime: 2658 ms
+100% test cases passed.
+
+
+/**
+ * Definition for ListNode.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode(int val) {
+ *         this.val = val;
+ *         this.next = null;
+ *     }
+ * }
+ */ 
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @return: The head of linked list.
+     */
+    public ListNode insertionSortList(ListNode head) {
+        if(head == null || head.next == null) return head;
+        
+        ListNode dummy = new ListNode(-1);
+        dummy.next = head;
+        head = dummy;
+        
+        ListNode back = null, curr = head.next, forward = curr.next;
+        
+        while(forward != null){
+            if(curr.val > forward.val){
+                curr.next = forward.next;
+                
+                back = head;
+                while(forward.val > back.next.val) back = back.next;
+                forward.next = back.next;
+                back.next = forward;
+                
+                forward = curr.next;
+            } else {
+                curr = forward;
+                forward = forward.next;
+            }
+        }
+        
+        return head.next;
+    }
+}

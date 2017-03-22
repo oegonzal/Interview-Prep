@@ -1,0 +1,187 @@
+//Third Try:
+Total Runtime: 4024 ms
+100% test cases passed.
+
+public class Solution {
+     
+    public List<String> anagrams(String[] strs) {
+        
+        LinkedList<String> answer = new LinkedList<String>();
+        HashMap<String, LinkedList<String>> map = new HashMap<String, LinkedList<String>>();
+        
+        for(int i = 0; i < strs.length; i++){
+            
+            int[] chars = new int[26];
+            for(int j = 0; j < strs[i].length(); j++){
+                char c = strs[i].charAt(j);
+                chars[c - 'a']++;
+            }
+            
+            String key = arrayToKey(chars);
+            
+            if(!map.containsKey(key)){
+                map.put(key, new LinkedList<String>());
+            }
+            
+            map.get(key).add(strs[i]);
+        }
+        
+        for(LinkedList<String> n : map.values()){
+            if(n.size() > 1){
+                for(String str : n)
+                    answer.add(str);
+            }
+        }
+        
+        return answer;
+    }
+    
+    public String arrayToKey(int[] chars){
+        StringBuilder s = new StringBuilder();
+        
+        for(int x : chars){
+            s.append(x);
+        }
+        
+        return s.toString();
+    }
+}
+
+
+//Second Try:
+Total Runtime: 5485 ms
+94% test cases passed.
+
+public class Solution {
+    class Node{
+        int size;
+        int count;
+        String firstWord;
+        HashMap<Character, Integer> map;
+        
+        public Node(int size, int count, HashMap<Character, Integer> map, String str){
+            this.size = size;
+            this.count = count;
+            this.map = map;
+            this.firstWord = str;
+        }
+    } 
+     
+    public List<String> anagrams(String[] strs) {
+        //System.out.println();
+        LinkedList<String> answer = new LinkedList<String>();
+        LinkedList<Node> list = new LinkedList<Node>();
+        HashMap<Character, Integer> temp;
+        
+        for(int i = 0; i < strs.length; i++){
+            temp = new HashMap<Character, Integer>();
+            for(int j = 0; j < strs[i].length(); j++){
+                char c = strs[i].charAt(j);
+                if(temp.containsKey(c)){
+                    temp.put(c, temp.get(c) + 1);
+                }
+                else {
+                    temp.put(c, 1);
+                }
+            }
+            
+            int exists = -1;
+            int j;
+            for(j = 0; j < list.size(); j++){
+                if(list.get(j).size == strs[i].length()){
+                    int k;
+                    for(k = 0; k < strs[i].length(); k++){
+                        char c = strs[i].charAt(k);
+                        if(temp.get(c) != list.get(j).map.get(c)){
+                            break;
+                        }
+                    }
+                    if(k == strs[i].length()){ exists = j; break;}
+                }
+            }
+            
+            if(exists == -1) list.add(new Node(strs[i].length(), 1, temp, strs[i]));
+            else { list.get(j).count++; answer.add(strs[i]); }
+        }
+        
+        for(Node n : list){
+            if(n.count > 1) answer.add(n.firstWord);   
+        }
+        return answer;
+    }
+}
+
+//First try: Total Runtime: 6399 ms
+public class Solution {
+    /**
+     * @param strs: A list of strings
+     * @return: A list of strings
+     */
+    class Node{
+        int size;
+        int count;
+        String firstWord;
+        HashMap<Character, Integer> map;
+        
+        public Node(int size, int count, HashMap<Character, Integer> map, String str){
+            this.size = size;
+            this.count = count;
+            this.map = map;
+            this.firstWord = str;
+        }
+    } 
+     
+    public List<String> anagrams(String[] strs) {
+        //System.out.println();
+        if (strs == null || strs.length == 0) {
+            return rst;
+        }
+        LinkedList<String> answer = new LinkedList<String>();
+        LinkedList<Node> list = new LinkedList<Node>();
+        HashMap<Character, Integer> temp;
+        
+        for(int i = 0; i < strs.length; i++){
+            //System.out.println("word: " + strs[i]);
+            
+            temp = new HashMap<Character, Integer>();
+            for(int j = 0; j < strs[i].length(); j++){
+                char c = strs[i].charAt(j);
+                //System.out.print(c + ", ");
+                
+                if(temp.containsKey(c)){
+                    temp.put(c, temp.get(c) + 1);
+                }
+                else {
+                    temp.put(c, 1);
+                }
+            }
+            
+            int exists = -1;
+            int j;
+            for(j = 0; j < list.size(); j++){
+                if(list.get(j).size == strs[i].length()){
+                    int k;
+                    for(k = 0; k < strs[i].length(); k++){
+                        char c = strs[i].charAt(k);
+                        if(temp.get(c) != list.get(j).map.get(c)){
+                            break;
+                        }
+                    }
+                    if(k == strs[i].length()){ exists = j; break;}
+                }
+            }
+            
+            if(exists == -1) list.add(new Node(strs[i].length(), 1, temp, strs[i]));
+            else { list.get(j).count++; answer.add(strs[i]); }
+            //System.out.println();
+        }
+        
+        for(Node n : list){
+            if(n.count > 1) answer.add(n.firstWord);   
+        }
+        
+        
+        return answer;
+        
+    }
+}
