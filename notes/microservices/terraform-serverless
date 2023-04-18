@@ -1,0 +1,199 @@
+Terraform vs Serverless
+
+Not comparable. Terraform creates and manages cloud infrastructure, Serveless framework helps to create and deploy 
+applications on cloud services like AWS Lambda.
+
+Even the comparison section on Serveless framework says they are not mutually exclusive.
+
+
+
+
+
+Terraform - is more of an agnostic provisioner and makes migrations very easy from one cloud to another & rollbacks
+Kubernetes - is an orchestrator of APPLICATIONS, load balancing, in-memory caches, messages queueing, etc
+
+https://cloudify.co/blog/terraform-vs-kubernetes/
+
+Scaling On-Demand Apps With Terraform And Kubernetes
+Orchestrator your Orchestrators with Cloudify’s Environment as a Service
+
+When it comes to technology, the only constant is that nothing is constant. The industry continues to move at such a 
+fast pace, continuously evolving. What began with ubiquitous systems and structures re-formed into service-oriented 
+architectures. Today, these solutions are moving toward microservices. The change is primarily driven by scalability, 
+though there are other factors at play.
+
+We’ll explore how to build scalable systems using two tools that are gaining in popularity: Terraform and Kubernetes. 
+This article will explain some intricacies of these tools and if you’re trying to decide which to invest in, this 
+is a good place to start in evaluating these two solutions.
+
+On-demand applications depend upon elastic resources which can be brought up or torn down (in a matter of seconds) 
+in order to scale. Speaking from a very high level, implementing these solutions requires two layers:
+
+The base layer, which is the physical infrastructure. This includes computing power, data storage, and networking. 
+The upper layer, which comprises the workload orchestration, and controls what is processed, and where and how it 
+is processed.
+These layers are typically loosely coupled, though there is some interaction between the two. Specific hardware may 
+be required for certain workloads, and these requirements must be properly addressed both during infrastructure 
+planning and orchestration. We’ll have a look at the tools that meet these requirements on both levels: Terraform 
+for controlling the infrastructure layer, and Kubernetes for orchestrating the workload.
+
+See How Cloudify Can Help You Maximize Terraform and Kubernetes 
+
+Both Terraform and Kubernetes rely on source-controlled configuration files to be used for orchestration. 
+Although there is an overlap in scope, most cases don’t allow for one to replace the other. They can, however, 
+work in tandem to provide a full-stack deployment solution.
+
+Terraform is effective for controlling resources such as DNS records, routing tables, VM instances, and generally 
+all low-level things. It can also help manage GitLab, so it clearly has a broad scope.
+
+Kubernetes has one job – and it does it very well. It’s focus is on managing containers, along with whatever they 
+may need to work properly. Anything unrelated is abstracted, helping to keep a clear line of sight on your target.
+Let’s explore some aspects of these tools more in depth, starting from the ground up.
+
+
+
+
+Version Control Your Infrastructure
+How long will it take to migrate your service to a new AWS account? What would happen in the case of a 
+significant traffic increase? Is it possible to roll back a deployment if an issue arises? What if you 
+need to roll back several versions?
+
+All of these concerns are mitigated with one simple tactic: Infrastructure as Code. Maintaining your 
+infrastructure as version-controlled code serves several purposes.
+
+Firstly, it serves as a great documentation strategy by recording every piece of your service in clear 
+text. This can serve as learning material, or an accounting reference. Launching your blueprint into 
+production, setting up a new region (or scaling an existing one) are as easy as entering one command, 
+making it a basis for automation.
+
+With the exception of proprietary solutions such as AWS CloudFormation, the most popular tool for IaC 
+is Terraform. It’s vendor agnostic, features a powerful interpolation syntax, and its included 
+abstractions are good enough to catch the primary errors before they begin to modify your resources.
+
+Here’s a sample of an EC2 instance:
+
+resource "aws_instance" "web" {
+  ami           = "${var.my_ami_id}"
+  instance_type = "t2.micro"
+  tags {
+    Provider= "Terraform"
+  }
+}
+Want to take a guess at what the arguments mean? If they aren’t obvious, Terraform has great documentation 
+you can consult which outlines them in detail. Terraform also benefits from not being locked-in to Amazon, 
+with the ability to also use it with Google Cloud or Azure. There are many more providers available, in 
+fact: DigitalOcean, Docker, or GitLab, for example. A variety of actions can be automated with this approach.
+
+
+
+Ship It In Containers
+Deciding how to ship your microservices-based architecture? Most often, IT professionals go with Docker containers. 
+Although they require a little bit of getting used to, they have two important advantages to using Docker containers. 
+One is the isolation of individual applications by creating individual operating systems in which they reside. 
+The other is the ability to check applications to ensure they run the same way in development as they do in production. 
+This obviously saves you a lot of potential issues when you co live, while making debugging easier if things do go 
+wrong at some point.
+The nature of containers demands better architecture. Since they stand separately, they need to be loosely coupled. 
+This means there are several stateful parts (database or file server, for example) and everything else is stateless, 
+which is great for scalability.
+
+
+
+How To Orchestrate A Workload?
+In the same way that Docker rules the container world, in the orchestration arena, 
+Kubernetes runs the show. But, let’s back up just a little bit and run through what orchestration is.
+
+Orchestration is the process to ensure applications run where they are expected to, and that they can 
+handle the desired workload. For a typical web app, this may mean a load balancer running on the machine 
+in a public subnet, and one or more back-end applications running on private subnets. This may be enhanced 
+by one or more databases, in-memory cache systems, or message queues. The starting point here is to have a 
+Kubernetes cluster. Minikube serves as one for experimentation purposes. When you move to production use, 
+set up a proper cluster or use a managed offering such as GCP or AWS. These are great for the majority of 
+use cases.
+
+
+But Which Is Better?
+Kubernetes and Terraform are both capable of addressing orchestration and scalability. Kubernetes relies 
+on Docker containers, so for DevOps who have yet to containerize applications, it will add a bit of preliminary effort. 
+Terraform is suited for any kind of workload (including legacy workloads), as it operates on what can be seen as hardware.
+
+Ultimately, the answer of preference isn’t a simple matter of either/or. Earlier we listed some Terraform providers. 
+Kubernetes also has a list of their own, which allows for configuration of things such as persistent volumes. 
+Should you decide to go the managed route, it’s possible to set up your AWS or GCP accounts to enable 
+Kubernetes-as-a-Service.
+
+Perhaps most interesting, is the case of specific hardware requirements. Need a particular GPU for specific workloads? 
+No problem at all! Use Terraform to provision it by selecting the appropriate instance type, then set up the 
+cluster and orchestrate the workload using Kubernetes. Consider it the best of both worlds!
+
+
+
+
+
+
+
+
+
+
+https://blog.scottlogic.com/2020/01/21/beginners-terraform-serverless.html
+
+Terraform:
+What is it?
+Terraform is an “Infrastructure as Code” tool. It’s one of the most popular of the IaC tools and has a huge number of providers. It allows you to configure and provision infrastructure. This Scott Logic blog by Chris Meehan goes into more detail.
+
+
+Serverless
+What is it?
+The Serverless Framework helps you provision and deploy serverless functions across different cloud providers.
+
+It allows you to specify the events that trigger the Lambdas. It then builds and connects the API Gateway based on those events. It can then handle deploying the Lambdas to a bucket you specify. This means you can focus on writing Lambdas – set up the configuration in the YAML file and off you go!
+
+Serverless uses CloudFormation (for AWS) to provision the declared configuration. While this works well for the resources Serverless has opinions on (Lambdas and API Gateway), it doesn’t work as well for the others. If you provision other resources with Serverless, you have to provide raw CloudFormation templates in the Serverless yaml.
+
+
+
+
+https://serverless-architecture.io/blog/all-you-need-to-know-about-terraform/
+
+Terraform builds an internal dependency graph.
+The dependency graph maps implicit and explicit dependencies between resources and can thus also recognize
+cyclic dependencies. If the graph can be generated without problems, the infrastructure can be setup and 
+dismantled without problems.
+
+
+
+
+
+
+https://medium.com/@joel.tbarna/serverless-framework-with-terraform-a-firsthand-experience-ce127db3ac5b
+
+Why use both?
+Most applications will require public facing infrastructure (APIs, application servers) and core 
+infrastructure such as databases.
+
+Serverless Framework (referred to herby as “Serverless”) handles the public facing infrastructure 
+(API Gateway, Lambda + application code), but falls short on the core, shared infrastructure. 
+To create a dynamo table or an S3 bucket using Serverless, you will have to configure the whole 
+thing in AWS CloudFormation.
+
+
+Terraform seamlessly handles creating + managing shared infrastructure, however it will not deploy any of your application code to cloud functions.
+
+
+Using both, you can utilize the deployment functionality of Serverless along with the core infrastructure management with Terraform. Terraform will be used to define any infrastructure that is shared across Serverless functions, in addition to any other infrastructure that your app may require. Serverless is responsible for deploying your application code and managing the API endpoints in API Gateway.
+
+
+
+Where things just fall short 💔
+It’s important to remember that both the Serverless Framework and Terraform are not tools provided by AWS, so there will be discrepancies. One notable challenge that we ran into was using API Gateway 2 with websockets in our application. Unfortunately Terraform simply doesn’t support API Gateway 2 yet, so we either have to create that manually or rely on Serverless to create some of that for us.
+Another thing to remember is that while standing up AWS resources is mostly free, some resources do not delete quickly. For example, S3 buckets take about an hour to fully delete and AWS Secrets take a minimum of 7 days. This means that some care is necessary when creating resources because it may not be incredibly easy to re-do certain parts of your infrastructure quickly.
+
+
+
+
+
+
+https://medium.com/swlh/integrating-the-serverless-framework-and-terraform-874215daa8bf
+Conclusion
+Like every tool, both the Serverless Framework and Terraform have their limitations, similar to a tradesman using a drill and an impact driver to join timber together, we use our two tools to join all of our components together.
+Terraform does require a bit more thought up-front when using it especially when you need to consider workspaces and state — this can make automation a little more difficult, but with some code injection magic in your pipelines and offloading state to S3 these can be worked around. That being said, Terraform may be a better choice for persistent infrastructure (think RDS instances for example) rather than the Serverless Framework or CloudFormation.

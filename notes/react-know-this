@@ -1,0 +1,84 @@
+Dealing with event listeners:
+useEffect(() => {
+    function handleWindowMouseMove(e) {
+      // Spreading "...state" ensures we don't "lose" width and height
+      setState(state => ({ ...state, left: e.pageX, top: e.pageY }));
+    }
+    // Note: this implementation is a bit simplified
+    window.addEventListener('mousemove', handleWindowMouseMove);
+    return () => window.removeEventListener('mousemove', handleWindowMouseMove);
+  }, []);
+
+
+
+Learn how to recognize being able to move logic out into its own hook, for example
+check this example:
+
+function Box() {
+    const [state, setState] = useState({ left: 0, top: 0, width: 100, height: 100 });
+    // ...
+
+    return (
+        <> 
+        </>
+    )
+}
+
+Instead make colocation better in the state
+
+
+
+function Box() {
+    const [location, setLocation] = useState({ left: 0, top: 0 });
+    const [size, setSize] = useState({ width: 100, height: 100 })
+
+    useEffect(() => {
+        function handleWindowMouseMove(e) {
+            setLocation(s => {
+                return {
+                    ...s,
+                    left: e.pageX,
+                    top: e.pageY
+                }
+            })
+        }
+        window.addEventListener('mousemove', handleWindowMouseMove)
+    }, [])
+
+    // ...
+
+    return (
+        <> 
+        </>
+    )
+}
+
+
+Even better though would be to do this:
+
+function useGetLocation() {
+    const [location, setLocation] = useState({ left: 0, top: 0 });
+    useEffect(() => {
+        function handleWindowMouseMove(e) {
+            setLocation(s => {
+                return {
+                    ...s,
+                    left: e.pageX,
+                    top: e.pageY
+                }
+            })
+        }
+        window.addEventListener('mousemove', handleWindowMouseMove)
+    }, [])
+
+    return  location;
+}
+
+function Box() {
+    const [location, setLocation] = useState({ left: 0, top: 0 });
+    const location = useGetLocation();
+    // ...
+}
+
+Benefit of top optimization is that we were able to really cleanup the state by 
+moving logic to a custom hook

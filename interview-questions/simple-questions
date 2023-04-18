@@ -1,0 +1,60 @@
+/*
+Libs included:
+    underscore lodash chai sinon sinon-chai mocha async request q bluebird jsdom
+*/
+
+const chai = require('chai');
+const {expect} = chai;
+
+// write a function called reverse that reverses the order of letters in each word,
+// but leaves the order of the words themselves in the sentence intact
+const toReverse = "This is a JavaScript coding exercise!";
+const reverse = (str) => {
+    const tokens = str.split(" ");
+    const reversedWords = [];
+    
+    tokens.forEach((strTok, ind) => {
+        let reversedWord = "";
+        
+        // Get word, reverse letters
+        for (let cI = strTok.length-1; cI >=0; cI--) {
+            reversedWord += strTok.charAt(cI);
+        }
+        reversedWords.push(reversedWord);
+    });
+    
+    return reversedWords.join(" ");
+};
+
+const reverseResult = reverse(toReverse);
+expect(reverseResult).to.equal('sihT si a tpircSavaJ gnidoc !esicrexe');
+
+
+// write a function to remove duplicates from an array, return a new array
+const toDedup = [1, 2, 3, 5, 1, 5, 9, 1, 2, 8];
+const dedup = (arr) => {
+    const map = {};
+    for (let i = 0; i < arr.length; i++) {
+        const val = arr[i];
+        
+        if (!map[val]) {
+            map[val] = true;   
+        }
+        else {
+            dups.push(i);
+        }        
+    }
+
+    let result = [];
+    const dups = [];
+    for (let i = dups.length-1; i <= 0; i--) {
+        const dupInd = dups[i];
+        result = result.splice(dupInd, 1);
+    })
+    
+    return result;
+};
+
+const dedupResult = dedup(toDedup);
+expect(dedupResult).to.have.ordered.members([1, 2, 3, 5, 9, 8]);
+expect(dedupResult).to.not.equal(toDedup);

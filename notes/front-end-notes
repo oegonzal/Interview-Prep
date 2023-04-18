@@ -1,0 +1,2737 @@
+
+
+Study this:
+-   https://blog.pramp.com/how-to-succeed-in-a-frontend-interview-d748cb073823
+
+
+****
+TODO's before interview:
+-   Rehearse behavioral Qs AND FINISH QUESTION-PROJECT GRID
+-   Practicing on whiteboard or blank paper (w/ past reviewed questions)
+-   Design patterns (In JS - w/ closure, scope, & OOD ) & system design
+    -   https://www.sitepoint.com/javascript-object-creation-patterns-best-practises/
+    -   https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Objects/Object-oriented_JS
+-   OOP vs functional
+-   React & libs (Redux + Saga)
+-   CSS (layout) + HTML (markup)
+-   Security
+-   Performance 
+-   Unit testing 
+-   Vanilla javascript 
+-   Babbel & Grunt
+
+
+
+
+Questions for myself:
+-   How do I evaluate app performance? What tools?
+
+
+
+
+Extra:
+-   Momentjs - datetime converter
+-   viewport - metatag to set dimensions of device, responsive as well 
+-   RPC - action procedures for communicating on client vs REST (representative state trasnfer) 
+-   JSONP - Requests using scripts. May be used agaisnt Cross domain policy restrictions
+-   The Cache-Control HTTP header holds directives (instructions) for caching in both requests and responses. A given directive in a request does not mean the same directive should be in the response
+    Standard Cache-Control directives that can be used by the server in an HTTP response.
+
+    Cache-Control: must-revalidate
+    Cache-Control: no-cache
+    Cache-Control: no-store
+    Cache-Control: no-transform
+    Cache-Control: public
+    Cache-Control: private
+    Cache-Control: proxy-revalidate
+    Cache-Control: max-age=<seconds>
+    Cache-Control: s-maxage=<seconds>
+
+-   Transfer-Encoding is a hop-by-hop header, that is applied to a message between two nodes, not to a resource itself. Each segment of a multi-node connection can use different Transfer-Encoding values. If you want to compress data over the whole connection, use the end-to-end Content-Encoding header instead.
+    Transfer-Encoding: chunked
+    Transfer-Encoding: compress
+    Transfer-Encoding: deflate
+    Transfer-Encoding: gzip
+    Transfer-Encoding: identity
+
+    // Several values can be listed, separated by a comma
+    Transfer-Encoding: gzip, chunked
+
+-   The ETag HTTP response header is an identifier for a specific version of a resource. 
+    It lets caches be more efficient and save bandwidth, as a web server does not need to resend 
+    a full response if the content has not changed. Additionally, etags help prevent simultaneous 
+    updates of a resource from overwriting each other ("mid-air collisions").
+
+    If the resource at a given URL changes, a new Etag value must be generated. 
+    A comparison of them can determine whether two representations of a resource are the same. 
+    Etags are therefore similar to fingerprints, and might also be used for tracking purposes 
+    by some servers. They might also be set to persist indefinitely by a tracking server.
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------------------------
+Threads vs Events:
+http://courses.cs.vt.edu/cs5204/fall09-kafura/Presentations/Threads-VS-Events.pdf
+https://people.eecs.berkeley.edu/~brewer/papers/threads-hotos-2003.pdf
+** https://berb.github.io/diploma-thesis/original/043_threadsevents.html
+
+Threads:
+-   in "thread driven" runtimes, when a request comes in, a new thread is created and all the handling is done in that thread
+-   in the "thread driven" model, if the handler takes a lot of time to complete, it won't hurt other threads much, because they can run at the same time independently.
+-   Pros:
+    -   Better multi-threading & number crunching
+    -   Concurrency
+
+-   Cons:
+    -   Less performant in IO - increases blocking
+    -   the extreme difficulty of developing correct concurrent code--even for programming experts--is the most harmful trait of threads. As soon as 
+        a multi-threaded system shares a single state between multiple threads, coordination and synchronization becomes an imperative
+    -   Coordination and synchronization requires locking primitives, which in turn brings along additional issues. Erroneous locking 
+        introduces deadlocks or livelocks, and threatens the liveness of the application.
+    -   placing circular dependencies between multi-threaded components unknowingly can introduce severe deadlocks.
+    -   lack of understandability and predictability of multi-threaded code, due to nondeterminism and preemptive scheduling
+    -   Multithreading appears to be error-prone, and very difficult to debug.
+
+Events:
+-   in "event driven" runtimes, when a request comes in, the event is dispatched and handler will pick it up. When? In Node.js, there is an "event loop" which basically loops over all the pieces of code that need to be executed and executes them one by one. So the handler will handle the event once event loop invokes it. The important thing here is that all the handlers are called in the same thread - the event loop doesn't have a thread pool to use, it only has one thread.
+-   Unfortunately, creating a new thread adds some overhead and if you need to handle thousands of concurrent connections, it might become a burden. That's why Node.js is considered fast - no matter how many connections you handle, there's only one thread 1. You just need to be a bit careful not to block in any of the handlers to keep things moving. Fortunately most of the time it's not that easy to write blocking JavaScript code.
+-   Of course there is more that one thread in Node.js process, some of them are related to I/O. But your app logic is handled in one thread
+-   Pros: 
+    -   is an event driven I/O and It's a single threaded server that acts upon callbacks and never blocks on the main thread.
+    -   More appropriate for high concurrency servers when compared to thread servers
+    -   Event handler code and callbacks can be developed without the immanent fear of concurrent access on state. The execution of a callbacks is guaranteed to be deterministic, as long as no yielding operation is triggered in the callback.
+    -   This provides a feeling of deterministic reasoning. Scheduling becomes an explicit operation and happens inside the application itself. Fine-grained tuning of scheduling is possible and can take into account application-specific requirements
+    -   Instead of giving the abstraction of an isolated sequential flow of executions, the asynchronous style makes the differences between I/O operations and CPU-bound operations obvious.
+-   Cons:
+    -   In an "event driven" model, if a handler will take a very long time to finish (i.e. by having a computationally intensive for loop inside), no other request will be handled during that time, because the event loop will not invoke the next handler before the current one completes. That's usually not an issue because of the asynchronous nature of Javascript.
+    -   The most common reason why event-driven systems are rejected is their programming style. The idea of an event loop and registered event handlers yields an inversion of control. Instead of sequential operations, code is organized as a fragmented set of event handlers and callbacks.
+    -   In non-trivial applications, this leads to heavy chaining of callbacks. Gustafsson refers to the notion of an event loop sequentially executing callbacks on events as a form of "delayed GOTO" [Gus05]. Compared to threads, that provide higher abstractions, event-driven systems hence appear as a step backwards.
+
+
+While threads are endangered by deadlocks or livelocks, single-threaded, event-driven applications can be scuttled by long running, CPU-bound callbacks, blocking operations or callbacks that refuse to yield.
+
+While the single-threaded event-loop model fits for mostly I/O-bound applications, it is very difficult by default to take advantage of real CPU concurrency and utilize multiple cores (cf. subsection :autoref:TP 4.2.2).
+
+------------------------------------------------------------------------------------------------------------------------
+****** UNDERSTAND ALL THIS WELL AND YOU'LL BE IN GOOD SHAPE
+Bundling & Automation
+    -   Webpack/Babel/Browserify as a bundler 
+
+
+        What is webpack?
+        Topic: Webpack
+        Difficulty: ⭐
+        Answer:
+        Webpack is a build tool that puts all of your assets, including Javascript, images, fonts, and CSS, 
+            in a dependency graph. Webpack lets you use require() in your source code to point to local files, 
+            like images, and decide how they're processed in your final Javascript bundle, like replacing the path 
+            with a URL pointing to a CDN.
+
+
+        Name some benefits of using webpack
+        Topic: Webpack
+        Difficulty: ⭐⭐⭐
+        Answer:
+        Webpack and static assets in a dependency graph offers many benefits. Here's a few:
+
+        Dead asset elimination. This is killer, especially for CSS rules. You only build the images and CSS into 
+            your dist/ folder that your application actually needs.
+        
+        Easier code splitting. For example, because you know that your file Homepage.js only requires specific CSS files, 
+            Webpack could easily build a homepage.css file to greatly reduce initial file size.
+        
+        You control how assets are processed. If an image is below a certain size, you could base64 encode it directly into 
+            your Javascript for fewer HTTP requests. 
+        If a JSON file is too big, you can load it from a URL. You can require('./style.less') and it's automaticaly 
+            parsed by Less into vanilla CSS.
+        
+        Stable production deploys. You can't accidentally deploy code with images missing, or outdated styles.
+        
+        Webpack will slow you down at the start, but give you great speed benefits when used correctly. You get hot page 
+            reloading. 
+            True CSS management. 
+            CDN cache busting because Webpack automatically changes file names to hashes 
+                of the file contents, etc.
+
+
+        Webpack gives us a dependency graph. What does that mean?
+        Topic: Webpack
+        Difficulty: ⭐⭐⭐
+        Answer:
+        Any time one file depends on another, webpack treats this as a dependency. This allows webpack to take 
+            non-code assets, such as images or web fonts, and also provide them as dependencies for your application.
+
+        Webpack lets you use require() on local "static assets":
+
+        <img src={ require('../../assets/logo.png') } />  
+        When webpack processes your application, it starts from a list of modules defined on the command line or 
+            in its config file. Starting from these entry points, webpack recursively builds a dependency graph that 
+            includes every module your application needs, then packages all of those modules into a small number of 
+            bundles - often, just one - to be loaded by the browser.
+
+        The require('logo.png') source code never actually gets executed in the browser (nor in Node.js). Webpack builds 
+            a new Javascript file, replacing require() calls with valid Javascript code, such as URLs. The bundled file 
+            is what's executed by Node or the browser.
+
+
+
+    -   Grunt/Gulp for automation
+
+
+------------------------------------------------------------------------------------------------------------------------
+Cross browser support & dubugging (beyond polyfills & 3rd party libs)
+
+First & foremost:
+-   If asked about this problem, say that you would expect to know what browsers you application should support 
+-   Test on those browser often as you develop
+
+
+
+
+
+
+Browswer Support:
+-   Polyfills:
+    -   A polyfill is a browser fallback, made in JavaScript, that allows functionality you expect to work 
+        in modern browsers to work in older browsers, e.g., to support canvas (an HTML5 feature) in older browsers.
+
+-   All browsers have user agents 
+
+-   Every browser has their own user agents
+
+
+Debugging:
+-   The first thing to do is to narrow down where the bug occurs as much as possible. Get as much information 
+    as you can from the person reporting the bug — what platform(s), device(s), browser version(s), etc.
+-   Many times the bug can be on the browser itself and it will just require an update
+-   Check for javascript errors in the console that could be stopping flow
+
+-   Debugging CSS
+    -   Use chrome tools and change attributes
+    -   Understand the box model
+
+Cross-browser support & debugging (other than temporary bandages)
+-   Use extensions
+-   Inspection tools
+-   Test on diff versions of devices you might need. 
+    You should test on all the devices you have, and then use an emulator or a service like BrowserStack to check the rest.
+-   Simply put, test what you're going to support. If you don't have any other restriction 
+    (like a client who insists on using IE11), a good baseline is the 3 latest versions of major browsers. 
+    This will give you a nice tradeoff between compatibility and all the latest browser technology.
+-   Find bug & trace 
+    -   Any cross-browser issues can usually be traced to a single incompatibility - you'll have to rely on 
+        standard debugging techniques here: debugger
+-   In every case, cross-browser bugs require a bit of research and experimentation. You should check resources like the MDN 
+    (devleoper mozilla)
+
+
+Fixing the problem:
+-   If the problem is in JavaScript, your best bet is to try and find a polyfill - this is a piece of code that will replace 
+    the functionality that doesn't exist. This isn't flawless (you can't polyfill keywords), but it will let you modify API 
+    functions seamlessly.
+-   If you can't polyfill, the next approach is to use a different, 'good enough' replacement for the unsupported functionality.
+
+-   In CSS, this is done by providing two values. When CSS encounters a value that is doesn't recognise, 
+    it ignores it – or if it encounters the same value twice, it will use the second. This means we can provide fall-back values:
+
+    .grid {
+        /* In browsers that support display: grid, this is overridden */
+        display: block;
+
+        /* In browsers that don't support display: grid, this is ignored */
+        display: grid;
+    }
+
+-   In JavaScript, the best approach to create backup functionality is to use feature-sniffing. 
+    This works by testing that a feature exists before attempting to use it. It's possible to perform these tests 
+    yourself, but it's better to use a library like Modernizr.
+
+    if (Modernizr.webgl) {
+        // this browser supports WebGL
+        let ctx = canvas.getContext('webgl');
+        draw3d(ctx);
+    } else {
+        // we don't have WebGL support, so we perform a 2d drawing
+        let ctx = canvas.getContext('2d');
+        draw2d(ctx);
+    }
+
+    What is Modernizr?
+    It’s a collection of superfast tests – or “detects” as we like to call them – which run as your web page loads, 
+    then you can use the results to tailor the experience to the user.
+
+
+    Why do I need it?
+    All web developers come up against differences between browsers and devices. That’s largely due to different 
+    feature sets: the latest versions of the popular browsers can do some awesome things which older browsers 
+    can’t – but we still have to support the older ones.
+
+    Modernizr makes it easy to deliver tiered experiences: make use of the latest and greatest features in browsers 
+    which support them, without leaving less fortunate users high and dry.
+
+
+-   The functionality is inconsistent
+    In my mind, what's more annoying than functionality not existing is functionality that doesn't work the same. Unfortunately, browsers are seperate projects developed by seperate teams, so inconsistencies in certain APIs are inevitable.
+
+    Inconsistent behaviour tends to stem from some browsers being more flexible about what they'll accept (Firefox and Chrome are generally very flexible), and some browser being more restrictive (Safari and Internet Explorer come to mind).
+
+    Thankfully, because of flexible browsers, your fix is usually to change your approach to match the restrictive browser's version of the behaviour - Flexible browsers like Chrome and Firefox will usually handle this version too.
+
+    One that I've dealt with in the past is that Internet Explorer doesn't acknowledge 0 in it's flex-basis property without a unit.
+
+    .flex-container {
+        flex-basis: 0; /* Breaks in IE */
+        flex-basis: 0px; /* Works in all browsers */
+    }
+
+-   http://www.stubbornella.org/content/2012/05/02/cross-browser-debugging-css/
+-   https://www.lambdatest.com/blog/fixing-javascript-cross-browser-compatibility-issues/
+------------------------------------------------------------------------------------------------------------------------
+Dynamic layout & CSS:
+
+
+------------------------------------------------------------------------------------------------------------------------
+Deep knowledge of web development best practices around performance, security, and code maintainability
+
+-   Security:
+    -   Checklist:
+        -   https://github.com/thedaviddias/Front-End-Checklist#security
+        -   https://frontendchecklist.io/
+
+    -   https://www.softwaretestinghelp.com/interview-questions/security-testing-interview-questions-and-answers/
+    -   https://www.fullstack.cafe/Web%20Security
+
+------------------------------------------------------------------------------------------------------------------------
+Comfort and experience working within MVC architecture
+
+
+------------------------------------------------------------------------------------------------------------------------
+Unit Tests
+-   Chai & Mocha
+-   Testing react 
+
+TDD can reduce bug density.
+TDD can encourage more modular designs (enhancing software agility/team velocity).
+TDD can reduce code complexity.
+
+Before you implement,
+write the test.
+
+
+
+End-to-End
+-   Puppeteer
+-   Selenium
+-   Headless browsing
+
+------------------------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------------------------
+Management / Team Help:
+-   If they ask too many questions:
+    -   Ask them for their 2 or 3 biggest problems 
+    -   Review it with them in a diagram
+    -   Empower & challenge them to take care of smaller details 
+    -   Offer to give them feedback later on their progress
+
+
+------------------------------------------------------------------------------------------------------------------------
+Reporting:
+
+-   Record & resummarize our talks & goals 
+-   Get written accountability from team 
+-   Support them and ask how I may help them
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+
+
+Performance:
+
+-   For many items in a UI
+    -   Pagination / Scroll
+
+-   React performance 
+    -   Limit Reconciliation 
+    -   Use "ShouldComponentUpdate"
+    -   Smaller more modular components to prevent renders
+    -   Avoid props waterfall (pass down through many childs)
+
+
+React Advanced Section:
+Reconciliation
+React compares first with component types & then with keys
+“Keys” are a devs way of showing react what it doesn’t need to rerender if strrucuttre of tree changes
+Sttate is maintained for component by “key” indicator so do not use list index to specify key bc weird things can happen with component states on resorts
+When structure changes this means recon rerenders not “unmounts” and “mounts”
+If a change is done on a component it updates the attributes then recurses to children
+React knows to only update changed attributes (on props or style props)
+componentWillReceiveProps() and componentWillUpdate()  when attribute changes then render() called
+Transforming tree two other takes O(n**3) with state of art algo however this is too long so react uses hearistics to do roughly O(n)
+Performance
+Checks (shouldComponentUpdates), render() calls, & Dom changes
+Can render() be called without having to change Dom just virtual?
+If render is called and react elements are the same as last DOM tree then no DOM modifications are needed
+When render is called and react elements are not equivalent then DOM update is made
+Refs
+Can be used to autoplay media, focus text, etc 
+Imperative way to use components
+Context
+Used to be able to share global data that would be too cumbersome to pass down through props like locales & app themes, current authenticated user or preferred language
+This might be able to fix global Layout Component problem or global error handling I have been thinking about
+Through making a provider and wrapping whole App with it
+If you only want to avoid passing some props through many levels, component composition is often a simpler solution than context.
+Honestly I don’t see this being important for theming because we can store themes in global store like redux
+Render Props
+Help build reusable and generic components
+Can pass in components from parent component that can also take in parent generated values
+Higher-Order Components
+Never modify wrapped component (for example it’s native or static functions) just wrap functionality & props on top
+Mainly serves as a Container
+Code Splitting
+Lazyloading (React.Lazy) + lazy loading at the navigation level as well
+Error handling when lazy loads fail (network problems)
+Web Components
+Can be used along side react
+
+------------------------------------------------------------------------------------------------------------------------
+Tools:
+-   LogRocket
+-   Sentry
+-   StoryBook for UI libs
+
+------------------------------------------------------------------------------------------------------------------------
+
+Behavioral Questions (tips from Cracking the coding interview):
+-   Usually asked as: 
+    "Tell me about a time when you..."
+-   Most Common Questions - Have response of each for 4 different projects (ready for any context)
+    -   Most Challenging
+    -   What You Learned
+    -   Most Interesting
+    -   Hardest Bug 
+    -   Enjoyed Most 
+    -   Conflicts with Teammates 
+-   On above grid keep each topic to project limited to a couple of keywords, to easily remember
+-   Have "Soft" responses available:
+    -   Conflict
+        -   STAR approach
+            Situation: Briefly explain the issue you were dealing with in a positive, constructive way.
+            Task: Describe your role in the situation.
+            Action: Discuss what you did to resolve or address the situation.
+            Result: Emphasize what you learned and how your actions had a positive outcome.
+        -   Keys:
+            -   Calmly explain the situation in a postive constructive feedback way
+            -   Listen to what the problem may be (often times there is an issue)
+                -   Too many other assignments
+                -   Not feeling confident about speaking up or shy about abilities
+                -   Lack of information or no idea where to start
+            -   Ask how you can help
+        -   With Authority:
+            -   Strong and honest opinion, but respectful of authority & never deragotory
+            -   Voice opinion in order to turn into constructive conversation
+    -   Failures
+        -   Reflection often in the form of diagrams & pros-cons & feedback
+    -   Time I had to pursuade someone
+        -   Break-down of the problem, limited resources & where value can most be served
+    
+-   List all common projects, job, or activty in your resume
+-   Think deeply about what each story communicates about you 
+
+-   Think about a realy weakness (do not be arrogant by giving a bad weakness)
+    -   Not the best at attention to detail
+    -   I try to keep calls at a minimum when I have a lot of technial work to do
+
+
+
+During interview:
+-   Frame well & say IDK when you don't know something but this is what I would do...
+    -   Understand that they do not expect you to know everything
+-   Clarify ambiguities
+    -   They want to see if you are solving correct probs & not wasting resources building something completely off
+    -   Ask for parameters, scale, conditions, core objects, verification, error handling, etc
+-   Don’t get set on one approach
+    -   Receive feeback well 
+-   Approach the problem from multiple angles
+-   Demonstrate curiousity
+
+-   Be specific, not arrrogant
+-   Limit details
+    -   Give key insights & then ask interviewer that you can go into more detail if they'd like 
+-   Give a structured answer
+    -   Give Nuggest First (the shiny thing that was accomplished)
+    -   Use S.A.R. (Situation, Action, Result)
+        -   Explain situation, say the aciton you took & the following result
+
+
+
+
+
+
+------
+Security:
+
+
+-   Cross Domain Policy
+    -   https://www.quora.com/What-is-cross-domain-policy
+    Modern Browsers have a security policy by default because of which they do not allow executable resources like Flash and some Javascript to be loaded from domains different from the one through which the current web page is coming.
+    
+    To implement cross domain policy we basically need just to save one file by the name crossdomain.xml in your hosting’s root directory, the contents of the files would be like this:
+
+    <?xml version="1.0"?>
+    <cross-domain-policy>
+    <allow-access-from domain="*" />
+    </cross-domain-policy>
+
+    ** JSONP
+    Requesting a file from another domain can cause problems, due to cross-domain policy.
+
+    Requesting an external script from another domain does not have this problem.
+
+    JSONP uses this advantage, and request files using the script tag instead of the XMLHttpRequest object.
+
+
+-   What is the difference between Authentication vs Authorization?  	
+
+    Authentication is the process of ascertaining that somebody really is who he claims to be.
+
+    Authorization refers to rules that determine who is allowed to do what. 
+        E.g. Adam may be authorized to create and delete databases, while Usama is only authorised to read.
+    
+    Or in short:
+
+    Authentication = login + password (who you are)
+    Authorization = permissions (what you are allowed to do)
+    Also:
+
+    Authentication = Verification
+    Authorization = Permissions
+
+
+-   Injection attacks stem from a lack of strict separation between program instructions 
+    (i.e., code) and user-provided (or external) input. This allows an attacker to inject malicious code into a data snippet.
+
+    SQL injection is one of the most common types of injection attack. To carry it out, an attacker provides 
+    malicious SQL statements through the application.
+
+    How to prevent:
+
+    Prepared statements with parameterized queries
+    Stored procedures
+    Input validation - blacklist validation and whitelist validation
+    Principle of least privilege - Application accounts shouldn’t assign DBA or admin type access onto the database server. 
+        This ensures that if an application is compromised, an attacker won’t have the rights to the database through the 
+        compromised application
+
+
+-   A denial-of-service attack (DoS attack) is an attempt to make a computer resource unavailable to its intended users.
+
+    Denial of service is typically accomplished by flooding the targeted machine or resource with superfluous requests 
+    in an attempt to overload systems and prevent some or all legitimate requests from being fulfilled.
+
+    In a distributed denial-of-service attack (DDoS attack), the incoming traffic flooding the victim originates 
+    from many different sources. This effectively makes it impossible to stop the attack simply by blocking a single source.
+
+
+-   A botnet is a number of Internet-connected devices, each of which is running one or more bots. Botnets can 
+    be used to perform distributed denial-of-service attack (DDoS attack), steal data, send spam, and allows 
+    the attacker to access the device and its connection.
+
+
+-   
+    Security testing can be considered most important in all type of software testing. Its main objective is to 
+    find vulnerabilities in any software (web or networking) based application and protect their data from 
+    possible attacks or intruders.
+
+    As many applications contains confidential data and needs to be protected being leaked. Software 
+    testing needs to be done periodically on such applications to identify threats and to take immediate action on them.
+
+-   
+    OWASP stands for Open Web Application Security Project. It is an organization which supports secure software development.
+
+-   
+    Impersonation is an act of pretending to be another person. For IT Systems impersonation means that some specific users 
+    (usually Admins) could get an access to other user's data.
+
+
+-   Cross-Site Scripting (XSS) is an attack that occurs when an attacker uses a web application to send malicious code, 
+    generally in the form of a browser side script, to a different end user.
+
+    The page provided by the server when someone requests it is unaltered. Instead, an XSS attack exploits 
+    a weakness in a page that include a variable submitted in a request to show up in raw form in the response. 
+    The page is only reflecting back what was submitted in that request.
+
+
+    While Javascript as a programming language has evolved over the years, the ways that Javascript code is meant to be added 
+    to a web page have not. This is why we can still use <script> and </script> tags inside of HTML documents and put any 
+    Javascript we want inside of them, and this is the main reason why XSS is still rampant today.
+    XSS allows malicious users to inject client-side code (mainly Javascript) into web pages to be run by other unsuspecting users
+
+    Notice how this differs from another popular attack, SQL injection, in that XSS is aimed at users of the website, not 
+    the website itself.
+    An attacker can use XSS to steal users’ cookies and use those to impersonate them at example.com, steal their credit 
+    card information, or even trick them into installing and downloading malware. Anything that HTML and Javascript can do, 
+    the attacker can do.
+
+
+
+-   Content Security Policy (CSP) is an HTTP header that allows site operators fine-grained control over where 
+    resources on their site can be loaded from. The use of this header is the best method to prevent cross-site 
+    scripting (XSS) vulnerabilities. Due to the difficulty in retrofitting CSP into existing websites, CSP is 
+    mandatory for all new websites and is strongly recommended for all existing high-risk sites.
+
+    The primary benefit of CSP comes from disabling the use of unsafe inline JavaScript. Inline JavaScript – either 
+    reflected or stored – means that improperly escaped user-inputs can generate code that is interpreted by the web 
+    browser as JavaScript. By using CSP to disable inline JavaScript, you can effectively eliminate almost all XSS 
+    attacks against your site.
+
+-   HyperText Transfer Protocol
+    HTTP means HyperText Transfer Protocol. HTTP is the underlying protocol used by the World Wide Web and this 
+    protocol defines how messages are formatted and transmitted, and what actions Web servers and browsers should 
+    take in response to various commands
+
+
+    Simply put, HTTP is the protocol that enables communication online, transferring data from one machine to another. 
+    WWW is the set of linked hypertext documents that can be viewed on web browsers (such as Firefox, Google Chrome, and more).
+
+
+-   SSL - The green padlock simply represents that traffic to and from the website is encrypted. Encryption means no one else but 
+    that website can read any credit card details and/or any passwords you enter there
+
+    Certificate between browser and server to encrypt data 
+
+
+-   1. Analyzing Server Logs
+
+    Apache, NGINX, and IIS server logs can be manually analyzed to find anomalous bot activities. The logs must be 
+    exported to a spreadsheet and sorted by columns to show the IP addresses and User Agents. When you identify bot 
+    activities by finding the number of hits from User Agents from certain IPs, you can isolate that IP and block it 
+    with your firewall. Unfortunately, this process is laborious and takes many man-hours that could actually be allocated 
+    to other high priority activities. The biggest downside of this process is that hackers these days may use multiple 
+    genuine IPs to send malicious bots to your site, and you may end up blocking real users accessing your site from those IPs. 
+    The other disadvantage is that either you could fail to block user agents of spoofed search engine crawlers 
+    (i.e., pretending to be Google, Bing, etc.), or you could mistakenly block the user agents of genuine search engine crawlers. 
+    To ensure that you are doing the right thing, you have to do a reverse DNS lookup for all the IPs 
+    (i.e., given an IP, the corresponding domain name is found. And, when a reverse check is done in the domain name, 
+    the relevant IP has to be listed. It helps to identify advanced bots at the IP level).
+
+    2. Showing a CAPTCHA
+
+    A common practice to block bad bots on important pages is to show a CAPTCHA. Though effective against bad bots, 
+    a CAPTCHA should not be shown to everyone requesting the Web page without ascertaining if it’s a human or a bot. 
+    Genuine users get frustrated by having to solve CAPTCHAs, and may quickly bounce off your web page. Indiscriminately showing a CAPTCHA to humans impacts user experience, and the brand perception of the website in the long run.
+
+    3. Robots.txt
+
+    This is a basic misunderstanding that many website owners have — setting their robots.txt to disallow URLs, 
+    thinking that the crawlers and bots, both good and bad, will not traverse through their website. Unfortunately, 
+    this method does not shield a website completely from bots, as the people who deploy bots are really not bothered 
+    about the rules mentioned in the robots.txt file. In short, tweaking the robots.txt file doesn’t stop scrapers 
+    from stealing your content. Interestingly, in this conversation, some still find robots.txt a good tool to block 
+    scraper bots.
+
+    4. Honeypots
+
+    Honeypots are a good trap mechanism to capture new bots (sent by scrapers who are not well-versed with the structure of 
+    every page) on a website. But this approach poses a less-known threat of reducing the page rank on search engines. 
+    Search engine bots fall for this trap, and interpret the links as dead, irrelevant, or fake. With more such traps, the 
+    ranking of a website decreases considerably. Setting up honeypots is risky and needs to be managed very carefully.
+    A honeypot is a network-attached system set up as a decoy to lure cyberattackers and to detect, deflect or study 
+    hacking attempts in order to gain unauthorized access to information systems.
+
+
+    5. In-house bot prevention
+
+    All or some of the aforementioned techniques can be run by having an in-house bot prevention team. Sure, they will 
+    be able to detect and block bots. However, the accuracy and consistency varies drastically as it’s still a manual, 
+    error-prone process. The key thing to consider here is that when bots are blocked, the scrapers always try to find 
+    a way in by tweaking bot behavior and IPs, and can, in many instances, emulate human behavior. This presents a huge 
+    challenge to the web team, and they may not even know that they’re being attacked with even more sophistication.
+
+
+-   A request for a resource (like an image or a font) outside of the origin is known as a cross-origin request. 
+    CORS (cross-origin resource sharing) manages cross-origin requests. CORS allows servers to specify who 
+    (i.e., which origins) can access the assets on the server, among many other things.
+
+    Access-Control-Allow-Origin is an HTTP header that defines which foreign origins are allowed to access the content of 
+    pages on your domain via scripts using methods such as XMLHttpRequest.
+
+    For example, if your server provides both a website and an API intended for XMLHttpRequest access on a remote 
+    websites, only the API resources should return the Access-Control-Allow-Origin header. 
+    Failure to do so will allow foreign origins to read the contents of any page on your origin.
+
+    # Allow any site to read the contents of this JavaScript library, so that subresource integrity works
+    Access-Control-Allow-Origin: *
+
+/**
+ * Cross-Origin Resource Sharing (CORS) Settings
+ * (sails.config.cors)
+ *
+ * CORS is like a more modern version of JSONP-- it allows your server/API
+ * to successfully respond to requests from client-side JavaScript code
+ * running on some other domain (e.g. google.com)
+ * Unlike JSONP, it works with POST, PUT, and DELETE requests
+ */
+
+    -   CORS: relaxes security on your server 
+        By default: allows origin to access back to web server (can prevent cross site scripting)
+        Does this by returning a cors header on response header (only browsers implement this, command line can apply 
+        request stil, its a browser type of security feature)
+    -   Access Control Allow Origin & has your origin it willl allow that origin to access resources
+        -   If server does not have that origin in its cors rules browser will not add that Access control header in 
+            the response header and as a result the request iwll fail
+
+
+
+
+-   robots.txt is a text file placed within the root directory of a site that tells robots (such as indexers employed by search engines) how to behave, by instructing them not to index certain paths on the website.
+
+    It should not be used as a way to prevent the disclosure of private information or to hide portions of a website. Although this does prevent these sites from appearing in search engines, it does not prevent its discovery from attackers, as robots.txt is frequently used for reconnaisance.
+
+    # Using robots.txt to hide certain directories is a terrible idea
+    User-agent: *
+    Disallow: /secret/admin-interface
+
+-   Session Hijacking involves the exploitation of the web session control mechanism. The attacker basically 
+    exploits vulnerable connections and steals HTTP cookies to gain unauthorized access to sensitive information/data 
+    stored in web servers.
+
+    The most effective countermeasure network-level session hijacking is to pick encrypted transport protocols that 
+    enable secure connections.
+
+-   Access Control Violation threat arises from not flagging HTTP cookies with tokens as secure.
+
+-   Session hijacking, is the issue related to A2: 2017 – Broken Authentication. It is also called cookie hijacking. 
+    In this type of attack, there is the possibility of exploitation of a valid computer session—sometimes also called 
+    a session key—to gain unauthorized access to information 
+    or services in a system. This flaw comes when there is a poor randomness in session key.
+
+-   To mitigate SQL injection:
+
+    Prepared Statements with Parameterized Queries: Always ensure that your SQL interpreter always able to differentiate between code and data. Never use dynamic queries which fail to find the difference between code and data. Instead, use static SQL query and then pass in the external input as a parameter to query. Use of Prepared Statements (with Parameterized Queries) force developer to first define all the SQL code, and then pass in each parameter to the query later.
+    Use of Stored Procedures: Stored Procedure is like a function in C where database administrator call it whenever he/she need it. It is not completely mitigated SQL injection but definitely helps in reducing risks of SQL injection by avoiding dynamic SQL generation inside.
+    White List Input Validation: Always use white list input validation and allow only preapproved input by the developer. Never use blacklist approach as it is less secure than whitelist approach.
+    Escaping All User Supplied Input
+    Enforcing Least Privilege
+
+-   By using Cross Site Scripting (XSS) technique, users executed malicious scripts (also called payloads) unintentionally 
+    by clicking on untrusted links and hence, these scripts pass cookies information to attackers.
+
+-   DOM-based XSS is a type of cross-site scripting which appears in DOM(Document Object Model), instead of HTML.
+
+-   XSS can be prevented by sanitizing user input to the application. Always allowed those elements as input which is 
+    absolutely essential for that field.
+
+-   SSL Certificates are small data files that digitally bind a cryptographic key to an organization’s details. When installed on a web server, 
+    it activates the padlock and the https protocol (over port 443) and allows secure connections from a web server to a browser.
+
+-   A Root SSL certificate is a certificate issued by a trusted certificate authority (CA).
+
+    In the SSL ecosystem, anyone can generate a signing key and sign a new certificate with that signature. However, that certificate is not considered valid unless it has been directly or indirectly signed by a trusted CA.
+
+    A trusted certificate authority is an entity that has been entitled to verify that someone is effectively who it declares to be. In order for this model to work, all the participants on the game must agree on a set of CA which they trust. All operating systems and most of web browsers ship with a set of trusted CAs
+
+
+-   What is ClickJacking?
+    Clickjacking is a malicious technique of tricking a user into clicking on something different from what the user perceives, thus potentially revealing confidential information or allowing others to take control of their computer while clicking on seemingly innocuous objects, including web pages
+
+    For example, imagine an attacker who builds a web site that has a button on it that says “click here for a free iPod”. However, on top of that web page, the attacker has loaded an iframe with your mail account, and lined up exactly the “delete all messages” button directly on top of the “free iPod” button. The victim tries to click on the “free iPod” button but instead actually clicked on the invisible “delete all messages” button. In essence, the attacker has “hijacked” the user’s click, hence the name “Clickjacking”.
+
+    Defending against Clickjacking
+    There are two main ways to prevent clickjacking:
+
+    Sending the proper Content Security Policy (CSP) frame-ancestors directive response headers that instruct the browser to not allow framing from other domains. (This replaces the older X-Frame-Options HTTP headers.)
+    Employing defensive code in the UI to ensure that the current frame is the most top level window
+    
+
+-   What is CSRF? (Cross Site Request Forgery)
+    -   Cross-site request forgery, also known as one-click attack or session riding and abbreviated as CSRF or XSRF, 
+        is a type of malicious exploit of a website where unauthorized commands are transmitted from a user that the 
+        web application trusts.
+    -   The attack itself is quite simple. A CSRF vulnerability allows an attacker to force a logged-in user to perform 
+        an important action without their consent or knowledge. It is the digital equivalent of an attacker forging the 
+        signature of a victim on an important document. Furthermore, the attack leaves no evidence behind, since a forged 
+        request contains all of the information and comes from the same IP address as a real request from a victim.
+
+/**
+ * Cross-Site Request Forgery Protection Settings
+ * (sails.config.csrf)
+ *
+ * CSRF tokens are like a tracking chip.  While a session tells the server that a user
+ * "is who they say they are", a csrf token tells the server "you are where you say you are".
+ *
+ * When enabled, all non-GET requests to the Sails server must be accompanied by
+ * a special token, identified as the '_csrf' parameter.
+ *
+ * This option protects your Sails app against cross-site request forgery (or CSRF) attacks.
+ * A would-be attacker needs not only a user's session cookie, but also this timestamped,
+ * secret CSRF token, which is refreshed/granted when the user visits a URL on your app's domain.
+ *
+ * This allows us to have certainty that our users' requests haven't been hijacked,
+ * and that the requests they're making are intentional and legitimate.
+ *
+ * This token has a short-lived expiration timeline, and must be acquired by either:
+ *
+ * (a)		For traditional view-driven web apps:
+ *			Fetching it from one of your views, where it may be accessed as
+ *			a local variable, e.g.:
+ *			<form>
+ *				<input type="hidden" name="_csrf" value="<%= _csrf %>" />
+ *			</form>
+ *
+ * or (b)	For AJAX/Socket-heavy and/or single-page apps:
+ *			Sending a GET request to the `/csrfToken` route, where it will be returned
+ *			as JSON, e.g.:
+ *			{ _csrf: 'ajg4JD(JGdajhLJALHDa' }
+ *
+ *
+ * Enabling this option requires managing the token in your front-end app.
+ * For traditional web apps, it's as easy as passing the data from a view into a form action.
+ * In AJAX/Socket-heavy apps, just send a GET request to the /csrfToken route to get a valid token.
+ *
+ * For more information on CSRF, check out:
+ * http://en.wikipedia.org/wiki/Cross-site_request_forgery
+ *
+ * For more information on this configuration file, including info on CSRF + CORS, see:
+ * http://sailsjs.org/#!/documentation/reference/sails.config/sails.config.csrf.html
+ *
+ */
+
+
+
+
+-   What is Honeypot? 
+
+
+-   What is encryption, hashing, and encoding
+    -   Encoding: Making text shorter & more efficient
+    -   Encryption: key to lock data and secure (public private keys)
+    -   Hashing: Encoding and applying mod to an input for purpose of quick access (key search)
+
+
+-   Security header #1: HTTP Strict Transport Security (HSTS) to solve man-in-the-middle attacks
+    When a site performs a 301 redirect from the http to the https version of a site, the redirect does not fully protect the site visitor, since it can be intercepted between when the visitor requests the http version of the site, and when it reaches the https destination, for a type of attack called a “man in the middle” attack.
+
+    In order to prevent this interception during a redirect, you can use the HTTP Strict Transport Security (HSTS) header, which allows site owners to instruct browsers to always go straight to the https version. This removes the window for the man-in-the-middle attacker since the http version of the site is never accessed, not even for a second.
+
+    In order for sites to be HSTS-enabled, the HSTS header “Strict-Transport-Security” must be in place, the site must meet a number of criteria outlined here, and then be submitted to the HSTS Preload list.
+
+    Because security is extremely important to us, we have implemented HSTS for all our client’s websites. In order to complete the process, all our clients have to do is fill out the HSTS Preload form to get added to it. You can read more about HSTS and possible drawbacks here.
+
+    
+
+    Security header #2 Content Security Policy (CSP) to solve mixed content errors
+    A Content Security Policy (CSP) uses browsers to detect and mitigate certain types of attacks like cross-site scripting (XSS), clickjacking and other code injection attacks resulting from execution of malicious content in the trusted web page context. A CSP can be used for simple purposes like enforcing HTTPS on SSL-enabled sites, to more sophisticated uses like authorizing only truly trusted sources and blocking others.
+
+    Using CSP also makes sure that there are no mixed content errors on your site. For example, if your site is on https but you embedded a YouTube video with a http link, then you would otherwise wind up with mixed content errors in the browser console. These mixed content errors will prevent the green padlock from displaying next to your url in the browser bar. A CSP could direct a website to make make all urls are always https, to avoid any mixed content errors.
+
+-   https://www.strattic.com/ssl-http-security-headers/
+
+
+
+
+
+
+
+
+
+Vanilla Javascript:
+
+What’s the Difference Between Class & Prototypal Inheritance?
+-   https://medium.com/javascript-scene/master-the-javascript-interview-what-s-the-difference-between-class-prototypal-inheritance-e4cd0a7562e9
+-   Prototypal Inheritance: A prototype is a working object instance. Objects inherit directly from other objects.
+-   “A prototype is a working object instance. Objects inherit directly from other objects.”
+-   Class inheritance creates parent/child object taxonomies as a side-effect.
+
+-   the fragile base class problem, which makes them difficult to fix when you get them wrong.
+    The tight coupling problem (class inheritance is the tightest coupling available in oo design), which leads to the next one…
+    -   This mean a child absorbs all props of parent even the ones it doesn't need. This is completely coupled 
+    The fragile base class problem
+    -   When so many sub-classes use one base class & then one subclass needs a detail to change in baseclass, then 
+        it changes it for everything else...
+    Inflexible hierarchy problem (eventually, all evolving hierarchies are wrong for new uses)
+    -   Code becomes static & super unable to change bc it has a purpose for & its so base for other classes it cannot change 
+    -   Especially when new used need to occur and you need to extend new functionality, etc
+    The duplication by necessity problem (due to inflexible hierarchies, new use cases are often shoe-horned in by duplicating, rather than adapting existing code)
+    -   Duplicating code becomes a thing which leads to more complexity in a project then necessary
+    The Gorilla/banana problem (What you wanted was a banana, but what you got was a gorilla holding the banana, and the entire jungle)
+    -   You want to be able to just take the data or logic that you need not the whole package it's coupled with
+
+-   Concatenative inheritance: The process of inheriting features directly from one object to another by copying the source 
+    objects properties. In JavaScript, source prototypes are commonly referred to as mixins. 
+
+-   Prototype delegation: In JavaScript, an object may have a link to a prototype for delegation. If a property is not 
+    found on the object, the lookup is delegated to the delegate prototype, which may have a link to its own delegate 
+    prototype, and so on up the chain until you arrive at `Object.prototype`, which is the root delegate. 
+
+-   javascript is nice because it uses prototypical inheritance. Which means it has a pointer that keeps pointing up to parents.
+    -   If we want to use an action and it is not found in the current object it'll keep going up the chain until it finds the 
+        encapsulated logic with the action in a parent prototype node
+
+
+Root nodes:
+-   Window 
+    -   Reprensent the tab in the browser
+    -   Document (root of every node in the DOM)
+        -   Is a property of the Window node
+
+Below is a chart consisting of the root elements that every document will contain. Even if a blank HTML file is loaded into a browser, these three nodes will be added and parsed into the DOM.
+
+Property	Node	Node Type
+document	#document	DOCUMENT_NODE
+document.documentElement	html	ELEMENT_NODE
+document.head	head	ELEMENT_NODE
+document.body	body	ELEMENT_NODE
+
+
+IIFE:
+
+    SCOPE & IIFE:
+    ( 
+        function() {
+            for (var i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    console.log(i)
+                })
+            }
+        }
+    )()
+9 (10x)
+
+
+    ( 
+        function() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    console.log(i)
+                })
+            }
+        }
+    )()
+1...9
+
+
+    ( 
+        function() {
+            for (var i = 0; i < 10; i++) {
+
+                ( 
+                    function(i) {
+                        setTimeout(() => {
+                            console.log(i)
+                        }, 10)
+                    }
+
+                )(i)
+
+            }
+        }
+    )()
+1...9
+
+
+Q1: What is Coercion in JavaScript?
+    Topic: JavaScript
+    Difficulty:
+    Answer:
+    In JavaScript conversion between different two build-in types called coercion. Coercion comes in two forms in JavaScript: explicit and implicit.
+
+    Here's an example of explicit coercion:
+
+    var a = "42";
+
+    var b = Number( a );
+
+    a;                // "42"
+    b;                // 42 -- the number!
+    And here's an example of implicit coercion:
+
+    var a = "42";
+
+    var b = a * 1;    // "42" implicitly coerced to 42 here
+
+    a;                // "42"
+    b;                // 42 -- the number!
+
+Q2: Explain meta tags in HTML
+    Topic: HTML5
+    Difficulty: ⭐
+    Answer:
+
+    Meta tags always go inside head tag of the HTML page
+    Meta tags is always passed as name/value pairs
+    Meta tags are not displayed on the page but intended for the browser
+    Meta tags can contain information about character encoding, description, title of the document etc,
+    Example:
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="description" content="I am a web page with description"> 
+  <title>Home Page</title>
+</head>
+<body>
+
+</body>
+</html>
+
+
+
+
+
+
+Html Viewport:
+What is The Viewport?
+The viewport is the user's visible area of a web page.
+
+The viewport varies with the device, and will be smaller on a mobile phone than on a computer screen.
+
+Before tablets and mobile phones, web pages were designed only for computer screens, and it was common for web pages to have a static design and a fixed size.
+
+Then, when we started surfing the internet using tablets and mobile phones, fixed size web pages were too large to fit the viewport. To fix this, browsers on those devices scaled down the entire web page to fit the screen.
+
+This was not perfect!! But a quick fix.
+
+
+
+Setting The Viewport
+HTML5 introduced a method to let web designers take control over the viewport, through the <meta> tag.
+
+You should include the following <meta> viewport element in all your web pages:
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+A <meta> viewport element gives the browser instructions on how to control the page's dimensions and scaling.
+
+The width=device-width part sets the width of the page to follow the screen-width of the device (which will vary depending on the device).
+
+The initial-scale=1.0 part sets the initial zoom level when the page is first loaded by the browser.
+
+Here is an example of a web page without the viewport meta tag, and the same web page with the viewport meta tag:
+
+
+
+Size Content to The Viewport
+Users are used to scroll websites vertically on both desktop and mobile devices - but not horizontally!
+
+So, if the user is forced to scroll horizontally, or zoom out, to see the whole web page it results in a poor user experience.
+
+Some additional rules to follow:
+
+1. Do NOT use large fixed width elements - For example, if an image is displayed at a width wider than the viewport it can cause the viewport to scroll horizontally. Remember to adjust this content to fit within the width of the viewport.
+
+2. Do NOT let the content rely on a particular viewport width to render well - Since screen dimensions and width in CSS pixels vary widely between devices, content should not rely on a particular viewport width to render well.
+
+3. Use CSS media queries to apply different styling for small and large screens - Setting large absolute CSS widths for page elements will cause the element to be too wide for the viewport on a smaller device. Instead, consider using relative width values, such as width: 100%. Also, be careful of using large absolute positioning values. It may cause the element to fall outside the viewport on small devices.
+
+
+
+
+
+Performance:
+-    http://designingforperformance.com/basics-of-page-speed/
+-   https://uxdesign.cc/the-amazing-world-of-browser-performance-how-to-be-performant-44f8749b3617
+    -   Google chrome dev tools performance debugging
+
+****    
+-   Yahoo checklist of front end site optimizations
+    -   https://developer.yahoo.com/performance/rules.html
+
+-   Garbage collection friendly code in javascript 
+    -   http://buildnewgames.com/garbage-collector-friendly-code/
+
+Steps for rendering in browser:
+1. Javascript: this refers to all your insert framework of your choice code and DOM interactions. All of this is executed before the new frame is rendered. For this initial step some things need to be taken into consideration:
+Avoid Micro Optimization: It’s important to remember that Javascript code is not the final code that’s run by the browser. All browsers interpret Javascript code through their own engine (V8 engine in Chrome’s case). Each one performs their own optimizations so most of the time it’s not worth it to micro-optimize certain operations. We may end up making the engine perform more work than it should.
+Run Javascript as soon as possible in animations/transitions: Because JS can make changes in any of the other steps in the pipeline, it can cause repeated steps or re-doing any part of the pipeline for one single frame. Considering we have to run the entire pipeline in around 16ms tops to keep up with our 60fps quota, we don’t want the browser to be repeating steps unnecessarily.
+Optimize your code for a good memory management: Making your code garbage collection friendly will help your js code run faster and better. Here’s a great article on garbage collection friendly javascript that can fill you in a bit more on how it works.
+2. Style Calculations: Every time a style is applied to an element of the DOM, the browser needs to perform calculations on a different thing. This is a two-step process that starts by matching selectors to actual DOM elements and finally constructing the actual RenderStyle out of the matched selectors. The simpler the selectors, the easier it is for the browser to find those elements and apply the styles. To keep your style calculations performant, you’ll want to make them affect as few elements in the render tree as possible. For this it’s a good idea to implement a naming convention and methodology like BEM (Block-Element-Modifier). This will not only improve your styles performance but make your CSS code easier to read and more maintainable. Also, it’s important to note that different CSS properties can alter different steps in the pipeline. A great resource to check triggers is CSS Triggers. The sole fact of being aware of what triggers what can lead you to write more performant CSS code. Additionally, to ensure the best chance for a smooth, high-quality animation, we should always try to use these GPU-friendly properties:
+Transform
+Opacity
+Filter
+3. Layout: Once the browser has calculated which style rules apply to each element, it begins calculating spacing and dimensions. Anything that involves spacing and dimensions changes within the DOM being rendered will trigger the Layout step. This includes resizing, moving elements around, and changing layouts. This step will be skipped if none of these actions are required, so it’s a great place for optimization and improvements. Always watch for layout calls as this is one of the most important steps of the whole process. It’s also very useful to make use of the new flexbox layout and to use GPU-friendly properties (transform, opacity, filter) to avoid any unnecessary spacing calculations and to optimize this step.
+4. Paint: This is the process to convert all the information provided by the render tree that has been gathered through the previous steps into pixels. The browser goes through all elements and creates different layers with the elements drawn in them that will later become the end rendered screen. Just like the Layout step, if nothing needs to be painted the browser will skip this step.
+5. Composite: In this final step, the browser puts together all the layers created in the Paint step and will render them on the screen. This process will give the user the sense of depth and will put all elements in the order they were designed. It’s important to keep as few layers as possible.
+
+
+**
+Article above went over how to find and optimze performance using chrome tools
+-   Go to performance tab 
+-   On timeframe widnow -> roll focus where delay is occuring
+-   On menu  in the bottom click on event that is causing it -> keep rolling down to get specific 
+-   Get to the piece of code that is causing the issue & diagnose
+-   Fix the problem & redeploy
+
+
+Browser Rendering:
+-   https://blog.logrocket.com/how-browser-rendering-works-behind-the-scenes-6782b0e8fb10/
+
+compressed data & bytes (network) => browser (decode) => string character tokens in html => nodes => DOM 
+compressed data & bytes (network) => browser (decode) => string character tokens in html => nodes => CSS Object Model (CSSOM)
+
+CSS has something called the cascade. The cascade is how the browser determines what styles are applied to an element. 
+Owing to the fact that styles affecting an element may come from a parent element (i.e., via inheritance), or have been 
+set on the element themselves, the CSSOM tree structure becomes important.
+
+Why? This is because the browser has to recursively go through the CSS tree structure and determine the styles that 
+affect a particular element.
+
+
+What happens to this flow once we introduce JavaScript? Well, one of the most important things to remember is that whenever the browser 
+encounters a script tag, the DOM construction is paused! The entire DOM construction process is halted until the script finishes 
+executing.
+This is because JavaScript can alter both the DOM and CSSOM. Since the browser isn’t sure what this particular JavaScript will do, 
+it takes precaution by halting the entire DOM construction altogether.
+
+
+And that’s not all. If you extract the inline script to an external local file app.js, the behavior is just the same. 
+The DOM construction is still halted:
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Medium Article Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="app.js"></script>
+</head>
+
+<body>
+    <p id="header">How Browser Rendering Works</p>
+    <div><img src="https://i.imgur.com/jDq3k3r.jpg">
+</body>
+
+</html>
+
+
+**
+Loading the app.js from the <script> tag will pause the construction until it is fetched from the internet.
+So it is bad to place there script tags above the html body content
+
+
+
+
+******
+The critical rendering path
+This entire process is called the critical rendering path (CRP). Optimizing your websites for performance is all about optimizing the CRP. A well-optimized site should undergo progressive rendering and not have the entire process blocked.
+
+
+
+
+There are two instances in which the browser-generated DOM will be different than HTML source code:
+The DOM is modified by client-side JavaScript
+The browser automatically fixes errors in the source code
+
+The Document Object Model (DOM) connects web pages to scripts or programming languages by representing the structure of a document—such as the HTML representing a web page—in memory. Usually that means JavaScript, although modeling HTML, SVG, or XML documents as objects is not part of the core JavaScript language, as such.
+The DOM represents a document with a logical tree. Each branch of the tree ends in a node, and each node contains objects. DOM methods allow programmatic access to the tree. With them you can change the document's structure, style, or content.
+
+Nodes can also have event handlers attached to them. Once an event is triggered, the event handlers get executed.
+
+
+***
+In addition to parsing the style and structure of the HTML and CSS, the browser creates a representation of the document 
+known as the Document Object Model. This model allows JavaScript to access the text content and elements of the website 
+document as objects.
+
+
+
+
+The DOM Tree and Nodes
+All items in the DOM are defined as nodes. There are many types of nodes, but there are three main ones that we work with most often:
+
+Element nodes
+Text nodes
+Comment nodes
+
+ELEMENT_NODE	1	The <body> element
+TEXT_NODE	3	Text that is not part of an element
+COMMENT_NODE	8	<!-- an HTML comment -->
+
+
+
+
+
+ID	        #demo	getElementById()
+Class	    .demo	getElementsByClassName()
+Tag	demo	getElementsByTagName()
+Selector    (single)		querySelector()
+Selector    (all)		querySelectorAll()
+
+
+// Assign all elements
+const demoId = document.getElementById('demo');
+const demoClass = document.getElementsByClassName('demo');
+const demoTag = document.getElementsByTagName('article');
+const demoQuery = document.querySelector('#demo-query');
+const demoQueryAll = document.querySelectorAll('.demo-query-all');
+
+// Change border of ID demo to purple
+demoId.style.border = '1px solid purple';
+
+// Change border of class demo to orange
+for (i = 0; i < demoClass.length; i++) {
+  demoClass[i].style.border = '1px solid orange';
+}
+
+// Change border of tag demo to blue
+for (i = 0; i < demoTag.length; i++) {
+  demoTag[i].style.border = '1px solid blue';
+}
+
+// Change border of ID demo-query to red
+demoQuery.style.border = '1px solid red';
+
+// Change border of class query-all to green
+demoQueryAll.forEach(query => {
+  query.style.border = '1px solid green';
+});
+
+
+DOM MANIPULATION:
+-   https://www.digitalocean.com/community/tutorials/how-to-traverse-the-dom
+-   https://www.digitalocean.com/community/tutorial_series/understanding-the-dom-document-object-model
+
+-   parentNode	    Parent Node
+    parentElement	Parent Element Node
+
+    -   The top get the parent node
+    -   You can also multiple chains: p.parentNode.parentNode
+
+-   childNodes	Child Nodes
+    firstChild	First Child Node
+    lastChild	Last Child Node
+    children	Element Child Nodes
+    firstElementChild	First Child Element Node
+    lastElementChild	Last Child Element Node
+
+ul.childNodes;
+Output
+► (7) [text, li, text, li, text, li, text]
+
+
+for (let element of ul.children) {
+  element.style.background = 'yellow';
+}
+
+
+previousSibling	Previous Sibling Node
+nextSibling	Next Sibling Node
+previousElementSibling	Previous Sibling Element Node
+nextElementSibling	Next Sibling Element Node
+
+const tiger = ul.children[1];
+tiger.nextElementSibling.style.background = 'coral';
+tiger.previousElementSibling.style.background = 'aquamarine';
+
+
+
+
+
+
+-   https://www.digitalocean.com/community/tutorials/how-to-make-changes-to-the-dom
+
+createElement()	Create a new element node
+createTextNode()	Create a new text node
+node.textContent	Get or set the text content of an element node
+node.innerHTML	Get or set the HTML content of an element
+
+
+
+const paragraph = document.createElement('p');
+paragraph.textContent = "I'm a brand new paragraph.";
+console.log(paragraph)
+Output
+<p>I'm a brand new paragraph.</p>
+
+paragraph.innerHTML = "I'm a paragraph with <strong>bold</strong> text.";
+
+Note:
+While this will work and is a common method of adding content to an element, 
+there is a possible cross-site scripting (XSS) risk associated with using the innerHTML 
+method, as inline JavaScript can be added to an element. Therefore, it is recommended to 
+use textContent instead, which will strip out HTML tags.
+
+const text = document.createTextNode("I'm a new text node.");
+console.log(text)
+Output
+"I'm a new text node."
+
+
+node.appendChild()	Add a node as the last child of a parent element
+node.insertBefore()	Insert a node into the parent element before a specified sibling node
+node.replaceChild()	Replace an existing node with a new node
+
+
+<ul>
+  <li>Buy groceries</li>
+  <li>Feed the cat</li>
+  <li>Do laundry</li>
+</ul>
+
+
+
+// To-do list ul element
+const todoList = document.querySelector('ul');
+
+// Create new to-do
+const newTodo = document.createElement('li');
+newTodo.textContent = 'Do homework';
+
+
+// Add new todo to the end of the list
+todoList.appendChild(newTodo);
+
+// Create new to-do
+const anotherTodo = document.createElement('li');
+anotherTodo.textContent = 'Pay bills';
+
+We can add it to the beginning of the list using insertBefore(). This method takes two arguments — the 
+first is the new child node to be added, and the second is the sibling node that will immediately 
+follow the new node. In other words, you’re inserting the new node before the next sibling node. 
+This will look similar to the following pseudocode:
+
+parentNode.insertBefore(newNode, nextSibling);
+
+
+parentNode.replaceChild(newNode, oldNode);
+
+
+node.removeChild()	Remove child node
+node.remove()	Remove node
+
+todoList.removeChild(todoList.lastElementChild);
+
+// Remove second element child from todoList
+todoList.children[1].remove();
+
+
+
+
+
+https://www.digitalocean.com/community/tutorials/how-to-modify-attributes-classes-and-styles-in-the-dom
+
+document.querySelector() and document.getElementById()
+// Both methods will return a single element
+const demoId = document.querySelector('#demo-id');
+
+We’ll use querySelectorAll() to grab all elements with demo-class applied to them, and forEach() 
+to loop through them and apply a change. It is also possible to access a specific element with 
+querySelectorAll() the same way you would with an array — by using bracket notation.
+
+// Get a NodeList of all .demo elements
+const demoClasses = document.querySelectorAll('.demo-class');
+
+// Change the text of multiple elements with a loop
+demoClasses.forEach(element => {
+  element.textContent = 'All demo classes updated.';
+});
+
+// Access the first element in the NodeList
+demoClasses[0];
+
+Note: The methods getElementsByClassName() and getElementsByTagName() will return HTML collections which do 
+not have access to the forEach() method that querySelectorAll() has. In these cases, you will need to use a 
+standard for loop to iterate through the collection.
+
+
+***
+Custom elements that are not part of the HTML standard will be prepended with data-.
+
+
+
+hasAttribute()	Returns a true or false boolean	element.hasAttribute('href');
+getAttribute()	Returns the value of a specified attribute or null	element.getAttribute('href');
+setAttribute()	Adds or updates value of a specified attribute	element.setAttribute('href', 'index.html');
+removeAttribute()	Removes an attribute from an element	element.removeAttribute('href');
+
+
+// Assign image element
+const img = document.querySelector('img');
+
+img.hasAttribute('src');                // returns true
+img.getAttribute('src');                // returns "...shark.png"
+img.removeAttribute('src');             // remove the src attribute and value
+
+
+img.setAttribute('src', 'https://js-tutorials.nyc3.digitaloceanspaces.com/octopus.png');
+
+img.src = 'https://js-tutorials.nyc3.digitaloceanspaces.com/shark.png';
+
+
+className	Gets or sets class value	element.className;
+classList.add()	Adds one or more class values	element.classList.add('active');
+classList.toggle()	Toggles a class on or off	element.classList.toggle('active');
+classList.contains()	Checks if class value exists	element.classList.contains('active');
+classList.replace()	Replace an existing class value with a new class value	element.classList.replace('old', 'new');
+classList.remove()	Remove a class value	element.classList.remove('active')
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<style>
+    body {
+        max-width: 600px;
+        margin: 0 auto;
+        font-family: sans-serif;
+    }
+    .active {
+        border: 2px solid blue;
+    }
+
+    .warning {
+        border: 2px solid red;
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    div {
+        border: 2px dashed lightgray;
+        padding: 15px;
+        margin: 5px;
+    }
+</style>
+
+<body>
+
+    <div>Div 1</div>
+    <div class="active">Div 2</div>
+
+</body>
+
+</html>
+
+
+
+// Select the first div
+const div = document.querySelector('div');
+
+// Assign the warning class to the first div
+div.className = 'warning';
+
+
+// Select the second div by class name
+const activeDiv = document.querySelector('.active');
+
+activeDiv.classList.add('hidden');                // Add the hidden class
+activeDiv.classList.remove('hidden');             // Remove the hidden class
+activeDiv.classList.toggle('hidden');             // Switch between hidden true and false
+activeDiv.classList.replace('active', 'warning'); // Replace active class with warning class
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<body>
+
+    <div style="height: 100px;
+                width: 100px;
+                border: 2px solid black;">Div</div>
+
+</body>
+
+</html>
+
+
+
+// Select div
+const div = document.querySelector('div');
+
+// Apply style to div
+div.setAttribute('style', 'text-align: center');
+
+
+CSS properties are written in kebab-case, which is lowercase words separated by dashes. It is important to note 
+that kebab-case CSS properties cannot be used on the JavaScript style property. Instead, they will be replaced with 
+their camelCase equivalent, which is when the first word is lowercase, and all subsequent words are capitalized. In 
+other words, instead of text-align we will use textAlign for the JavaScript style property.
+
+
+// Make div into a circle and vertically center the text
+div.style.borderRadius = '50%';
+div.style.display = 'flex';
+div.style.justifyContent = 'center';
+div.style.alignItems = 'center';
+
+
+
+
+
+
+
+https://www.digitalocean.com/community/tutorials/understanding-events-in-javascript
+
+
+Events are actions that take place in the browser that can be initiated by either the user or the browser itself. 
+Below are a few examples of common events that can happen on a website:
+
+The page finishes loading
+The user clicks a button
+The user hovers over a dropdown
+The user submits a form
+The user presses a key on their keyboard
+
+
+An event handler is a JavaScript function that runs when an event fires.
+
+An event listener attaches a responsive interface to an element, which allows that particular element to wait and “listen” for the given event to fire.
+
+There are three ways to assign events to elements:
+
+Inline event handlers
+Event handler properties
+Event listeners
+
+
+
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <title>Events</title>
+</head>
+
+<body>
+
+    <button onclick="changeText()">Click me</button>
+
+    <p>Try to change me.</p>
+
+</body>
+
+<script src="js/events.js"></script>
+
+</html>
+
+
+// Function to modify the text content of the paragraph
+const changeText = () => {
+    const p = document.querySelector('p');
+
+    p.textContent = "I changed because of an inline event handler.";
+}
+
+// Function to modify the text content of the paragraph
+const changeText = () => {
+    const p = document.querySelector('p');
+
+    p.textContent = "I changed because of an event handler property.";
+}
+
+// Add event handler as a property of the button element
+const button = document.querySelector('button');
+button.onclick = changeText;
+
+
+Note: Event handlers do not follow the camelCase convention that most JavaScript code adheres to. Notice that the code is onclick, not onClick.
+
+// Function to modify the text content of the paragraph
+const changeText = () => {
+    const p = document.querySelector('p');
+
+    p.textContent = "I changed because of an event listener.";
+}
+
+
+******
+At first look, event listeners seem very similar to event handler properties, but they have a few advantages
+
+// Listen for click event
+const button = document.querySelector('button');
+button.addEventListener('click', changeText);
+
+
+// Remove alert function from button element
+button.removeEventListener('click', alertText);
+
+
+
+click	Fires when the mouse is pressed and released on an element
+dblclick	Fires when an element is clicked twice
+mouseenter	Fires when a pointer enters an element
+mouseleave	Fires when a pointer leaves an element
+mousemove	Fires every time a pointer moves inside an element
+
+
+Form Events
+Form events are actions that pertain to forms, such as input elements being selected or unselected, and forms being submitted.
+
+Event	Description
+submit	Fires when a form is submitted
+focus	Fires when an element (such as an input) receives focus
+blur	Fires when an element loses focus
+
+
+Keyboard Events
+Keyboard events are used for handling keyboard actions, such as pressing a key, lifting a key, and holding down a key.
+
+Event	Description
+keydown	Fires once when a key is pressed
+keyup	Fires once when a key is released
+keypress	Fires continuously while a key is pressed
+
+
+
+If a parameter, known as an event object, is passed through to the event listener, we can access more information about the action that took place. Three properties that pertain to keyboard objects include keyCode, key, and code.
+
+For example, if the user presses the letter a key on their keyboard, the following properties pertaining to that key will surface:
+
+Property	Description	Example
+keyCode	A number pertaining to the key	65
+key	Represents the character name	a
+code	Represents the physical key being pressed	KeyA
+
+Note that keyCode is in the process of being deprecated and it is preferable to use code in new projects.
+
+
+// Test the keyCode, key, and code properties
+document.addEventListener('keydown', event => {
+    console.log('key: ' + event.keyCode);
+    console.log('key: ' + event.key);
+    console.log('code: ' + event.code);
+});
+
+
+
+// Pass an event through to a listener
+document.addEventListener('keydown', event => {
+    var element = document.querySelector('p');
+
+    // Set variables for keydown codes
+    var a = 'KeyA';
+    var s = 'KeyS';
+    var d = 'KeyD';
+    var w = 'KeyW';
+
+    // Set a direction for each code
+    switch (event.code) {
+        case a:
+            element.textContent = 'Left';
+            break;
+        case s:
+            element.textContent = 'Down';
+            break;
+        case d:
+            element.textContent = 'Right';
+            break;
+        case w:
+            element.textContent = 'Up';
+            break;
+    }
+});
+
+
+
+
+const section = document.querySelector('section');
+
+// Print the selected target
+section.addEventListener('click', event => {
+    console.log(event.target);
+});
+
+Clicking on any one of those elements will return output of the relevant specific element 
+    to the Console using event.target. This is extremely useful, as it allows you to place 
+    only one event listener that can be used to access many nested elements.
+
+
+
+
+
+
+Javasript classes:
+-   They are not hoisted unlike functions
+-   Static keyword for a function means you have to activate it like this: 
+    console.log(Point.distance(p1, p2));
+
+
+-   Concept of autoboxing
+    -   Strict mode: means 
+
+        class Animal { 
+            speak() {
+                return this;
+            }
+            static eat() {
+                return this;
+            }
+        }
+
+        let obj = new Animal();
+        obj.speak(); // the Animal object
+        let speak = obj.speak;
+        speak(); // undefined
+
+        Animal.eat() // class Animal
+        let eat = Animal.eat;
+        eat(); // undefined
+
+
+    -   ** None strict mode with auto-boxing: 
+
+        function Animal() { }
+
+        Animal.prototype.speak = function() {
+            return this;
+        }
+
+        Animal.eat = function() {
+            return this;
+        }
+
+        let obj = new Animal();
+        let speak = obj.speak;
+        speak(); // global object
+
+        let eat = Animal.eat;
+        eat(); // global object
+
+        https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes#Super_class_calls_with_super
+
+
+    -   You can call super.eat() or whatever to use parent prototypical inheritance methods 
+
+    -   
+        Public field declarations
+        With the JavaScript field declaration syntax, the above example can be written as:
+
+        class Rectangle {
+        height = 0;
+        width;
+        constructor(height, width) {    
+            this.height = height;
+            this.width = width;
+        }
+        }
+        By declaring fields up-front, class definitions become more self-documenting, and the fields are always present.
+
+        As seen above, the fields can be declared with or without a default value.
+
+        Private field declarations
+        Using private fields, the definition can be refined as below.
+
+        class Rectangle {
+        #height = 0;
+        #width;
+        constructor(height, width) {    
+            this.#height = height;
+            this.#width = width;
+        }
+        }
+
+
+
+iFrame:
+-   https://krasimirtsonev.com/blog/article/iframe-or-not-that-is-the-question
+-   Security risks are that you must be able to trust the domain of your iFrame & that they do not give  malware  
+    to users in your page through the iFrame
+
+    Doesn’t block the rendering
+
+    The iframe is not blocking the rendering. We may still get our page while the external content is loading.
+
+    It’s not blocked by the main page’s JavaScript failure
+
+    Imagine that we develop our awesome widget and we place it somewhere following the non-iframe solution. It’s a JavaScript driven. Now imagine that something else on the page fails before the browser reaches our JavaScript file. We’ll fail delivering our content. By using an iframe we base the injecting only on HTML rendering, not JavaScript execution.
+
+
+
+    Easy to update / versioning
+
+    At some point we will need to update the widget. If we distribute our widget as a JavaScript snippet we are not directly controlling the injection. It’s a piece of code that we can’t contribute to and changing it means reaching every single developer that uses it.
+
+
+    Our own styling
+
+    It’s our own page so the only ones styles that apply are coming from our own stylesheet. This could be a disadvantage if the widget needs to be customizable but that’s another story.
+
+    Testing
+
+    To test if our widget works we’ll probably have to create a dummy page and simply put the iframe there. Because our page lives in a sandbox we don’t really care what’s on that dummy page. The most common bugs that we may encounter are layout related only.
+
+
+
+
+    iframe, the bad parts
+    In parallel
+
+    Indeed the iframe’s content is loaded in parallel with main page’s content. However, what third party data is blocking is the onload event. All the iframes on the page use the same connection pool. And because we have a limited number of connections we may block the main content. The browsers open just a few connections in parallel to a given web server.
+
+    Responsiveness
+
+    iframes are not exactly responsive. By definition we have to provide width and height. Otherwise the browser is rendering nothing. Even though there are some workarounds the size of the iframe is always an issue. Especially on mobile devices where we can change the orientation.
+
+    Configuration
+
+    Very often we provide settings for our widgets. The communication between the main page and the iframe is not always an easy task. There is a postMessage API or we may pass GET parameters to the iframe’s page but it’s not that straightforward as with the JavaScript-only approach.
+
+
+    As a conclusion I would say that if the widget is a simple one we may use the JavaScript-only solution. Like for example a call-to-action button or just a small ad. However, if we are delivering a complex logic with series of screens then we better go with the <iframe>. There are still issues to handle but definitely less then with the non-iframe approach.
+
+
+
+
+
+
+
+
+
+
+Server Performance:
+
+-   A program is CPU bound if it would go faster if the CPU were faster, i.e. it spends the majority of its time simply using the CPU (doing calculations). A program that computes new digits of π will typically be CPU-bound, it's just crunching numbers.
+
+    A program is I/O bound if it would go faster if the I/O subsystem was faster. Which exact I/O system is meant can vary; I typically associate it with disk, but of course networking or communication in general is common too. A program that looks through a huge file for some data might become I/O bound, since the bottleneck is then the reading of the data from disk (actually, this example is perhaps kind of old-fashioned these days with hundreds of MB/s coming in from SSDs).
+
+
+
+CPU Bound means the rate at which process progresses is limited by the speed of the CPU. A task that performs calculations on a small set of numbers, for example multiplying small matrices, is likely to be CPU bound.
+
+I/O Bound means the rate at which a process progresses is limited by the speed of the I/O subsystem. A task that processes data from disk, for example, counting the number of lines in a file is likely to be I/O bound.
+
+Memory bound means the rate at which a process progresses is limited by the amount memory available and the speed of that memory access. A task that processes large amounts of in memory data, for example multiplying large matrices, is likely to be Memory Bound.
+
+Cache bound means the rate at which a process progress is limited by the amount and speed of the cache available. A task that simply processes more data than fits in the cache will be cache bound.
+
+I/O Bound would be slower than Memory Bound would be slower than Cache Bound would be slower than CPU Bound.
+
+The solution to being I/O bound isn't necessarily to get more Memory. In some situations, the access algorithm could be designed around the I/O, Memory or Cache limitations. See Cache Oblivious Algorithms.
+
+
+
+
+-   CPU vs IO vs Memory bound: 
+    -   https://stackoverflow.com/questions/868568/what-do-the-terms-cpu-bound-and-i-o-bound-mean
+    -   ******
+    Multi-threading
+
+    In this answer, I will investigate one important use case of distinguishing between CPU vs IO bounded work: when writing multi-threaded code.
+
+    RAM I/O bound example: Vector Sum
+
+    Consider a program that sums all the values of a single vector:
+
+    #define SIZE 1000000000
+    unsigned int is[SIZE];
+    unsigned int sum = 0;
+    size_t i = 0;
+    for (i = 0; i < SIZE; i++)
+        /* Each one of those requires a RAM access! */
+        sum += is[i]
+    Parallelizing that by splitting the array equally for each of your cores is of limited usefulness on common modern desktops.
+
+    For example, on my Ubuntu 19.04, Lenovo ThinkPad P51 laptop with CPU: Intel Core i7-7820HQ CPU (4 cores / 8 threads), RAM: 2x Samsung M471A2K43BB1-CRC (2x 16GiB) I get results like this:
+
+    enter image description here
+
+    Plot data.
+
+    Note that there is a lot of variance between run however. But I can't increase the array size much further since I'm already at 8GiB, and I'm not in the mood for statistics across multiple runs today. This seemed however like a typical run after doing many manual runs.
+
+    Benchmark code:
+
+    POSIX C pthread source code used in the graph.
+
+    And here is a C++ version that produces analogous results.
+
+    plot script
+
+    I don't know enough computer architecture to fully explain the shape of the curve, but one thing is clear: the computation does not become 8x faster as naively expected due to me using all my 8 threads! For some reason, 2 and 3 threads was the optimum, and adding more just makes things much slower.
+
+    Compare this to CPU bound work, which actually does get 8 times faster: What do 'real', 'user' and 'sys' mean in the output of time(1)?
+
+    The reason it is all processors share a single memory bus linking to RAM:
+
+    CPU 1   --\    Bus    +-----+
+    CPU 2   ---\__________| RAM |
+    ...     ---/          +-----+
+    CPU N   --/
+    so the memory bus quickly becomes the bottleneck, not the CPU.
+
+    This happens because adding two numbers takes a single CPU cycle, memory reads take about 100 CPU cycles in 2016 hardware.
+
+    So the CPU work done per byte of input data is too small, and we call this an IO-bound process.
+
+    The only way to speed up that computation further, would be to speed up individual memory accesses with new memory hardware, e.g. Multi-channel memory.
+
+    Upgrading to a faster CPU clock for example would not be very useful.
+
+    Other examples
+
+    matrix multiplication is CPU-bound on RAM and GPUs. The input contains:
+
+    2 * N**2
+    numbers, but:
+
+    N ** 3
+    multiplications are done, and that is enough for parallelization to be worth it for practical large N.
+
+    This is why parallel CPU matrix multiplication libraries like the following exist:
+
+    http://www.netlib.org/scalapack/pblas_qref.html
+    http://icl.cs.utk.edu/magma/software/
+    Cache usage makes a big difference to the speed of implementations. See for example this didactic GPU comparison example.
+
+    See also:
+
+    Why can GPU do matrix multiplication faster than CPU?
+    BLAS equivalent of a LAPACK function for GPUs
+    Networking is the prototypical IO-bound example.
+
+    Even when we send a single byte of data, it still takes a large time to reach it's destination.
+
+    Parallelizing small network requests like HTTP requests can offer a huge performance gains.
+
+    If the network is already at full capacity (e.g. downloading a torrent), parallelization can still increase improve the latency (e.g. you can load a web page "at the same time").
+
+    A dummy C++ CPU bound operation that takes one number and crunches it a lot:
+
+    serial
+    parallel
+    Sorting appears to be CPU based on the following experiment: Are C++17 Parallel Algorithms implemented already? which showed a 4x performance improvement for parallel sort, but I would like to have a more theoretical confirmation as well
+
+    How to find out if you are CPU or IO bound
+
+    Non-RAM IO bound like disk, network: ps aux, then theck if CPU% / 100 < n threads. If yes, you are IO bound, e.g. blocking reads are just waiting for data and the scheduler is skipping that process. Then use further tools like sudo iotop to decide which IO is the problem exactly.
+
+    Or, if execution is quick, and you parametrize the number of threads, you can see it easily from time that performance improves as the number of threads increases for CPU bound work: What do 'real', 'user' and 'sys' mean in the output of time(1)?
+
+    RAM-IO bound: harder to tell, as RAM wait time it is included in CPU% measurements, see also:
+
+    How to check if app is cpu-bound or memory-bound?
+    https://askubuntu.com/questions/1540/how-can-i-find-out-if-a-process-is-cpu-memory-or-disk-bound
+    Some options:
+
+    Intel Advisor Roofline (non-free): https://software.intel.com/en-us/articles/intel-advisor-roofline (archive) "A Roofline chart is a visual representation of application performance in relation to hardware limitations, including memory bandwidth and computational peaks."
+    GPUs
+
+    GPUs have an IO bottleneck when you first transfer the input data from the regular CPU readable RAM to the GPU.
+
+    Therefore, GPUs can only be better than CPUs for CPU bound applications.
+
+    Once the data is transferred to the GPU however, it can operate on those bytes faster than the CPU can, because the GPU:
+
+    has more data localization than most CPU systems, and so data can be accessed faster for some cores than others
+
+    exploits data parallelism and sacrifices latency by just skipping over any data that is not ready to be operated on immediately.
+
+    Since the GPU has to operate on large parallel input data, it is better to just skip to the next data that might be available instead of waiting for the current data to be come available and block all other operations like the CPU mostly does
+
+    Therefore the GPU can be faster then a CPU if your application:
+
+    can be highly parallelized: different chunks of data can be treated separately from one another at the same time
+    requires a large enough number of operations per input byte (unlike e.g. vector addition which does one addition per byte only)
+    there is a large number of input bytes
+    These designs choices originally targeted the application of 3D rendering, whose main steps are as shown at What are shaders in OpenGL and what do we need them for?
+
+    vertex shader: multiplying a bunch of 1x4 vectors by a 4x4 matrix
+    fragment shader: calculate the color of each pixel of a triangle based on its relative position withing the triangle
+    and so we conclude that those applications are CPU-bound.
+
+    With the advent of programmable GPGPU, we can observe several GPGPU applications that serve as examples of CPU bound operations:
+
+    Image Processing with GLSL shaders?
+
+    enter image description here
+
+    Local image processing operations such as a blur filter are highly parallel in nature.
+
+    Is it possible to build a heatmap from point data at 60 times per second?
+
+    Plotting of heatmap graphs if the plotted function is complex enough.
+
+    enter image description here
+
+    https://www.youtube.com/watch?v=fE0P6H8eK4I "Real-Time Fluid Dynamics: CPU vs GPU" by Jesús Martín Berlanga
+
+    Solving partial differential equations such as the Navier Stokes equation of fluid dynamics:
+
+    highly parallel in nature, because each point only interacts with their neighbour
+    there tend to be enough operations per byte
+    See also:
+
+    Why are we still using CPUs instead of GPUs?
+    What are GPUs bad at?
+    https://www.youtube.com/watch?v=_cyVDoyI6NE "CPU vs GPU (What's the Difference?) - Computerphile"
+    CPython Global Intepreter Lock (GIL)
+
+    As a quick case study, I want to point out to the Python Global Interpreter Lock (GIL): What is the global interpreter lock (GIL) in CPython?
+
+    This CPython implementation detail prevents multiple Python threads from efficiently using CPU-bound work. The CPython docs say:
+
+    CPython implementation detail: In CPython, due to the Global Interpreter Lock, only one thread can execute Python code at once (even though certain performance-oriented libraries might overcome this limitation). If you want your application to make better use of the computational resources of multi-core machines, you are advised to use multiprocessing or concurrent.futures.ProcessPoolExecutor. However, threading is still an appropriate model if you want to run multiple I/O-bound tasks simultaneously.
+
+    Therefore, here we have an example where CPU-bound content is not suitable and I/O bound is.
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+Angular vs React 
+-   Circular dependencies & codesplitting
+
+
+
+Node & nginx vs .NET & C#
+-   Events vs threads
+-   Hotreloading
+-   https://strongloop.com/strongblog/node-js-is-faster-than-java/
+    -   It seems that with very high concurrency (thousands of pools)
+        Node may end up winning because of its highly nonblocking async nature 
+    -   Node is single threaded on the master thread which manages the event-loop
+        Then it has its processing threads
+    -   Thread type servers like C# and java tend to get much more blocked the higher 
+        the concurrent pools
+
+-   https://www.ukessays.com/essays/information-technology/multithreaded-environment-vs-event-driven-environment-information-technology-essay.php
+    in "thread driven" runtimes, when a request comes in, a new thread is created and all the handling is done in that thread.
+
+    in "event driven" runtimes, when a request comes in, the event is dispatched and handler will pick it up. When? In Node.js, there is an "event loop" which basically loops over all the pieces of code that need to be executed and executes them one by one. So the handler will handle the event once event loop invokes it. The important thing here is that all the handlers are called in the same thread - the event loop doesn't have a thread pool to use, it only has one thread.
+
+    The node has changed the way I/O operations are done. Traditional languages and frameworks pre-allocates large amount of resources for each and every user. Thus communication between web server and database is most time-intensive portion. Node allocates web server resources on an on-demand basis thus leaving smaller footprints on web server side.
+
+    The node does not allocate resources to things when they are waiting and thus provides efficiency. For e.g., suppose that application wants to talk with database, and it’s going to take 100ms for responding. Instead of assigning resources and waiting for that call to respond, Node uses callback technique. When the database responds it allocates the resources required to process. This improves performance, because server is allocated to resources only when they need it and not while waiting on databases.
+
+    The main advantage of multithreaded techniques is that it allows applications to handle activities concurrently leading to efficient execution.
+
+-   Web servers “Traditional mode” has always been using thread based model. Whenever Apache or any other web server is started it starts receiving connections. After receiving connection server holds that connection until the transaction is completed or request for page is performed. If it takes some time to retrieve page from disk or to do database operations the web server will have to wait causing blocking on input/output operation called as blocking I/O. For scaling such applications additional server copies has to be added.
+    To resolve the problem of blocking I/O, Node.js uses an event-driven model where the web server accepts the request, and then goes on to service the next web request. When the original request is completed, it gets back in the processing queue and when it reaches the front of the queue the results are sent back (or whatever the next action is). This model provides efficiency and scalability because at any point of time web server is not idle. It always accepts requests as it is not waiting for any I/O operations.
+
+
+-   So it seems that javascript node cannot handle concurrency for ONE task, but it does allow 
+    many concurrent tasks to happen (much less prone to blocking if coded correctly)
+    -   It process queued handler callbacks very well 
+    -   It's specialty is that it doesn't block threads/resources in the IO process (waiting for data to come, eg 
+        database or memory transmissions)
+-   https://www.ukessays.com/essays/information-technology/multithreaded-environment-vs-event-driven-environment-information-technology-essay.php
+
+
+Node:
+-   There is only one thread that executes JavaScript code and this is the thread where the event loop is running. The execution of callbacks (know that every userland code in a running Node.js application is a callback) is done by the event loop. We will cover that in depth a bit later.
+-   Libuv by default creates a thread pool with four threads to offload asynchronous work to. Today’s operating systems already provide asynchronous interfaces for many I/O tasks (e.g. AIO on Linux).
+Whenever possible, libuv will use those asynchronous interfaces, avoiding usage of the thread pool. The same applies to third party subsystems like databases. Here the authors of the driver will rather use the asynchronous interface than utilizing a thread pool.
+In short: Only if there is no other way, the thread pool will be used for asynchronous I/O.
+
+-   While there are queue-like structures involved, the event loop does not run through and process a stack. The event loop as a process is a set of phases with specific tasks that are processed in a round-robin manner.
+-   The event loop is what keeps a Node.js application running
+-   Its functionality is often misunderstood — it is a set of phases that are traversed continuously with specific tasks for each phase
+-   There are no out-of-the-box metrics provided by the event loop so the metrics collected are different between APM vendors
+-   The metrics clearly provide valuable insights about bottlenecks but deep understanding of the event loop and also the code 
+    that is running is key
+
+MongoDb vs SQL
+-   Data can build faster in one table than in another (SQL) so sharding is a little harder here than w/ NoSQL
+-   Caching
+
+
+PM2 
+-   PM2 is a production process manager for Node.js applications with a built-in load balancer. It allows you to keep applications alive forever, to reload them without downtime and to facilitate common system admin tasks.
+
+Go vs Node 
+-   https://yalantis.com/blog/golang-vs-nodejs-comparison/
+-   In 2016, Uber migrated from Node.js to Go to improve the performance of their geofence lookup microservice. This microservice turned out to be the company’s service with the most queries per second (QPS). There were several reasons why Uber decided to migrate to Go. First, the dynamically typed and interpreted nature of Node.js hinders the ability to handle CPU-intensive point-in-polygon algorithms efficiently.
+-   Second, to ensure that they had the freshest geofence information, Uber needed to refresh information from several sources simultaneously. This took a lot of time with Node.js, since it’s single-threaded. Goroutines allowed the Uber app to perform several tasks simultaneously.
+-   Uber developers have shared their experience using Go, saying that Go is extremely easy to learn and maintain, they also highlighted Go reliability: Uber has experienced 99.99% uptime with Go. They also have highlighted that the language has high performance in terms of throughput and latency. The Uber app can handle a peak load of 170,000 queries per second.
+
+
+
+
+React:
+-   Functional Components: Dumb components, do not have state just have the props given by parent 
+-   PureComponents vs ClassComponents
+    -   PureComponents implement the ShouldComponentUpdate
+    -   React.PureComponent’s shouldComponentUpdate() only shallowly compares the objects. If these contain complex data structures, it may produce false-negatives for deeper differences. Only extend PureComponent when you expect to have simple props and state, or use forceUpdate() when you know deep data structures have changed. Or, consider using immutable objects to facilitate fast comparisons of nested data.
+        Furthermore, React.PureComponent’s shouldComponentUpdate() skips prop updates for the whole component subtree. Make sure all the children components are also “pure”.
+
+
+
+Design Patterns:
+-   https://addyosmani.com/resources/essentialjsdesignpatterns/book/#observerpatternjavascript
+
+
+Scope & Context:
+-   "let" and "const" are specific to es6 
+    They are meant to hold scope in block scope (curly braces like within if or for loops)
+    -   Remember var does not do this. So haveing a for loop with an async Fn like setTimeout
+        would mean that the for loop runs & when the setTimeout gets executed it gets the value of 
+        the last scope variable it was attached to. Which in a forloop would be the last value of 'i' or the 
+        index iterator variable
+-   "this" references what ever the current object is under which the scope is enclosed in.
+    That means this.x could be changed if it is called from within a Fn and this.x changes outside the Fn
+-   https://www.bennadel.com/blog/2265-changing-the-execution-context-of-javascript-functions-using-call-and-apply.htm
+-   Scope pertains to the visibility of variables, and context refers to the object to which a function belongs.
+-   Arrow function:
+    -    The value of this inside an arrow function remains the same throughout the lifecycle of the function and is always bound to the value of this in the closest non-arrow parent function.
+-   in JavaScript all functions are bound to an object
+-   all functions in JavaScript are actually "methods." That is, they are all properties of some object. We can define 
+    functions that appear to be free-floating; however, these free-floating functions are implicitly created as properties 
+    of the global scope (ie. the Window object in the web browser). This means that functions defined without an explicit 
+    context can be accessed as a window property
+
+
+
+-   'new' keyword:
+    -   By simply prefixing a call to a constructor function with the keyword "new", we can tell JavaScript we would like 
+        the function to behave like a constructor and instantiate a new object with the members defined by that function.
+        Inside a constructor, the keyword 'this' references the new object that's being created
+
+
+    function Car( model, year, miles ) {
+        this.model = model;
+        this.year = year;
+        this.miles = miles;
+        
+        this.toString = function () {
+            return this.model + " has done " + this.miles + " miles";
+        };
+    }
+
+function Car( model, year, miles ) {
+ 
+  this.model = model;
+  this.year = year;
+  this.miles = miles;
+ 
+}
+ 
+ 
+// Note here that we are using Object.prototype.newMethod rather than
+// Object.prototype so as to avoid redefining the prototype object
+Car.prototype.toString = function () {
+  return this.model + " has done " + this.miles + " miles";
+};
+ 
+// Usage:
+ 
+var civic = new Car( "Honda Civic", 2009, 20000 );
+var mondeo = new Car( "Ford Mondeo", 2010, 5000 );
+ 
+console.log( civic.toString() );
+console.log( mondeo.toString() );
+
+
+method.call( newThisContext, Param1, ..., Param N )
+
+method.apply( newThisContext, [ Param1, ..., Param N ] );
+
+
+var hi = 'hi!';
+
+function test() {
+    console.log(this.hi);
+}
+
+test()
+// 'hi!' // Attaches to window context
+
+
+function ntest() {
+    var length = 4;
+
+    function nt() {
+        console.log(this.length)
+    }
+
+    nt()
+
+    return {
+        length: 4
+    }
+}
+ntest()
+
+// 0 // prints window.length int whatever it is
+
+
+
+var context = "Global (ie. window)";
+
+
+// Create an object.
+var objectA = {
+    context: "Object A"
+};
+
+
+// Create another object.
+var objectB = {
+    context: "Object B"
+};
+
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// Define a function that uses an argument AND a reference
+// to this THIS scope. We will be invoking this function
+// using a variety of approaches.
+function testContext( approach ){
+
+    console.log( approach, "==> THIS ==>", this.context );
+
+}
+
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// Invoke the unbound method with standard invocation.
+testContext( "testContext()" );
+
+// Invoke it in the context of Object A using call().
+testContext.call(
+    objectA,
+    ".call( objectA )"
+);
+
+// Invoke it in the context of Object B using apply().
+testContext.apply(
+    objectB,
+    [ ".apply( objectB )" ]
+);
+
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// Now, let's set the test method as an actual property
+// of the object A.
+objectA.testContext = testContext;
+
+
+// -------------------------------------------------- //
+// -------------------------------------------------- //
+
+
+// Invoke it as a property of object A.
+objectA.testContext( "objectA.testContext()" );
+
+// Invoke it in the context of Object B using call.
+objectA.testContext.call(
+    objectB,
+    "objectA.testContext.call( objectB )"
+);
+
+// Invoke it in the context of Window using apply.
+objectA.testContext.apply(
+    window,
+    [ "objectA.testContext.apply( window )" ]
+);
+
+testContext() ==> THIS ==> Global (ie. window)
+.call( objectA ) ==> THIS ==> Object A
+.apply( objectB ) ==> THIS ==> Object B
+objectA.testContext() ==> THIS ==> Object A
+objectA.testContext.call( objectB ) ==> THIS ==> Object B
+objectA.testContext.apply( window ) ==> THIS ==> Global (ie. window)
+
+
+
+Module Patterns:
+-   In JavaScript, the Module pattern is used to further emulate the concept of classes in such a way that we're 
+    able to include both public/private methods and variables inside a single object, thus shielding particular parts 
+    from the global scope. What this results in is a reduction in the likelihood of our function names conflicting 
+    with other functions defined in additional scripts on the page.
+-   The Module pattern encapsulates "privacy", state and organization using closures. It provides a way of wrapping a mix of public and private methods and variables, protecting pieces from leaking into the global scope and accidentally colliding with another developer's interface. With this pattern, only a public API is returned, keeping everything else within the closure private.
+-   This gives us a clean solution for shielding logic doing the heavy lifting whilst only exposing an interface we wish other parts of our application to use. The pattern utilizes an immediately-invoked function expression (IIFE - see the section on namespacing patterns for more on this) where an object is returned.
+
+
+var testModule = (function () {
+ 
+  var counter = 0;
+ 
+  return {
+ 
+    incrementCounter: function () {
+      return counter++;
+    },
+ 
+    resetCounter: function () {
+      console.log( "counter value prior to reset: " + counter );
+      counter = 0;
+    }
+  };
+ 
+})();
+ 
+// Usage:
+ 
+// Increment our counter
+testModule.incrementCounter();
+ 
+// Check the counter value and reset
+// Outputs: counter value prior to reset: 1
+testModule.resetCounter();
+
+
+
+
+
+
+var myNamespace = (function () {
+ 
+  var myPrivateVar, myPrivateMethod;
+ 
+  // A private counter variable
+  myPrivateVar = 0;
+ 
+  // A private function which logs any arguments
+  myPrivateMethod = function( foo ) {
+      console.log( foo );
+  };
+ 
+  return {
+ 
+    // A public variable
+    myPublicVar: "foo",
+ 
+    // A public function utilizing privates
+    myPublicFunction: function( bar ) {
+ 
+      // Increment our private counter
+      myPrivateVar++;
+ 
+      // Call our private method using bar
+      myPrivateMethod( bar );
+ 
+    }
+  };
+ 
+})();
+
+
+var basketModule = (function () {
+ 
+  // privates
+ 
+  var basket = [];
+ 
+  function doSomethingPrivate() {
+    //...
+  }
+ 
+  function doSomethingElsePrivate() {
+    //...
+  }
+ 
+  // Return an object exposed to the public
+  return {
+ 
+    // Add items to our basket
+    addItem: function( values ) {
+      basket.push(values);
+    },
+ 
+    // Get the count of items in the basket
+    getItemCount: function () {
+      return basket.length;
+    },
+ 
+    // Public alias to a private function
+    doSomething: doSomethingPrivate,
+ 
+    // Get the total value of items in the basket
+    getTotal: function () {
+ 
+      var q = this.getItemCount(),
+          p = 0;
+ 
+      while (q--) {
+        p += basket[q].price;
+      }
+ 
+      return p;
+    }
+  };
+})();
+
+
+
+// basketModule returns an object with a public API we can use
+ 
+basketModule.addItem({
+  item: "bread",
+  price: 0.5
+});
+ 
+basketModule.addItem({
+  item: "butter",
+  price: 0.3
+});
+ 
+// Outputs: 2
+console.log( basketModule.getItemCount() );
+ 
+// Outputs: 0.8
+console.log( basketModule.getTotal() );
+ 
+// However, the following will not work:
+ 
+// Outputs: undefined
+// This is because the basket itself is not exposed as a part of our
+// public API
+console.log( basketModule.basket );
+ 
+// This also won't work as it only exists within the scope of our
+// basketModule closure, but not in the returned public object
+console.log( basket );
+
+
+
+
+Singleton:
+
+var mySingleton = (function () {
+ 
+  // Instance stores a reference to the Singleton
+  var instance;
+ 
+  function init() {
+ 
+    // Singleton
+ 
+    // Private methods and variables
+    function privateMethod(){
+        console.log( "I am private" );
+    }
+ 
+    var privateVariable = "Im also private";
+ 
+    var privateRandomNumber = Math.random();
+ 
+    return {
+ 
+      // Public methods and variables
+      publicMethod: function () {
+        console.log( "The public can see me!" );
+      },
+ 
+      publicProperty: "I am also public",
+ 
+      getRandomNumber: function() {
+        return privateRandomNumber;
+      }
+ 
+    };
+ 
+  };
+ 
+  return {
+ 
+    // Get the Singleton instance if one exists
+    // or create one if it doesn't
+    getInstance: function () {
+ 
+      if ( !instance ) {
+        instance = init();
+      }
+ 
+      return instance;
+    }
+ 
+  };
+ 
+})();
+
+
+
+Observer Pattern:
+
+function ObserverList(){
+  this.observerList = [];
+}
+ 
+ObserverList.prototype.add = function( obj ){
+  return this.observerList.push( obj );
+};
+ 
+ObserverList.prototype.count = function(){
+  return this.observerList.length;
+};
+ 
+ObserverList.prototype.get = function( index ){
+  if( index > -1 && index < this.observerList.length ){
+    return this.observerList[ index ];
+  }
+};
+ 
+ObserverList.prototype.indexOf = function( obj, startIndex ){
+  var i = startIndex;
+ 
+  while( i < this.observerList.length ){
+    if( this.observerList[i] === obj ){
+      return i;
+    }
+    i++;
+  }
+ 
+  return -1;
+};
+ 
+ObserverList.prototype.removeAt = function( index ){
+  this.observerList.splice( index, 1 );
+};
+
+
+
+
+function Subject(){
+  this.observers = new ObserverList();
+}
+ 
+Subject.prototype.addObserver = function( observer ){
+  this.observers.add( observer );
+};
+ 
+Subject.prototype.removeObserver = function( observer ){
+  this.observers.removeAt( this.observers.indexOf( observer, 0 ) );
+};
+ 
+Subject.prototype.notify = function( context ){
+  var observerCount = this.observers.count();
+  for(var i=0; i < observerCount; i++){
+    this.observers.get(i).update( context );
+  }
+};
+
+
+// The Observer
+function Observer(){
+  this.update = function(){
+    // ...
+  };
+}
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+OOP:
+-   Inheritance 
+    -   Object inherits an implementation from a superclass 
+    -   Object can also override implementation from super class 
+    -   CONS:
+        -   In both cases we are relying on the implementation. We are locked into using that 
+            specific implementation and there is no room for changing that behavior other 
+            than writing more code
+    -   Interfaces:
+        -   "Program to an interface" really means "Program to a supertype"
+            -   The delcared type of the variable should be a supertype 
+                -   So that the object assigned to that type can be any concrete implementation
+
+            Dog d = new Dog()
+            d.bask();           //  Forces us to code to a concrete class
+
+
+            Animal animal = new Dog()
+            animal.makeSound()      //  We know its a dog but we can use the animal ref polymorphically
+
+
+            OR better, assign animal in runtime **
+
+            a = getAnimal();
+            a.makeSound();
+
+            function Animal() {
+                function makeSound() {
+
+                };
+
+                return {
+                    makeSound,
+                }
+            }   
+
+
+            function Dog(type) {
+                Animal.call(this);
+                this.dogType = type;
+
+                function bark {
+                    console.log("Rouugh!!!");
+                }
+
+                function makeSound() {
+                    bark();
+                }
+
+                return {
+                    makeSound,
+                }
+            }
+
+
+            -   call() and apply() serve the exact same purpose. The only difference between how they work is that call() expects all parameters to be passed in individually, whereas apply() expects an array of all of our parameters. Example: Notice that apply accepts and array, and call expects each param individually.
+
+            -   When making strategy design pattern encapsulation you can
+                other types of object can reuse our fly and quack behavior bc these behaviros are no longer hidden away 
+                in our Duck classes!
+
+                And we can add new behaviors without modifying any of our exisiting behavior classes or touching 
+                any of the Duck classes that use fliying behaviors 
+                -   BIG WIN. As oppose to subclassing, changing behavior might mean changing implementation in super class 
+                    PLUS it changes behavior this way for all object that inherit from it...
+                -   The big lesson here is an object can delegate dynamic or possibly dynamic behavior away, 
+                    instead of having them defined/implemented in the subclass
+                -   Think "HAS-A" for interface rather than implentation "IS-A" relationship
+
+        -   PROS:
+            -   Make it possible so that an object does not have to rely on a certain 
+                implementation
+
+
+Notes of OOP relevant to my own thought process:
+-   Very important to have type declaration in order to best design core object & models 
+-   Very important to have dynamic documentation for quick model lookup & also to be able to use for intellisense
+-   Avoid the object pollution mistake where you make a bunch of duplicate or overlaping models of others already made
+-   Ultimately your code should be dynamic enough for change,
+    -   What does change mean?
+        -   Change in configs passed from root level like a global config that trickles down 
+            -   This could change the type of data we want to get, calculation, models, etc 
+            -   This should also ideally be doable at runtime 
+
+
+-   Pro of using an interface is that you can use polymorphism 
+    -   So if there are object with common behavior you can change them dynamically in runtime 
+        given they have similar actions they can run & data that can return 
+    -   In Obsererver-Subject design pattern this would be particulary important bc many types of objects can 
+        be observers and they need to be able to register to a specific subject 
+        -   Same with subject - many object an be subjects 
+
+-   Loose Coupling 
+    -   When 2 object are loosely coupled, they can interact, but have very little knowledge of each other. 
+    -   When 2 objects are loosely coupled all they know about eachother is ****
+        that the other implements a certain interface 
+    -   Making code in the form of an interface also allows resuability even in completely different systems.
+        Because the interface is there & the interface allows any concrete data type
+    -   These designs allow us to build flexible OO systems that can handle change bc they minimize the interdependency
+        betwen objects
+        -   Much less of a dependency graph that has to be tracked & dealt with to handle side affects on dependencies
+            & debugged ****
+
+
+-   Encapsulation:
+    -   Ask yourself:
+        If a part of code did change, would the change be well encapsulated, or would it require changes in many parts of 
+        the code?
+
+    -   Allows you to extend functionality at runtime and therefore dynamically 
+        Implemntation will only allow functionality to work on compile time, which makes code unmaintainable & resistful to 
+        change 
+
+    -   Also in writing new code rather than altering previous, you can dynamically compose functionality & reduce chances 
+        of introducing bugs to pre-exisiting code 
+
+    -   ***** Code should be closed to implementation change but open to extension (different objects w/ similar actions)
+        -   Openclose principle: Classes should be open for extension, but closed for modification
+
+-   Maintainable code is code that exhibits high cohesion and low coupling. Cohesion is a measure of how related, readable 
+    and understandable code is. ... Maintainability is itself a measure of the ease to modify code, higher maintainability 
+    means less time to make a change.
+
+
+-   Inversion of Control
+    -   Depend upon abstractions. Do not depend upon concrete classes
+
+
+-   Command Pattern
+    -   is at the center of decoupling and encapsulation of a receiver with an action 
+    -   decouples an object making a request from the one that knows how to perform it
+
+-   The Adapter and Facade 
+    -   Adpater: converts the interface of a class into another interface the clients expect. 
+        Adapter lets classes work together that couldn't otherwise bc of incompatible interfaces.
+        -   Implementing an adapter may require little work or a great deal of work depending on the size 
+            and complexity of the target interface
+        -   An adapter changes an interface into one a client expects
+        -   When you need to use an exisiting class and its interface is not the one you need, use an adapter
+        -   The thing we want is what needs to get implemented to class
+
+    -   Facade: provides a unified interface to a set of interfaces in a subsystem. Facade defines a 
+        higher-level interface that makes the subsystem easier to use.
+        -   Implementing a facade requires that we compose the facade with its subsystem and use delgation 
+            to perform the work of the facade
+        -   when you need to simplify and unify a large interface or complex set of inerfaces, use a facade
+
+    -   An adapter wraps an object to change its interface,
+        a decorator wraps an object to add new behaviors and responsibilities, 
+        and a facade "wraps" a set of object to simplify
+
+?-   The Template Method:
+    -   Define the skeleton of an algorithm in an operation, deferring some steps to subclasses.
+        Template Method lets subclasses redefine certains steps of an algorithm without changing 
+        the algorithm's structure
+    -   Eg) Sort and using a comparator for the element comparing part 
+    -   Strategy:   Encapsulates interchangeable behaviors and use delegation to decide which 
+                    behavior to use
+        Template: Subclasses decide how to implement steps in an algorithm
+    -   Strategy pattern defines the outline of the algo (like merge sort), but lets the subclasses 
+        its doing algo on do some of the work (like choose its comporator)
+
+-?   Iterator and Composite Patterns
+    -   Iterator:   Provide a way to access the elements of an aggregate object sequentially without exposing its 
+                    underlying representation 
+        -   Iterator takes the job of iterating over an aggregate and encapsulates it in another object
+        -   Iterator provides a common interface for traversing the items of an aggregate, allowing you to use 
+            polymorphism when writing code that makes use of the items of the aggregate
+
+        Composite:  Compose objects into tree structure to represent part-whole hierarchies. Composite lets 
+                    clients treat idividual object and compositions of object uniformly
+    -   Eg) iterator that iterates through list of menuItems (category menu item & leaf menu items aka composite obj & leaf object)
+        -   All object implement same interface so iterator works
+
+-   State Pattern:
+    -   Allow an object to alter its behavior when its internal state changes. The object will appear to change its class.
+    -   Allows an object to have many different behaviors that are based on its internal state 
+    -   The strategy pattern typically configures Context classes with a behavior or algorithm 
+        State pattern allows a Context to change its behavior as the state of the Context changes
+    -   Think about a gumball machine and how its behavior changes depending on state 
+        -   When quarter is in 
+        -   When off 
+        -   When in level 100
+
+
+-   Proxy Pattern: 
+    -   Provide a surrogate or placeholder for another object to control access to it, this control's client access to it 
+    -   A remote proxy manages interraction between a client and a remote object 
+    -   Virtual Proxy controls access to an object that is expensive to instantiate 
+    -   A Protection Proxy controls access to the methods of an object based on the caller
+
+
+
+High Quality Code (In order of importance for me): 
+-   Simple (low finite state machine system)
+    -   Reduced complication & degrees of freedom as much as possible in accomplishing tasks 
+    *   Less choice-making, debugging, implementation, & testing
+-   Maintainable (highly extensible & extemely flexible meaning change doesn't change the past implementations)
+    -   Doesn't break other  code (minimized dependency graphs)
+    *   More changes in behavior or object models 
+-   Scalable (System can scale to  handle much more data)
+    -   Able to support processing more data later on or to flexibly adapt to being able to do this 
+    *   More data
+-   Performant 
+    -   No repeated work. Solves exact problems & its components. Memoizes & solves fractals of problem in best way 
+        possible.
+    -   No blocking
+    -   Does mimimal work & avoids unnecessary work
+    *   Least work + lowest time

@@ -1,0 +1,481 @@
+
+Priorities:
+- d3 features for AppEngine
+- Algos we will want to visualize
+- Limiting use of Dynamo to the use case that makes sense for it
+
+
+https://github.com/ipython-books/cookbook-2nd
+
+
+
+Reading Plan:
+- Master the notation & intuitively understand the concepts. Obsess your thoughts over it
+
+
+Urgent Plan:
+- Goal: to learn many mathematical modeling types & learn how to form
+    relationships logically
+- To tooling, python & ML
+- Learn & get comfortable with mathematical & financial notation
+- Learn to code dynamic mathematical models
+- Full out focus on Reinforcement Learning + Stochastics + Mathematical Python
+- Keep going. Don't get sucked into work peer pressure. Stay strong & focused
+    => keep iterating strat continuously**
+- Dual read books
+- MLF labs + Kaggle
+- Algos on leetcode
+- Mathematical Python vids
+
+
+
+By EOY 2022:
+- Finish Finance book while watching vids to keep up w/ Math (But prioritize read)
+- Start 2nd book (or read concurrently w/ first)
+- Trained in Kaggle / MLF examples
+- Python Algos (Keep training)
+- Math Model Visualization & Patterns ***** Actively build intuition =>     imagination****
+- System Design => next algos
+
+
+Best Value for Time:
+- Mastering Mathematical Visualization w/ ranging Mathematics & Python
+- Experimenting Markets + Doing research
+- Creating Reactive models
+- Staying fresh w/ ML + Algo concepts for fast implementations
+- Keep expanding Mathematical scope & Minimzing rest
+
+
+
+Simplication:
+- Go to side that will create less meetings & team interaction
+- Side that will maximize my alone time
+- Side that is easiest to convince
+
+
+I NEED MONEY:
+- LIFE IS HARD WHEN YOU ARE POOR & NICE
+- I need to quickly improve my python & quant skills
+    primarily quant exploration skills for trading & risks
+
+
+
+
+
+
+CREATE:
+- Node wrapper that serves as interface for state BehaviorSubjects
+- Create a EventChannel that serves as the queue for events
+    and that gets injected to all dependent classes that need to listen to events
+    - This will also help to visualize the data-flow and node relationships
+
+
+
+Reverse Engineer:
+- Start buidling different groups w/ randomized data w/ some correlation
+- Start mapping out events & actions to trigger good trades
+- Create visualization to get ideas with rxjs & d3
+
+
+Plan:
+- sql store responsibility
+- dynamo store responsibility
+    - storing most meta inside a document (data that can be composed for a workflow)
+    - documents should store commands to actual relational db so it doesn't
+        store too many complicated relations
+- rest interface
+- algo/dimensions
+- rxjs + d3
+- dependency injection
+- graph nodes w/ observables
+
+
+MAIN FOCUS:
+- Creating trading workflows & event trigger design system
+- Creating pipelines node/edges
+- Creating algos for market strategies
+- Creating cluster & market simulations & visualizations ( & for math algos )
+- Widgets/features may be good for creating conigurable graph visual/metrics
+    for reinforcement learning systems & input pipelines
+- Algo library w/ input/outputs like in Leetcode
+- So it can send commands to backend python engine &
+    engine returns aggregated UI simplified results that I can modify & design
+- Dependency injection
+- Queue + Stream + load balancer system
+- Data structures for representing UI appropriately & hooking up extensibly
+- Snapshot renderer of different data analysis
+- Only goal is to become free as soon as I turn 30 and retire near that age
+    so as to work on projects & find next stage
+- Point of a UI: is only to discover insight. Algos should take care 
+    of actual analysis & trading
+- nodes should take input/output of streamed data
+    - then trigger other nodes
+- Nodes should have build in subscription output count in order to see 
+    areas of inefficient flux
+
+
+
+-----------------------------------------------------------------------------
+Work:
+- I need my space
+- I don't want to spend countless nights working on other ppls bad code
+- Talk to Amit OR 
+    purposely create a branch w/ bad code
+- Don't update on the channel yet, but keep incrementally fixing
+- These pair programming things are not working
+- We've been on this for almost 2 months now with almost nothing to show for it
+- I believe if we had done certain things from the beginning we would be done already
+- If I have to keep doing these group pairings im gonna have to message Martin & tell him that I am going to have to change my estimate to 2 or 3 months & tell him why....
+- Otherwise, expectations will not be clear & I know where this will go bc exact same thing happened last year during the holidays and next months that lead to my burnout & the team will be paying the price due to bad decisions
+- I've been saying since the start it is due to core issues & you kept it focused on budget & we just wouldn't move on... Wild west, unfocused...
+- GOAL: 
+    - To start next sprint w/ Optimizations
+    - Slow it down => via individual tickets & no daily meetups
+    - Have sprint 2 start again in same way => allow enough room
+        for creatives to move by
+    - GOAL:
+        - clear December & finish books & Math training + Algos & ML Labs
+
+
+Monday Call:
+- insist on needing to focus individually ONLY
+- if needed ask for a 3 way call me, amit & manish
+- state that for 2 months almost no progress occured bc so much time 
+    was spent optimizing the wrong things which was going against my recommendations
+- state I need space & that manish & I are very different type of problem solvers:
+    - he likes to dive in right away
+    - I like to think for a long time & find the simplest solutions that won't create bugs or extra downtime
+    - code is super hacky, there aren't good practices or skill level developers keeping code quality high
+        & manish can personally attest to that he has worked on a serious ticket & platform project is way simpler
+- if disagreement: state who do I have to talk to to get some understanding?
+    - you guys are really good friends I am talking with you guys only hoping to get some understanding for the btter
+        of the project & team
+One-on-one:
+- w/ Amit & tell him i really hope Manish is giving correct assessment
+    of my performance bc I am not sure if he is...
+- He has lead me to burn out many time & so I am getting more protective
+    of my health
+- Also I notice he doesn't like to be wrong
+- & he doesn't acknowledge
+- I've introduced many innovations:
+    validations, rxjs, docker, testing, interface/service architecture, reactivite arch suited for our project, main contributer to brahmastra,
+    remote-videosharing, & better coding standards
+- Is it okay for managers not to respond right away? r u correct person to 
+    ask or who creates company policy? do managers have that privelage only?
+    I just want to know what the expectation is & dont want an abuse of pwer
+- Talk to Amit saying my increasing frusteration:
+    - & that I feel ppl are representing me correctly.
+        since I started no one onboarded me well except for Ankur & he
+        is not here anymore.
+        I didn't know anything about Angular or the project
+        & now I am transforming it to something better with all my innovations
+        which have gotten nothing but push back for the longest time.
+        - I had to step up my game & learn everything from best testing
+            standards to best tools & architecture stuff way beyond
+            aanybodies scope in the current team
+        I have contributed tremendously, & I am not just saying that
+        you can see my github stats it is the highest pretty much & 
+        def the highest by a lot in the onshore side
+        I've been lead to burn out time & time again seeing my health 
+        suffer. esp bc this is such a badly made project & the recommendations 
+        I make to better it get thrown out all the time during my 1on1s
+        & I am starting to think I need a different manager & I want to 
+        be responsible & tell you this. Im basically a solo player 
+        & have been for the longest time. Except for these past 2 months
+        but they have been such a bad experience & I have reasons why.
+        ... Manish cannot easily accept being wrong & blah blah
+        I know he is one of your best friends which is why you are the
+        correct person to tell
+        - lately he is loosening up bc I think he is under a lot of pressure
+            and management is getting mad and so he is more willing to 
+            allow me to make decisions but only bc of that
+            I work alone for a couple days try everything I wanted to do
+            and now the project is fast... yet he I feel he is expecting
+            me to go past burn out to fix all the bad decisions.... this is 
+            not healthy for me
+    - constantly see bad code being pushed
+    - finally got the chance to really prove it to Manish bc he wasn't having it. 
+    - I have a feeling he will get burned out now bc he has really had to 
+    step the gun, similarly like ive done multiple times in the past w/
+    this insanely unstable project
+    - I really hope I am not being under represented bc I really feel like 
+    that & i constantly feel like i am not doing enough when I know I my 
+    value & how much i am doing but its getting misrepreseneted by a bad process & bad manager
+    - I mean am I the hardest worker in the company. No prob not.
+        But I am def not damaging the cmpany with bad work. I am bringing
+        changes & adapatations that are multiplying returns. In other
+        words I am helping the project greatly grow, and not decay. I can't say that about other ppl. It would be incorrect to measure ones value input via hours.
+        Actions compound & multiply value over time like a stream => persons contribution
+        A lot of those offshore ppl, they may be hitting their target dates
+        prob bc they have many more resources + real-time access to them
+        but their work is shit. Its destroying the project & making everyone 
+        else job harder esp onshore ppl like me who can't access them that 
+        easily & who has to meet with them once I am tired.
+        This is a super high technical debt project. & my compensation is def
+        not enough to give my life to this.
+        But I am definitely providing a lot of value & guidance
+    - I just want to make sure I am not being under-stated 
+        & talked bad about w/o my version also being communicated
+    - I know you guys expect me to work like 60+ hours but that isn't realistic
+        first bc I am not getting compensated at my market value
+    - Check co-worker comps
+-----------------------------------------------------------------------------
+
+
+
+
+Kaggle sets:
+- **** https://www.kaggle.com/datasets?search=stocks&sort=votes
+- https://www.kaggle.com/competitions/jane-street-market-prediction/code?competitionId=23304&sortBy=voteCount
+- https://www.kaggle.com/code/faressayah/stock-market-analysis-prediction-using-lstm
+
+
+ReactiveX:
+- (Schedulers) https://dev.to/this-is-learning/rxjs-schedulers-2fhl
+- Create configurable pipelines & data
+- https://www.tutorialspoint.com/rxpy/rxpy_quick_guide.htm
+- (Angular Performance) https://medium.com/swlh/angular-performance-optimization-techniques-5b7ca0808f8b
+
+Observations:
+- We expect the Fed will pivot to easing monetary policy in mid-2023 as inflation falls back to its 2% target 
+    and the need to shore up economic growth becomes a top concern. The full analysis is detailed in our 2022 U.S. Interest Rate & Inflation Forecast. Interest-rate forecast.
+    - https://www.morningstar.com/articles/1106505/why-we-expect-the-fed-to-cut-interest-rates-in-2023
+
+Math:
+- https://www.quora.com/How-much-time-is-needed-to-learn-Stochastic-Process-for-a-guy-who-knows-calculus-but-doesnt-know-statistics-counting-and-probability-at-all
+
+-----------------------------------
+RXJS - queue designs w/ nodes
+-----------------------------------
+- Each component can interact w/ its surrounding system
+- Dependency management
+- Hiearchical choreography
+
+------------------------------------------------------------------------------------------------------------------------
+Strategy:
+
+- Find a factor to group closely correlated stocks ( like industry )
+- Find group nodes have consistently been bouncing off a certain direction OR continue moving in a directions
+    especially relative to other nodes (think zip and flat levels as unit of measurement)
+    - Like each day get closing prices
+    - Diversify
+
+
+---------------------------------------------------------------------------------------------------------
+
+QuantConnect Strategy:
+- Think of math as system design in that you're using different Mathematical models & components to create a system
+- US ETF Constituents
+- Cross sections
+- Wtd Alpha
+- Industry momentum / trends
+- Create feature:
+    - Perhaps we can add rolling equity wtdAlpha & industry wtdAlpha
+- Capture industry trends via the ETF moving averages
+- Lags and correlations to find signals of upcoming events => reacting dynamically based on changing conditions & before things happen
+- Decision trees & dynamic programming based on gaussian states
+- autocorrelation/partialcorrelation => linear so we need other ways of measureing lag correlation
+- decay can occur after preceding lag & next lag can just be receding effect of earlier ones
+- factors: trends (regression -> can also be non-linear in order) vs interactions (XGBoost)
+- Splines for better cycle analysis
+- Think of data as the addition of many components (like set theory) + random error 
+- While the linear regression algorithm is capable of multi-output regression, the XGBoost algorithm is not. 
+    To predict multiple series at once with XGBoost, we'll instead convert these series from wide format, 
+    with one time series per column, to long format, with series indexed by categories along rows.
+    - Stack() | y_fit.stack().squeeze() wide to long format for XGBoost learning => https://www.kaggle.com/code/ryanholbrook/hybrid-models
+    - The `stack` method converts column labels to row labels, pivoting from wide format to long
+    - convert DataFrame to Series (squeeze)
+UI:
+- Build configurable & reactive mathematical model machine with d3 & components
+    => strictly for creativing system design, aggregators & equations & some quick UI mods for app organization
+        - factor strategizing & dynamic reaction based on changing conditions
+    => hack and store all configs in dynamo meantime w/ schema validators in case future migrations for data consistency
+
+
+TIMELINE:
+- First => ML + ALGO  + Financial Math first
+- SD for online ML to start prepping on demand
+- Collect capital to pay for data that will be needed
+- Then start building UI & mapping to backend Rx Extensible nodes for extensible 
+    mathematical modeling & strategizing
+
+
+
+Utility Function:
+
+- Need to find a favorable utility function, given my initial wealth as param
+    that takes latest risk & calcs based off of it what ideal cost of my 
+    portfolio should be to get above 0 payoff
+
+- Study function analysis in order to mold good utility function for
+    wealth level to risk cost
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================================
+# Strategy 1:
+
+- Filter a universe of equities
+- Foreach:
+    - Take a sequence of points
+    - Imagine them in a multi-dimensional field w/ a z-axis
+
+
+
+Techniques:
+- geometric mean
+- cylces
+- jumps among different classes based on cyclic patterns
+
+
+
+
+
+================================================================================================
+Try to find average peaks in the market during typical day 
+Try to find market level S/R levels
+
+
+
+================================================================================================
+# Strategy 2:
+- Use deep learning and probability model on multi assets
+- Filter by stable securities that are robust for longs
+- Filter by failing companies for shorts
+- Take time series analaysis to find extremes in price change & mean correlation
+- Train reinforcement actions & create math model to define constraints so that not too much risk is taken at once
+    => Master math content to make sure you are able to create valid mathematical models
+- Use proper backtesting & validation of strategy
+- This is ultimate goal => keep testing it with different methods
+- Also apply an industry momentum strategy for factors to rest money
+- & a drift of market & index average to pick a proper long/short weight of capital
+=> Then get ML / Quant job &/or faang
+
+================================================================================================
+# Strategy 3:
+- Do market momentum reading => generate long/short ratio
+- Filter longs & shorts universe
+- Turn price timer series into log stationary w/ time series algos
+- Apply geometric smoothing on more recent data input params & kalman filter to get more accurate inputs
+- Measure statistical price change anomalies after detrending
+    - Try to see if there is a volume correlation in order to make sure it is just a volatility anomoly vs market dynamic change in security
+    - Would need to apply a cutoff measure backed by correlational factors that explain a breakout vs a volatility reversal & use statistical approaches
+        in order to make the final decision
+- Analyze general movement in that day => especially among group securities so as to prevent false positive entry/exit anomalies when its just a market movement
+    of the day
+- Diversification => a little in many
+    - Get a statistical measure of what is likely to deplete days amount by presetting buy/sells 
+        (all cash/capital for day does not need to be used => just statistical amount to be "enough" on most days w/ best risk)
+    - Entries levels => increase buy/sell amount exponentially the more extreme the price movement
+    
+- Leverage => mainly based on short/mid/long term trend identification
+    => state diagram => learnable via RL
+
+
+Top correlations factors:
+- Market / Industry direction
+- Vix or security volatility dynammics
+- US Treasury
+- Options Data => Hedging + expectations
+- Unusual Volume
+- Unusual Price change
+- Upcoming SEC Data
+- Fundamentals => filtering and/or true pricing security
+
+
+MAIN GOAL:
+- Simplify as much as possible => Minimize time so as to optimize later
+- Gain experience w/ the data & problem again
+
+DONE. THIS IS THE VISION FOR THIS REMAINDER OF THE MONTH. ANY EXTRA THOUGHTS GO IN OTHER DOCS***
+================================================================================================
+TECHNIQUES:
+- Kalman filter
+- Reward function, dicount factor smoothing, policies, & value function
+- MLE & MCMC methods for param calibration on a simple price-level or trend model (against noise/shock) to determine weights for short/long/hold 
+    - higher short should mean higher diversification or cash hold in model (could be linear model for simplicity w/ regrssion for example)
+- Multivariate volatility models => portfolio risk
+- Extreme value analysis => entries/exits
+- recursive value function that tunes params with MCMC probabilistic distribution => linear model for now => simple math model
+================================================================================================
+https://www.statlect.com/fundamentals-of-statistics/Markov-chains
+https://www.statlect.com/fundamentals-of-statistics/Markov-Chain-Monte-Carlo
+Kalmanfilter.net/alphabeta.html
+
+Kalman gain:
+- estimate_of_current_state = predicted_of_current_state + factor*(measurement - predicted_of_current_state)
+    - factor is called "kalman gain" & can be a function of t
+    - function can be linear or nonlinear
+    - function can be based on volatility, geometric smoothing, etc
+    - it is represented by greek letter alpha_n
+- (measurement - predicted_of_current_state) is the measurement residual or also caalled innovation
+- Kalman filters give the flexibility to create the state model & transition properties
+    - For example: in physics we may create a model via a physics equation like w/ radar measuring movement of a 
+        plane can use velocity displayment equation
+    - If there is a residual on new time step measurement then "kalman gain" will take a weighted amount from predicted & discrepancy
+
+- Keep in mind that a model parameters may change over time
+    => thus dynamically we may be able to iterate params as well
+    - residuals could be due to exogenous changes OR mismeasurement from measurement tool of true value (eg. bad radar signal)
+        - we don't know what caused the residual though
+    - Thus we may be able to take statistical knowledge (like std dev of radar measurement => if measurement is way off from predicted
+        then it is statistically prob due to exogenous cause like change off speed in plain being tracked)
+        - kalman gain factor can be set to high score like 0.9 to capture exogenous change more (statistically)
+        - If on the other hand, if measurement is off by not a significant amount then kalman gain factor can be low since
+            it most likely due to radar std error reading thus to capture little of the change
+    - NOTE: each unknown var (like velocity state & position state) can have their own calibration & thus their own "kalman gain" & equation
+        - Some vars may be input for other vars so their may be an order to calculation like position is input for velocity 
+            since we need to know change of position over a timespan window
+
+- Last time step's prediction becomes current steps estimate
+    - not necessarily the same value since the prediction can transform other state vars ( like predicted position can update predicted velocity )
+        & in next step we may use predicted velocity to get current position which could be different value position value than last steps predicted (last step's
+        predicted becomes current step's estimate)
+
+- Thus kalman filter has a smoothing effect that converges towards true value esp after some big shock that changes results
+
+- Lag error occurs when predicted & estimated values for uknown vars are not keeping up with actual change of new values of unknown variables
+    eg) estimated velocity is lagging behind actual velocity due to a sudden constant acceleration that wasnt there before
+
+Summary:
+- The current state estimation is based on the state update equations.
+- The following state estimation (prediction) is based on the dynamic model equations.
+    - NOTE THIS IS WHERE DIFFERENTIAL EQUATIONS MAY BE USEFUL ******* FOR MODELING DYNAMICAL SYSTEMS *******
+- The main difference between these filters is the selection of weighting coefficients α−β−(γ)
+    - Some filter types use constant weighting coefficients; others compute weighting coefficients for every filter iteration (cycle).
+
+- The choice of the α, β and γ is crucial for proper functionality of the estimation algorithm.
+
+- What should be the α−β−(γ) parameters?
+- Another important issue is the initiation of the filter, i.e., providing the initial value for the first filter iteration.
+
+
+
+- Estimate error: difference between estimates and the true values (not observed values)
+- State Measurement Uncertainty: we don't know the estimate error ( bc we don't know the true value), but we can estimate the state uncertainty (denoted by p)
+- Measurement errors: diff between true value and measured value
+
+- Kalman filter treats estimate as a random variable ( more precisely normal random variable ) & so we extrapolate estimation uncertainty p_n,n to next state
+
+Kalman Filter has 5 equations:
+- The state update equation
+- The dynamic model equation
+- Covariance Extrapolation Equation: estimate uncertainty extrapolation equation
+- Kalman Gain Equation
+================================================================================================

@@ -1,0 +1,386 @@
+
+Lerna: Monorepo manager
+
+Allows you to manage multiple packages within one repo
+
+https://www.youtube.com/watch?v=p6qoJ4apCjA
+
+yarn add lerna 
+npx lerna init
+
+
+lerna json add:
+useWorkspaces: true,
+npmClient: 'yarn'
+
+
+Allows you build scripts, for example in the package.json file, for running build commands for multiple 
+packages
+
+You can also version multiple packages at once
+
+-   on commit release changes version packages of only packages that changed!
+
+
+
+
+
+
+
+
+**************************
+**************************
+**************************
+
+
+
+
+Sharing UI Components with Lerna and Yarn Workspaces
+
+
+
+
+
+
+Today’s popular front-end frameworks like Angular and React allow us to create rich web applications using modular, reusable components. Most of the time we get away with reusing components that someone else wrote. Angular Material, Material-UI and Glamorous are just a few examples of the many off-the-shelf component libraries that allow us to build rich web applications with minimal effort. We generally don’t think about writing shared reusable components until we have to write moderately complex applications. In my case, our team was tasked to write a set of reusable components so that they can be used to quickly compose a suite of complex financial applications. I started thinking about the best way to create these components.
+Motivation: Faster Development Cycle
+Imagine that you were writing an online shopping app. There’s a page in this app that shows the list of orders. The OrderList component uses the List component from the Material-UI library. Your component hierarchy might look like this:
+Image for post
+Let’s see how these components may be organized in your repo:
+Image for post
+Your repo has a src folder that contains the code you wrote. You also have a node_modules folder that contains reusable components installed from npm.
+Now imagine that you needed to package OrderList as a independent component that could be reused across several applications. How might you do that? Here’s one way:
+Image for post
+We have created a new repo called myshared. This repo contains the OrderList component along with its dependencies — in this case the List component from Material-UI. We have published the myshared repo to npm and installed it in myapp. This allows us to use OrderList in myapp and any other app. Yeah! But do you see an issue with this approach?
+Of course! For every change in OrderList, we must publish myshared to npm and reinstall it in myapp. This is extremely frustrating. How can we speed this up?
+Note that I have glossed over an important step — before publishing to npm, we should unit test our component to make sure it works as expected. We could use testing frameworks such as Jest or Jasmine to do this. We could also use Storybook to visualize different states of our component and develop it interactively.
+Lerna and Workspaces - Package Management Made Easy
+Lerna and Yarn Workspaces give us the ability to build libraries and apps in a single repo (a.k.a. monorepo) without forcing us to publish to npm or other registries. We can go through code-test-debug cycles much faster by sharing components locally. Of course, we still have the option of publishing to npm at any time. Let’s see how this works.
+Lerna & Yarn Workspaces expect a folder called packages in your repo. A package is simply a “mini-repo” that can be versioned, built and published independently. The monorepo shown in the diagram below has two packages
+myshared: this is a library of reusable components
+myapp: an app that uses the components in myshared
+Image for post
+We can have any number of packages inside a monorepo, with complex dependencies between each other. The secret sauce behind managing these dependencies is the concept of symlinks. In computing, a symlink (short for Symbolic Link) is a file that references another file or directory and makes it look like the referenced file or directory is at the original file’s location. Looking at the diagram above, there is a symlink called myshared under myapp/node_modules that references the myshared package under packages. The beauty behind Lerna and Yarn Workspaces is that these tools can find package dependencies by analyzing the package.json files under each package. After determining these dependencies, they create symlinks that make each package think that their dependencies have been installed under their own node-modules folder! Once these links are established, we can build any package without publishing dependent packages to a registry. This is pretty neat!
+Now you may be thinking, why do we need both Lerna and Yarn Workspaces? What roles do they each play in this workflow? Quite frankly, there is a big overlap between the functionalities offered by the two tools. Both are able to analyze package.json files and create the necessary symlinks. However, Lerna falls short in some important use cases — as I found out the hard way. Turns out that libraries like React and MobX get very upset if an app loads multiple copies of these libraries (see this React warning and this MobX issue for details). Unfortunately, Lerna does exactly that even if we carefully specifying dependencies, dev dependencies and peer dependencies. On the other hand, Yarn Workspaces has mastered this task. It automatically detects such dependencies and includes the libraries only once in the final app. It’s the best tool I know to manage package dependencies in a monorepo.
+So what purpose does Lerna serve? Well, Lerna provides the high-level commands to optimize the management of multiple packages. For example, with one Lerna command you can iterate through all the packages, running a series of operations (such as linting, testing and building) on each package. It compliments Yarn Workspaces in managing your monorepo.
+Let’s give it a spin
+Now that we understand what Lerna and Yarn Workspaces do, let’s try them out first-hand. I will make it easy for you — just clone my sample repo from Github. This repo contains vanilla JavaScript code, no fancy React or Angular components, but it is enough to understand the fundamentals. We have two packages:
+temp-utils: a package containing temperature conversion utilities. This package has an external dependency on lodash (you can see this in the package.json file).
+weather-app: a command-line app that uses the temp-utils package (as specified in its package.json file).
+The key to setting up Lerna and Yarn Workspaces is the lerna.json configuration file in the root directory:
+{
+  "lerna": "2.11.0",
+  "packages": [
+    "packages/*"
+  ],
+  "version": "independent",
+  "npmClient": "yarn",
+  "useWorkspaces": true
+}
+The configuration basically tells Lerna to use independent versions for each package and to enable integration with Yarn Workspaces. That’s it! We are now ready to roll. Open a command line shell and set you directory to the root of the monorepo. Run the following command:
+$ yarn
+This allows yarn to analyze all the packages in your monorepo. It will download external dependencies (like lodash) from npm and create symlinks for internal dependencies. You will notice that yarn does not create node_modules directories in either of your packages — this is not the usual case. For this repo, Yarn has hoisted all the dependencies to its root. If you look inside lerna-workspaces-concepts/node_modules you will find the symlink to temp-utils.
+Now that Yarn has prepared the repository with symlinks, you can build the temp-utils library and the weather-app, all in one shot — thanks to Lerna! Execute the following command in the root directory:
+$ yarn build
+This command effectively runs the following Lerna command (see package.json). The Lerna command compiles the source folder in all packages using babel.
+$ lerna exec -- babel src -d dist --ignore test.js
+Notice how Lerna saved you time by going through each package and building it for you. No need to do this manually! Now you are ready to run your final app. Execute the following command:
+$ yarn start
+This effectively runs
+$ node packages/weather-app/dist/weather-app
+You should see the following output:
+100 degrees C = 212 degrees F
+212 degrees F = 100 degrees C
+average of [10, 20, 30] = 20
+This simple example shows the power of Lerna and Yarn Workspaces.
+Starter Templates
+Now that you understand the basics of Lerna and Yarn Workspaces, you should be able to create more complex monorepos to build reusable UI libraries and apps. Kick-start your monorepo using one of these starter templates:
+React ES6 template
+React TypeScript template
+React, MobX, Material-UI Monorepo using TypeScript
+TL;DR
+Lerna and Yarn Workspaces give us the ability to build libraries and apps in a single repo without forcing us to publish to npm or other registries. We can go through code-test-debug cycles much faster by sharing components locally.
+Yarn Workspaces finds package dependencies by analyzing the package.json files under each package and creates symlinks to satisfy internal dependencies.
+Lerna provides high-level commands to optimize the management of multiple packages.
+Lerna and Yarn Workspaces together improve the developer experience of managing multiple packages in a monorepo.
+
+
+
+
+
+
+
+
+
+
+
+
+**************************
+**************************
+**************************
+
+
+
+
+
+
+
+
+https://www.perforce.com/blog/vcs/what-monorepo
+
+What is a Monorepo?
+
+
+Some development teams use a monorepo. Some use multiple repositories. Here we cover what a monorepo is — and the benefits of using it.
+
+What Is a Monorepo? And Why Should You Care?
+A monorepo (mono repository) is a single repository that stores all of your code and assets for every project.
+
+Using a monorepo is important for many reasons. It creates a single source of truth. It makes it easier to share code. It even makes it easier to refactor code.
+
+Difference Between Monorepo and Monolith
+A monorepo is a single repository. A monolith is a massive codebase.
+
+A monolith could be managed in a monorepo. But a monolith could also be split into multiple repositories. Similarly, a monorepo could be used with microservices instead of a monolith.
+
+In this blog, we’re going to focus on the monorepo.
+
+Monorepo vs. Multirepo
+A monorepo keeps everything in one repository. A multirepo (multiple repositories) typically has one repository for each project. The more projects, the more repositories. A multirepo is also known as polyrepo.
+
+So, which one is better? Should you keep everything together in one repository? Or should you divide it up into multiple repositories?
+
+Monorepo Is Usually Best For…
+Visibility
+Using a single repository gives you visibility into your code and assets for every project. This helps you manage dependencies.
+
+Collaboration
+A single repository makes it easier to collaborate. That’s because everyone can access the code, files, and assets. So, developers can share and reuse assets.
+
+Speed
+Using a single repository can help you accelerate development. For instance, you can make atomic changes (one action to make a change across multiple projects).
+
+Multirepo Is Usually Best For…
+Git Projects
+Managing a monorepo at scale in Git would never work. As the repository gets bigger, a monorepo in Git becomes a huge problem. So if you have teams using Git, it’s best to have multiple repositories.
+
+Another Git challenge is that Git lacks security. Learn how to lock down Git.
+
+LOCK DOWN GIT
+
+Open Source or Third Party Projects
+In some version control systems, you’ll need multiple repositories to use open source projects or work with third party teams. Then you can ensure that third party developers only have access to the project they're working on.
+
+(Of course, with Perforce version control — Helix Core — you can do this with a monorepo or multirepo. You can restrict permissions down to the file level, even in a monorepo. And you can even bring Git projects into your pipeline with Helix4Git.) 
+
+So, Why Use a Mono Repository?
+Using a mono repository is a good idea for many companies. You can keep all of source code (and other files/digital assets) from every team in one repository. This makes it easier to share with everyone. And it helps you maintain a single source of truth.
+
+After any commit, the new code is visible to and usable by all of your developers. This helps avoid painful merges that are prevalent with trunk-based development.
+
+Here are some reasons why you should consider using a mono repository:
+
+You want a single source of truth.
+You want to share and reuse code easily.
+You want visibility to manage dependencies (e.g., if you make a change, what else will be impacted?).
+You want to make atomic changes (e.g., one operation to make a change across multiple projects).
+You want teams to collaborate more.
+You want to make large-scale changes (e.g., code refactoring).
+If you decide to go the monorepo route, you’ll be in good company. Leading companies — like Google — use a monorepo.
+
+Example: Why Does Google Use a Monorepo?
+Google is one of many large companies that famously uses a monorepo.
+
+Google decided early on to use a monorepo — and scaled it up as the company grew. In 2015, the Google monorepo held:
+
+86 terabytes of data.
+2 billion lines of code.
+9 million unique source files.
+So, why did Google choose a monorepo — and stick with it? Because using a monorepo is key to an open and collaborative culture.
+
+Salesforce, Facebook, and Twitter also famously use monorepos.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://danluu.com/monorepo/
+
+
+Advantages of monorepos
+Here's a conversation I keep having:
+
+Someone: Did you hear that Facebook/Google uses a giant monorepo? WTF!
+Me: Yeah! It's really convenient, don't you think?
+Someone: That's THE MOST RIDICULOUS THING I've ever heard. Don't FB and Google know what a terrible idea it is to put all your code in a single repo?
+Me: I think engineers at FB and Google are probably familiar with using smaller repos (doesn't Junio Hamano work at Google?), and they still prefer a single huge repo for [reasons].
+Someone: Oh that does sound pretty nice. I still think it's weird but I could see why someone would want that.
+
+“[reasons]” is pretty long, so I'm writing this down in order to avoid repeating the same conversation over and over again.
+
+Simplified organization
+With multiple repos, you typically either have one project per repo, or an umbrella of related projects per repo, but that forces you to define what a “project” is for your particular team or company, and it sometimes forces you to split and merge repos for reasons that are pure overhead. For example, having to split a project because it's too big or has too much history for your VCS is not optimal.
+
+With a monorepo, projects can be organized and grouped together in whatever way you find to be most logically consistent, and not just because your version control system forces you to organize things in a particular way. Using a single repo also reduces overhead from managing dependencies.
+
+A side effect of the simplified organization is that it's easier to navigate projects. The monorepos I've used let you essentially navigate as if everything is on a networked file system, re-using the idiom that's used to navigate within projects. Multi repo setups usually have two separate levels of navigation -- the filesystem idiom that's used inside projects, and then a meta-level for navigating between projects.
+
+A side effect of that side effect is that, with monorepos, it's often the case that it's very easy to get a dev environment set up to run builds and tests. If you expect to be able to navigate between projects with the equivalent of cd, you also expect to be able to do cd; make. Since it seems weird for that to not work, it usually works, and whatever tooling effort is necessary to make it work gets done1. While it's technically possible to get that kind of ease in multiple repos, it's not as natural, which means that the necessary work isn't done as often.
+
+Simplified dependencies
+This probably goes without saying, but with multiple repos, you need to have some way of specifying and versioning dependencies between them. That sounds like it ought to be straightforward, but in practice, most solutions are cumbersome and involve a lot of overhead.
+
+With a monorepo, it's easy to have one universal version number for all projects. Since atomic cross-project commits are possible, the repository can always be in a consistent state -- at commit #X, all project builds should work. Dependencies still need to be specified in the build system, but whether that's a make Makefiles or bazel BUILD files, those can be checked into version control like everything else. And since there's just one version number, the Makefiles or BUILD files or whatever you choose don't need to specify version numbers.
+
+Tooling
+The simplification of navigation and dependencies makes it much easier to write tools. Instead of having tools that must understand relationships between repositories, as well as the nature of files within repositories, tools basically just need to be able to read files (including some file format that specifies dependencies between units within the repo).
+
+This sounds like a trivial thing but, take this example by Christopher Van Arsdale on how easy builds can become:
+
+The build system inside of Google makes it incredibly easy to build software using large modular blocks of code. You want a crawler? Add a few lines here. You need an RSS parser? Add a few more lines. A large distributed, fault tolerant datastore? Sure, add a few more lines. These are building blocks and services that are shared by many projects, and easy to integrate. … This sort of Lego-like development process does not happen as cleanly in the open source world. … As a result of this state of affairs (more speculation), there is a complexity barrier in open source that has not changed significantly in the last few years. This creates a gap between what is easily obtainable at a company like Google versus a[n] open sourced project.
+
+The system that Arsdale is referring to is so convenient that, before it was open sourced, ex-Google engineers at Facebook and Twitter wrote their own versions of bazel in order to get the same benefits.
+
+It's theoretically possible to create a build system that makes building anything, with any dependencies, simple without having a monorepo, but it's more effort, enough effort that I've never seen a system that does it seamlessly. Maven and sbt are pretty nice, in a way, but it's not uncommon to lose a lot of time tracking down and fixing version dependency issues. Systems like rbenv and virtualenv try to sidestep the problem, but they result in a proliferation of development environments. Using a monorepo where HEAD always points to a consistent and valid version removes the problem of tracking multiple repo versions entirely2.
+
+Build systems aren't the only thing that benefit from running on a mono repo. Just for example, static analysis can run across project boundaries without any extra work. Many other things, like cross-project integration testing and code search are also greatly simplified.
+
+Cross-project changes
+With lots of repos, making cross-repo changes is painful. It typically involves tedious manual coordination across each repo or hack-y scripts. And even if the scripts work, there's the overhead of correctly updating cross-repo version dependencies. Refactoring an API that's used across tens of active internal projects will probably a good chunk of a day. Refactoring an API that's used across thousands of active internal projects is hopeless.
+
+With a monorepo, you just refactor the API and all of its callers in one commit. That's not always trivial, but it's much easier than it would be with lots of small repos. I've seen APIs with thousands of usages across hundreds of projects get refactored and with a monorepo setup it's so easy that it's no one even thinks twice.
+
+Most people now consider it absurd to use a version control system like CVS, RCS, or ClearCase, where it's impossible to do a single atomic commit across multiple files, forcing people to either manually look at timestamps and commit messages or keep meta information around to determine if some particular set of cross-file changes are “really” atomic. SVN, hg, git, etc solve the problem of atomic cross-file changes; monorepos solve the same problem across projects.
+
+This isn't just useful for large-scale API refactorings. David Turner, who worked on twitter's migration from many repos to a monorepo gives this example of a small cross-cutting change and the overhead of having to do releases for those:
+
+I needed to update [Project A], but to do that, I needed my colleague to fix one of its dependencies, [Project B]. The colleague, in turn, needed to fix [Project C]. If I had had to wait for C to do a release, and then B, before I could fix and deploy A, I might still be waiting. But since everything's in one repo, my colleague could make his change and commit, and then I could immediately make my change.
+
+I guess I could do that if everything were linked by git versions, but my colleague would still have had to do two commits. And there's always the temptation to just pick a version and "stabilize" (meaning, stagnate). That's fine if you just have one project, but when you have a web of projects with interdependencies, it's not so good.
+
+[In the other direction,] Forcing dependees to update is actually another benefit of a monorepo.
+
+It's not just that making cross-project changes is easier, tracking them is easier, too. To do the equivalent of git bisect across multiple repos, you must be disciplined about using another tool to track meta information, and most projects simply don't do that. Even if they do, you now have two really different tools where one would have sufficed.
+
+Mercurial and git are awesome; it's true
+The most common response I've gotten to these points is that switching to either git or hg from either CVS or SVN is a huge productivity win. That's true. But a lot of that is because git and hg are superior in multiple respects (e.g., better merging), not because having small repos is better per se.
+
+In fact, Twitter has been patching git and Facebook has been patching Mercurial in order to support giant monorepos.
+
+Downsides
+Of course, there are downsides to using a monorepo. I'm not going to discuss them because the downsides are already widely discussed. Monorepos aren't strictly superior to manyrepos. They're not strictly worse, either. My point isn't that you should definitely switch to a monorepo; it's merely that using a monorepo isn't totally unreasonable, that folks at places like Google, Facebook, Twitter, Digital Ocean, and Etsy might have good reasons for preferring a monorepo over hundreds or thousands or tens of thousands of smaller repos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IS MONO REPO FOR YOU??
+
+
+
+A perspective considering frontend codebase & tooling.
+Working on a single feature often requires a developer to perform cross-team collaboration and cross-module work, traditionally these repos have their individual build pipelines and release processes.
+In such a multi repo system we see:-
+Faster work for each individual repo due to a restricted code. This means changing code in individual repos is fairly easy and fast. A common code repo can be changed as per the new requirements and the change once committed and published can be consumed by the rest of the dependent repos using package versioning.
+It allows easy support for tooling e.g. CI/CD and testing can be set up with minimal configurations due to the simplicity of each smaller repo.
+It provides flexibility in each repo to manage itself. Testing and releasing become easier provided separate tooling, configuration, and dependencies, setting up the new repo and modifying the existing build becomes easier.
+This also allows fast iteration in individual repos or packages without worrying about dependent repos, since we can update them later as required.
+Along with these benefits, there are some issues that devs face with the above approach.
+The requirement of setting up a monorepo:
+The requirement to use npm or yarn link in order to test a repo when consuming a shared package which is built independently. This kind of development flow is error-prone, and time-consuming, as developers have to wait for two builds to complete in sequence.
+Devs often have to make changes in multiple repositories followed in an order of commits/testing phases. For eg. To fix a bug in a dropdown component which is present alongside other common components has to be first fixed and then the updated version of the dropdown is consumed in the dependent repository.
+This often results in more no of commits and unnecessary noise. In some cases, later when debugging an issue devs have to go through multiple repositories to understand code.
+When a package is introduced with a breaking change and the author doesn’t update dependant packages, the next developer who upgrades to a newer version of that package has to go through an unknown cost and risk of performing that upgrade.
+Monorepo?
+Because of these issues, we often think about setting up a large repo in which all code is checked into, and out of which all build/release tasks are performed. Such a collection of smaller projects into one big repo is what we call a monorepo.
+Continuing following discussion based on the fact that all internal dependencies in monorepo are on the latest version always.
+All code is located in one repository, remove the need for npm/yarn link or individually update different repos.
+Internal dependencies are on the currently checked-in code, one PR is sufficient for any changeset, makes it easy to refactor code, perform changes across repos.
+All external dependencies and configuration are unified, dependency versions are always in sync.
+Easier cross-team collaboration and code reusability provided good processes are in place, easier onboarding on a different project, resource movement across project becomes easier.
+Dependency management:-
+Choosing a strategy here will determine the challenges and solutions while working on a monorepo. Dependencies inside monorepo can be managed in the following ways.
+Packages are on the same version i.e. always rely on checked-in code.
+Simple to attain since it will work similarly to a normal repo build pipeline.
+Adds extra load on the build process since everything has to be built every time as all packages depend on the recent code.
+An increase in PR size results in a long time for code review, with a large team it may require extra effort in keeping the branch up to date as new commits are merged on the master.
+Reverting becomes difficult and risky because the previous update might be a necessity for one module but causing an issue in another.
+Packages are on different versions i.e packages publish artifacts and lists their own dependencies.
+Incremental updates, faster iteration, and easier rollbacks since a change in package.json can facilitate version changes across modules.
+Comparatively less load on build process since we don’t have to build parts of the project which are not changing but adds load to the tooling.
+Pushes us towards the old way of multi-repo management, we still have to manage dependencies across modules that are in comparison complex in a monorepo since a system needs to be enforced to facilitate version imports which are added relative to the folder structure.
+Drawbacks!
+The fundamental drawback of a mono repository is that additional load comes because configuration, code organization, full builds, and releases have to be handled on the whole-repo level. This results in:-
+Slowdowns and inflexibility in these operations, slower git processes, difficultly in keeping track of code size, root cause issues.
+Time and resources in developing/managing better tooling and automation to keep these processes fast and agile complicated the build pipeline.
+In some cases, a lack of code organization and processes results in an undesirable codebase state. Challenges around identifying code owners further add to it.
+Indexing of files takes time and IntelliSense can be tricky to perfect. High memory usage while building.
+Let’s look at some tools to speed up the build.
+Speeding up the build:-
+To work efficiently we would need faster build and better tooling. Mentioning a few examples from link — would recommend you to skip this section and read from the original source.
+Parallelize:-
+Evaluate tools like parallel-webpack— will perform the whole webpack build in parallel and happypack — will execute loaders in parallel.
+Reduce the workload:-
+Minification takes significant time, UglifyJS in a parallel configuration has provided Slack 3x faster minification and somewhat similar bundle sizes.
+Duplicate code multiplies the minifier’s work. webpack-bundle-analyzer helps in finding duplicates and splitting them out into shared chunks.
+Reduce the number of files to be parsed by using noParse webpack option.
+Save webpack from expensive file creation step by using eager-imports during dev builds.
+Cache:-
+If there are usually only small differences between the current and previous build caching would reduce webpack work and speed up builds.
+Other things to consider:-
+Cost of setting up a monorepo, with/without existing code setup, release pipeline setup, reverting, merging existing repos with git history, evening out the dependencies in different projects, etc.
+Publishing packages out of monorepo for left our repositories.
+Challenges around maintaining proper coding practices.
+Security aspects — ownership of the complete repo.
+
+
+
+
+
+
+
+

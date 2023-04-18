@@ -1,0 +1,11 @@
+
+Factors to consider:
+- Partitioning
+- Scaling
+
+
+
+
+Db Design:
+- read heavy
+- NoSql (relation only to user that created it)

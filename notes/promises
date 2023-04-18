@@ -1,0 +1,821 @@
+
+
+Async functions
+Await expressions suspend progress through an async function, yielding control and subsequently 
+resuming progress only when an awaited promise-based asynchronous operation is either fulfilled 
+or rejected. The resolved value of the promise is treated as the return value of the await expression. 
+Use of async / await enables the use of ordinary try / catch blocks around asynchronous code.
+
+
+Async functions always return a promise. If the return value of an async function is not 
+explicitly a promise, it will be implicitly wrapped in a promise.
+
+
+async function foo() {
+   return 1
+}
+...is equivalent to:
+
+function foo() {
+   return Promise.resolve(1)
+}
+
+
+
+Promises 
+-   async and await 
+    -   wrapped in reject if exception within fn 
+
+
+
+
+
+
+The body of an async function can be thought of as being split by zero or more await expressions. 
+Top-level code, up to and including the first await expression (if there is one), is run synchronously. 
+In this way, an async function without an await expression will run synchronously. 
+If there is an await expression inside the function body, however, the async function will always 
+complete asynchronously.
+
+For example:
+
+async function foo() {
+   await 1
+}
+...is equivalent to:
+
+function foo() {
+   return Promise.resolve(1).then(() => undefined)
+}
+
+
+
+
+
+https://codeburst.io/javascript-making-asynchronous-calls-inside-a-loop-and-pause-block-loop-execution-1cb713fbdf2d
+
+
+
+
+
+
+SAME:
+
+    async function myFetch() {
+    try {
+        let response = await fetch('coffee.jpg');
+
+        if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+        let myBlob = await response.blob();
+        let objectURL = URL.createObjectURL(myBlob);
+        let image = document.createElement('img');
+        image.src = objectURL;
+        document.body.appendChild(image);
+        }
+    } catch(e) {
+        console.log(e);
+    }
+    }
+
+    myFetch();
+
+
+
+AS:
+
+
+    async function myFetch() {
+        let response = await fetch('coffee.jpg');
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        } else {
+            return await response.blob();
+        }
+    }
+
+    myFetch().then((blob) => {
+        let objectURL = URL.createObjectURL(blob);
+        let image = document.createElement('img');
+        image.src = objectURL;
+        document.body.appendChild(image);
+    })
+    .catch((e) =>
+        console.log(e)
+    );
+
+This is because the .catch() block will catch errors occurring in 
+both the async function call and the promise chain. If you used the 
+try/catch block here, you might still get unhandled errors in the 
+myFetch() function when it's called.
+
+
+
+
+The downsides of async/await
+Async/await is really useful to know about, but there are a couple 
+of downsides to consider.
+
+Async/await makes your code look synchronous, and in a way it makes 
+it behave more synchronously. The await keyword blocks execution 
+of all the code that follows it until the promise fulfills, 
+exactly as it would with a synchronous operation. It does allow 
+other tasks to continue to run in the meantime, but the awaited 
+code is blocked.
+
+
+This means that your code could be slowed down by a significant 
+number of awaited promises happening straight after one another. 
+Each await will wait for the previous one to finish, whereas 
+actually what you want is for the promises to begin processing 
+simultaneously, like they would do if we weren't using async/await.
+
+There is a pattern that can mitigate this problem — setting off 
+all the promise processes by storing the Promise objects in 
+variables, and then awaiting them all afterwards
+
+
+
+
+
+In the slow-async-await.html example, timeTest() looks like this:
+
+async function timeTest() {
+  await timeoutPromise(3000);
+  await timeoutPromise(3000);
+  await timeoutPromise(3000);
+}
+Here we simply await all three timeoutPromise() calls directly, making 
+each one alert for 3 seconds. Each subsequent one is forced to 
+wait until the last one finished — if you run the first example, 
+you'll see the alert box reporting a total run time of around 
+9 seconds.
+
+In the fast-async-await.html example, timeTest() looks like this:
+
+async function timeTest() {
+  const timeoutPromise1 = timeoutPromise(3000);
+  const timeoutPromise2 = timeoutPromise(3000);
+  const timeoutPromise3 = timeoutPromise(3000);
+
+  await timeoutPromise1;
+  await timeoutPromise2;
+  await timeoutPromise3;
+}
+Here we store the three Promise objects in variables, which has 
+the effect of setting off their associated processes all running 
+simultaneously.
+
+Next, we await their results — because the promises all started 
+processing at essentially the same time, the promises will all 
+fulfill at the same time; when you run the second example, you'll 
+see the alert box reporting a total run time of just over 3 seconds!
+
+
+
+Promise resolve:
+The static Promise.resolve function returns a Promise that is resolved.
+
+
+Promise .then:
+The then() method returns a Promise. It takes up to two arguments: 
+callback functions for the success and failure cases of the Promise.
+
+p.then(onFulfilled[, onRejected]);
+
+p.then(value => {
+  // fulfillment
+}, reason => {
+  // rejection
+});
+
+
+
+
+
+The real difference between catch vs onRejected:
+
+const getPromise = () => new Promise((resolve, reject) => {  
+    Math.round(Math.random()) ?     
+        resolve('resolve #1') :     
+        reject('reject #1')
+})
+
+
+getPromise().then(
+    result => { throw new Error('reject #2') }, 
+    error => {  // Handles only 'reject #1' }
+)
+
+
+getPromise().then(result => {  
+        throw new Error('reject #2')
+    })  
+    .catch(error => {    
+        // Handles both 'reject #1',     
+        // and 'reject #2'  
+    }))
+
+
+onRejected never handles rejected promises from the same 
+.then(onFulfilled) callback and .catch takes both. However 
+besides the behavior difference, there is one more nuance. 
+It’s about how these ways will be translated to microtasks 
+and how they will be queued.
+Let’s see an example of the difference.
+
+Promise.race
+There is a task — write Promise.race polyfill. We use a common 
+pattern in both functions to handle resolved promises and 
+different tools to handle rejected promises.
+
+const promiseRaceOnRejected = (promises = []) => {  
+    return new Promise((resolve, reject) => {    
+        promises.forEach(promise => {      
+            promise.then(        
+                result => resolve(result),        
+                error => reject(error)      
+            )    
+        })  
+    })
+}
+
+
+const promiseRaceCatch = (promises = []) => {  
+    return new Promise((resolve, reject) => {    
+        promises.forEach(promise => {      
+            promise
+                .then(result => resolve(result))
+                .catch(error => reject(error))    
+        })  
+    })
+}
+
+
+
+// A helper function to create a delayed promise
+const getPromise = (resolveMs, rejectMs) => {  
+    return new Promise((resolve, reject) => {    
+        if ('number' === typeof rejectMs) {      
+            setTimeout(() => reject(rejectMs), rejectMs)    
+        }
+
+        if ('number' === typeof resolveMs) {      
+            setTimeout(() => resolve(resolveMs), resolveMs)    
+        }  
+    })
+}
+
+
+
+const testRaces = async () => {  
+    const r1 = await promiseRaceOnRejected([    
+        getPromise(0),     
+        getPromise(5)  
+    ])  // 0
+
+
+const r2 = await promiseRaceCatch([    
+    getPromise(0),     
+    getPromise(5)  
+])  // 0
+
+
+const r3 = await promiseRaceOnRejected([    
+    getPromise(5),     
+    getPromise(null, 2)  
+])
+.catch(e => e)  // 2
+
+
+const r4 = await promiseRaceCatch([    
+    getPromise(5),     
+    getPromise(null, 2)  
+])
+.catch(e => e)  // 2}
+
+
+testRaces()
+
+
+
+As you can see, both polyfills work as expected. 
+Arguments order and rejected promises handler variation 
+don’t matter. Until we try it with the next set of tests:
+
+
+
+const r5 = await promiseRaceOnRejected([    
+    Promise.resolve('Resolve'),     
+    Promise.reject('Reject')  
+])  // Resolve
+
+
+
+const r6 = await promiseRaceCatch([    
+    Promise.resolve('Resolve'),     
+    Promise.reject('Reject')  
+])  // Resolve
+
+
+const r7 = await promiseRaceOnRejected([    
+    Promise.reject('Reject'),     
+    Promise.resolve('Resolve')  
+])    
+.catch(e => e)  // Reject
+
+
+
+const r8 = await promiseRaceCatch([    
+    Promise.reject('Reject'),     
+    Promise.resolve('Resolve')  
+])    
+.catch(e => e)  // ???
+
+
+
+Microtasks queue
+Depending on the job’s result, a pending promise changes its 
+state to resolved or rejected. JS environment puts that promise 
+in a microtasks queue. Like it described in ECMA 2015 specification, 
+this queue works by the FIFO principle — first in, first out. Base 
+on this, let’s review the eighth race’s case.
+
+
+At the start of the race, we already have two queued promises, 
+and the rejected is first. .then without a second argument cannot 
+handle a rejected promise, so it puts the promise back into the 
+queue. And instead of handling this promise with .catch, the JS 
+environment switches to p2 because it has higher priorities in the 
+queue.
+
+
+Queue’s second tick
+On next tick .then handles p2 and the race ends with Resolve 
+result.
+
+
+
+Next time when you’re choosing between the catch and onRejected 
+handlers, remember not only which rejected promises they catch, 
+but about the queuing difference too!
+
+
+What I learned here is that in the event queue 
+a promise wwith a .then and reject callback has priority over 
+a .catch handler.
+So keep this in mind
+
+
+
+
+
+
+
+
+
+
+https://mathiasbynens.be/notes/async-stack-traces#:~:text=The%20fundamental%20difference%20between%20await,this%20difference%20is%20pretty%20significant.
+
+
+Asynchronous stack traces: why await beats Promise#then()
+Published 2nd October 2017 · tagged with JavaScript, performance
+
+Compared to using promises directly, not only can async and await make code more readable for developers — they enable some interesting optimizations in JavaScript engines, too! This write-up is about one such optimization involving stack traces for asynchronous code.
+
+The fundamental difference between await and vanilla promises is that await X() suspends execution of the current function, while promise.then(X) continues execution of the current function after adding the X call to the callback chain. In the context of stack traces, this difference is pretty significant.
+
+When a promise chain (desugared or not) throws an unhandled exception at any point, the JavaScript engine displays an error message and (hopefully) a useful stack trace. As a developer, you expect this regardless of whether you use vanilla promises or async and await.
+
+Vanilla promises
+Imagine a scenario where a function c is called when a call to an asynchronous function b resolves:
+
+const a = () => {
+	b().then(() => c());
+};
+When a is called, the following happens synchronously:
+
+b is called and returns a promise that will resolve at some point in the future.
+The .then callback (which is effectively calling c()) is added to the callback chain (or, in V8 lingo: […] is added as a resolve handler).
+After that, we’re done executing the code in the body of function a. a is never suspended, and the context is gone by the time the asynchronous call to b resolves. Imagine what happens if b (or c) asynchronously throws an exception. The stack trace should include a, since that’s where b (or c) was called from, right? How is that possible now that we have no reference to a anymore?
+
+To make it work, the JavaScript engine needs to do something in addition to the above steps: it captures and stores the stack trace within a while it still has the chance. In V8, the stack trace is attached to the promise that b returns. When the promise fulfills, the stack trace is passed on so that c can use it as needed.
+
+Capturing the stack trace takes time (i.e. degrades performance); storing these stack traces requires memory.
+
+async/await
+Here’s the same program, written using async/await instead of vanilla promises:
+
+const a = async () => {
+	await b();
+	c();
+};
+With await, we can restore the call chain even if we do not collect the stack trace at the await call. This is possible because a is suspended, waiting for b to resolve. If b throws an exception, the stack trace can be reconstructed on-demand in this manner. If c throws an exception, the stack trace can be constructed just like it would be for a synchronous function, because we’re still within a when that happens.
+
+Recommendations
+Like most ECMAScript features that are seemingly “just syntax sugar”, async/await is more than that.
+
+Enable JavaScript engines to handle stack traces in a more performant and memory-efficient manner by following these recommendations:
+
+Prefer async/await over desugared promises.
+Use @babel/preset-env to avoid transpiling async/await unnecessarily.
+Although V8 doesn’t implement this optimization yet, following this advice ensures optimal performance once we (or other JavaScript engines) do.
+
+In general, don’t transpile code unless you absolutely need to! 
+
+
+
+
+
+
+
+https://stackoverflow.com/questions/49617426/returning-values-from-javascript-promise-chain#:~:text=If%20no%20value%20is%20returned,resolved%20value%20of%20that%20promise.
+
+
+// utility function that returns a promise that resolves after a delay
+function delay(t, v) {
+    return new Promise(resolve => {
+        setTimeout(resolve.bind(null, v), t);
+    });
+}
+
+function test() {
+    return delay(100, 5).then(val => {
+        // this return value becomes the resolved value of the promise chain
+        // that is returned from this function
+        return 10;
+    });
+}
+
+test().then(result => {
+    // logs 10
+    console.log(result);
+});
+
+
+
+My big question is: What happens when you simply return a value from your success handler?
+
+When you return a value from a .then() handler, that value becomes the resolved value of the parent promise chain: So, in this code:
+
+// utility function that returns a promise that resolves after a delay
+function delay(t, v) {
+    return new Promise(resolve => {
+        setTimeout(resolve.bind(null, v), t);
+    });
+}
+
+function test() {
+    return delay(100, 5).then(val => {
+        // this return value becomes the resolved value of the promise chain
+        // that is returned from this function
+        return 10;
+    });
+}
+
+test().then(result => {
+    // logs 10
+    console.log(result);
+});
+Expand snippet
+When you run it, it will log 10 because of the return 10 in the .then() handler.
+
+There are four possibilities from a .then() handler:
+
+Return a regular value such as return 10 or return val. That value becomes the resolved value 
+    of the promise chain. If no value is returned (which in Javascript means the return value 
+    is undefined), then the resolved value of the promise chain is undefined.
+
+Return a promise that ultimately resolves or is already resolved. This promise is 
+    added to the chain and the promise chain takes on the resolved value of 
+    that promise.
+
+Return a promise that ultimately rejects or is already rejected. 
+    This promise is added to the chain and the promise chain takes on the rejected reason 
+    of the returned promise.
+
+Throw an exception. If an exception is thrown inside the .then() 
+    handler, then the .then() infrastructure will catch it and turn 
+    the promise chain into a rejected state with the reject reason 
+    set to the value that is thrown. So, if you do throw new Error("User not found") 
+    inside a .then() handler, then that promise chain will be rejected with that error 
+    object as the reject reason.
+
+
+
+My big question is: What happens when you simply return a value from your success handler?
+
+When you return a value from a .then() handler, that value becomes the resolved value of the parent promise chain: So, in this code:
+
+// utility function that returns a promise that resolves after a delay
+function delay(t, v) {
+    return new Promise(resolve => {
+        setTimeout(resolve.bind(null, v), t);
+    });
+}
+
+function test() {
+    return delay(100, 5).then(val => {
+        // this return value becomes the resolved value of the promise chain
+        // that is returned from this function
+        return 10;
+    });
+}
+
+test().then(result => {
+    // logs 10
+    console.log(result);
+});
+Expand snippet
+When you run it, it will log 10 because of the return 10 in the .then() handler.
+
+There are four possibilities from a .then() handler:
+
+Return a regular value such as return 10 or return val. That value becomes the resolved value of the promise chain. If no value is returned (which in Javascript means the return value is undefined), then the resolved value of the promise chain is undefined.
+
+Return a promise that ultimately resolves or is already resolved. This promise is added to the chain and the promise chain takes on the resolved value of that promise.
+
+Return a promise that ultimately rejects or is already rejected. This promise is added to the chain and the promise chain takes on the rejected reason of the returned promise.
+
+Throw an exception. If an exception is thrown inside the .then() handler, then the .then() infrastructure will catch it and turn the promise chain into a rejected state with the reject reason set to the value that is thrown. So, if you do throw new Error("User not found") inside a .then() handler, then that promise chain will be rejected with that error object as the reject reason.
+
+In your specific code:
+
+const doAsyncOp = () => 
+  $http.get(uri)
+    .then(
+      value => value,
+      reject => //... 
+    );
+There is no reason for the value => value. value is already the 
+resolved value of the promise, you do not need to set it again.
+
+And since the fat arrow function automatically returns any single 
+statement, you're already returning the promise from $http.get().then() 
+in your doAsyncOp() function. So, you can just do:
+
+const doAsyncOp = () => $http.get(uri);
+
+doAsyncOp().then(result => {
+   // handle the result here
+}).catch(err => {
+   // handle error here
+});
+
+
+
+
+
+
+
+
+
+
+
+https://itnext.io/error-handling-with-async-await-in-js-26c3f20bc06a
+
+
+A Simple Try Catch
+Let’s start with the simple try...catch example.
+function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+try {
+    thisThrows();
+} catch (e) {
+    console.error(e);
+} finally {
+    console.log('We do cleanup here');
+}
+
+// Output:
+// Error: Thrown from thisThrows()
+//   ...stacktrace
+// We do cleanup here
+
+
+This works as expected, we call the function thisThrows() which throws a regular error, we catch it, log the error and optionally we run some code in the finally block. No rocket science here.
+
+
+A Try Catch with a Rejecting Promise
+Now we modify thisThrows() so it actually rejects with a promise instead of a regular error. For simplicity, I will make the thisThrows() function async . Remember that an async function always returns a promise:
+When no return statement defined, or a return statement without a value, it returns a resolving promise, equivalent to return Promise.Resolve() .
+When a return statement is defined with a value, it will return a resolving promise with the given return value, equivalent to return Promise.Resolve("My return String")
+When an error is thrown, a rejected promised will be returned with the thrown error, equivalent to return Promise.Reject(error) .
+
+async function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+try {
+    thisThrows();
+} catch (e) {
+    console.error(e);
+} finally {
+    console.log('We do cleanup here');
+}
+
+// output:
+// We do cleanup here
+// UnhandledPromiseRejectionWarning: Error: Thrown from thisThrows()
+
+Now we have the classic problem, thisThrows returns a rejecting promise, so the regular try...catch is not able to catch the error. As thisThrows() is async , so when we call it, it dispatches a promise, the code does not wait, so the finally block is executed first and then the promise executes, which then rejects. So we don’t have any code that handles this rejected promise.
+We can handle this in two ways:
+We call thisThrows() in an async function and await the thisThrows() function.
+We chain the thisThrows() function call with a .catch() call.
+The first solution would look like this:
+
+async function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+async function run() {
+    try {
+        await thisThrows();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        console.log('We do cleanup here');
+    }
+}
+
+run();
+
+// Output:
+// Error: Thrown from thisThrows()
+//   ...stacktrace
+// We do cleanup here
+
+And the second one:
+
+async function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+thisThrows()
+    .catch(console.error)
+    .then(() => console.log('We do cleanup here'));
+
+// Output:
+// Error: Thrown from thisThrows()
+//   ...stacktrace
+// We do cleanup here
+
+Both solutions work fine, but the async/await one is easier to reason about (at least in my personal opinion).
+
+
+Caveats
+We had a look at simple error handling with and without errors. Let’s have a look now at some special cases.
+Returning from an async function
+Let’s start with a brain teaser, what will happen with the following code?
+
+async function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+async function myFunctionThatCatches() {
+    try {
+        return thisThrows();
+    } catch (e) {
+        console.error(e);
+    } finally {
+        console.log('We do cleanup here');
+    }
+    return "Nothing found";
+}
+
+async function run() {
+    const myValue = await myFunctionThatCatches();
+    console.log(myValue);
+}
+
+run();
+
+
+At first, we might expect the output to be:
+We do cleanup here
+Nothing Found
+
+
+But instead, we got a UnhandledPromiseRejection ! But why? Let’s step through the code:
+thisThrows() is an async method
+We throw an error in thisThrows()
+As thisThrows() is async the thrown error is returned as a rejected promises from the function.
+We return that rejected promised in myFunctionThatCatches() with the return statement.
+Our rejected promise reaches the await keyword. The await keyword discovers that the Promise is resolved with the status “rejected” and propagates the error as an unhandled promise rejection.
+Based on how our code is structured, our error snuck past our try...catch block and propagated further down in the call tree. Not good!
+We solve this by using the await keyword in the return statement.
+
+async function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+async function myFunctionThatCatches() {
+    try {
+        return await thisThrows(); // <-- Notice we added here the "await" keyword.
+    } catch (e) {
+        console.error(e);
+    } finally {
+        console.log('We do cleanup here');
+    }
+    return "Nothing found";
+}
+
+async function run() {
+    const myValue = await myFunctionThatCatches();
+    console.log(myValue);
+}
+
+run();
+
+// Outptut:
+// Error: Thrown from thisThrows()
+//   ...stacktrace
+// We do cleanup here
+// Nothing found
+
+
+
+Now our try..catch works as expected. Now the await keyword on line 7 will first await the returned promise of thisThrows() and if that promise rejects, the error will be propagated to the catch block on line 8 . Problem solved!
+Resetting your stack trace
+How to handle these use cases will be different on a per-case basis, make sure to be aware of this common mistake and then decide if it’s relevant for you or not.
+It’s not uncommon to see code where someone catches an error and wraps it in a new error, like in the following snippet:
+
+function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+function myFunctionThatCatches() {
+    try {
+        return thisThrows();
+    } catch (e) {
+        throw new TypeError(e.message);
+    } finally {
+        console.log('We do cleanup here');
+    }
+}
+
+async function run() {
+    try {
+        await myFunctionThatCatches();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+run();
+
+// Outputs:
+// We do cleanup here
+// TypeError: Error: Thrown from thisThrows()
+//    at myFunctionThatCatches (/repo/error_stacktrace_1.js:9:15) <-- Error points to our try catch block
+//    at run (/repo/error_stacktrace_1.js:17:15)
+//    at Object.<anonymous> (/repo/error_stacktrace_1.js:23:1)
+
+
+Notice that our stack trace only starts where we caught the original exception. When we create an error on line 2and catch it on 9 , we lose the original stack trace as we now create a new error of type TypeError and only keep the original error message (sometimes we don’t even do that).
+Imagine that the thisThrows() function has far more logic in it, and somewhere in that function an error is thrown, we won’t see in our logged stack trace the origin of the problem, as we created a new error which will build a brand new stack trace. If we just re-throw our original error, we won’t have that problem:
+
+
+function thisThrows() {
+    throw new Error("Thrown from thisThrows()");
+}
+
+function myFunctionThatCatches() {
+    try {
+        return thisThrows();
+    } catch (e) {
+        // Maybe do something else here first.
+        throw e;
+    } finally {
+        console.log('We do cleanup here');
+    }
+}
+
+async function run() {
+    try {
+        await myFunctionThatCatches();
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+run();
+
+// Outputs:
+// We do cleanup here
+// Error: Thrown from thisThrows()
+//     at thisThrows (/repo/error_stacktrace_2.js:2:11) <-- Notice we now point to the origin of the actual error
+//     at myFunctionThatCatches (/repo/error_stacktrace_2.js:7:16)
+//     at run (/repo/error_stacktrace_2.js:18:15)
+//     at Object.<anonymous> (/repo/error_stacktrace_2.js:24:1)
+
+Notice that the stack trace now points to the origin of the actual error, being on line 2 from our script.
+It is important to be aware of this problem when handling errors. Sometimes this might be desirable, but often this obfuscates the origin of your problem, making it hard to debug the root of a problem. If you create your own custom errors for wrapping errors, make sure you keep track of the original stack trace so that debugging doesn’t turn into a nightmare.
+Summary
+We can use try...catch for synchronous code.
+We can use try...catch (in combination with async functions) and the .catch() approaches to handle errors for asynchronous code.
+When returning a promise within a try block, make sure to await it if you want the try...catch block to catch the error.
+Be aware when wrapping errors and rethrowing, that you lose the stack trace with the origin of the error.

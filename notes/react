@@ -1,0 +1,302 @@
+
+
+
+Ref
+
+class MyComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.myRef = React.createRef();
+  }
+  render() {
+    return <div ref={this.myRef} />;
+  }
+}
+
+OR
+
+
+import React, { useLayoutEffect, useRef, useState, } from "react";
+export const useMeasure = (deps:any[]) => {
+    const [rect, setRect] = useState({});
+    const myRef:any = useRef();
+
+    useLayoutEffect(() => {
+        const dim = myRef.current.getBoundingClientRect();
+        setRect(dim);
+    }, deps);
+
+    return [rect, myRef];
+}
+
+const HookPractice = ({ showPracticeHooks }:HookPracticeProps) => {
+    const [rect, myRef] = useMeasure([data]);
+    useCountRenders();
+
+    return (
+        <div>
+            <div style={{ display: 'flex' }}>
+            <div ref={myRef}>{data ? data : "Loading...."}</div>
+        </div>
+    );
+}
+
+
+
+OR
+
+const HookPractice = ({ showPracticeHooks }:HookPracticeProps) => {
+    const [email, setEmail] = React.useState("enfav8");
+    const inputRef:any = React.useRef(); // For setting focus
+
+    return (
+        <div>
+            <div>{count}</div>
+
+            <button onClick={() => {
+                setCount(count+1);
+                inputRef.current.focus(); // Does not cause rerender
+                }}>+</button>
+    
+            
+            
+            <input 
+                ref={inputRef}
+                name="email" 
+                placeholder="Enter email"
+                value={email} 
+                onChange={e => setEmail(e.target.value)} />
+        </div>
+    )
+}
+
+
+
+
+Container vs Presentational (smart vs dumb components):
+Presentational components can be stateful, and containers can be stateless too.
+-   https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0
+-   Pros:
+    -   Better separation of concerns. 
+    -   Better reusability. 
+        You can use the same presentational component with completely different state sources, 
+        and turn those into separate container components that can be further reused.
+    -   Presentational components are essentially your app’s “palette”. You can put them on a single 
+        page and let the designer tweak all their variations without touching the app’s logic. You can run 
+        screenshot regression tests on that page.
+    -   This forces you to extract “layout components” such as Sidebar, Page, ContextMenu and use 
+        this.props.children instead of duplicating the same markup and layout in several container 
+        components.
+    -   Use when you are starting to notice that prop-drilling is becoming a problem and 
+        going down too many components. 
+        -   This is a refactoring process do not expect to get it correctly first time
+
+
+
+Pure and Impure. 
+People say that a component is pure if it is guaranteed to return the same result 
+given the same props and state. Pure components can be defined both as classes and 
+functions, and can be both stateful and stateless. Another important aspect of pure 
+components is that they don’t rely on deep mutations in props or state, so their 
+rendering performance can be optimized by a shallow comparison in their 
+shouldComponentUpdate() hook.
+-   Shallow comparison is automaticall done on functional components ****
+
+
+
+Children prop or left, right prop
+-   Can be used as a "hole" OR "holes" to pass in components 
+
+
+function SplitPane(props) {
+  return (
+    <div className="SplitPane">
+      <div className="SplitPane-left">
+        {props.left}
+      </div>
+      <div className="SplitPane-right">
+        {props.right}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  return (
+    <SplitPane
+      left={
+        <Contacts />
+      }
+      right={
+        <Chat />
+      } />
+  );
+}
+
+
+
+OR
+
+
+
+function FancyBorder(props) {
+  return (
+    <div className={'FancyBorder FancyBorder-' + props.color}>
+      {props.children}
+    </div>
+  );
+}
+
+
+function WelcomeDialog() {
+  return (
+    <FancyBorder color="blue">
+      <h1 className="Dialog-title">
+        Welcome
+      </h1>
+      <p className="Dialog-message">
+        Thank you for visiting our spacecraft!
+      </p>
+    </FancyBorder>
+  );
+}
+
+
+
+
+
+Render Prop
+
+class Cat extends React.Component {
+  render() {
+    const mouse = this.props.mouse;
+    return (
+      <img src="/cat.jpg" style={{ position: 'absolute', left: mouse.x, top: mouse.y }} />
+    );
+  }
+}
+
+class Mouse extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.state = { x: 0, y: 0 };
+  }
+
+  handleMouseMove(event) {
+    this.setState({
+      x: event.clientX,
+      y: event.clientY
+    });
+  }
+
+  render() {
+    return (
+      <div style={{ height: '100vh' }} onMouseMove={this.handleMouseMove}>
+
+        {/*
+          Instead of providing a static representation of what <Mouse> renders,
+          use the `render` prop to dynamically determine what to render.
+        */}
+        {this.props.render(this.state)}
+      </div>
+    );
+  }
+}
+
+class MouseTracker extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Move the mouse around!</h1>
+        <Mouse render={mouse => (
+          <Cat mouse={mouse} />
+        )}/>
+      </div>
+    );
+  }
+}
+
+
+OR
+
+
+w/ HOC 
+
+
+
+// If you really want a HOC for some reason, you can easily
+// create one using a regular component with a render prop!
+function withMouse(Component) {
+  return class extends React.Component {
+    render() {
+      return (
+        <Mouse render={mouse => (
+          <Component {...this.props} mouse={mouse} />
+        )}/>
+      );
+    }
+  }
+}
+
+
+
+
+
+w/ other prop name other than 'render' ('render' not required - just bc its called render props)
+
+<Mouse children={mouse => (
+  <p>The mouse position is {mouse.x}, {mouse.y}</p>
+)}/>
+
+
+
+
+
+BAD
+
+
+class Mouse extends React.PureComponent {
+  // Same implementation as above...
+}
+
+class MouseTracker extends React.Component {
+  render() {
+    return (
+      <div>
+        <h1>Move the mouse around!</h1>
+
+        {/*
+          This is bad! The value of the `render` prop will
+          be different on each render. ******************************
+        */}
+        <Mouse render={mouse => (
+          <Cat mouse={mouse} />
+        )}/>
+      </div>
+    );
+  }
+}
+
+
+
+
+
+BETTER 
+
+class MouseTracker extends React.Component {
+  // Defined as an instance method, `this.renderTheCat` always
+  // refers to *same* function when we use it in render
+  renderTheCat(mouse) {
+    return <Cat mouse={mouse} />;
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Move the mouse around!</h1>
+        <Mouse render={this.renderTheCat} />
+      </div>
+    );
+  }
+}

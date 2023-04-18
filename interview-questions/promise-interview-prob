@@ -1,0 +1,38 @@
+
+class cursor {
+    next() {}
+
+}
+
+async function printCursor(cursor) {
+    let prmItem = await cursor.next();
+    while ( prmItem ) {
+        console.log(prmItem);
+
+        prmItem = await cursor.next();
+    }
+}
+
+async function fn(prm) {
+
+    const res = prm.then(() => {
+        try {
+            // throws "error1"
+            // thros "error2"
+        } catch (e) {
+
+        }
+        const prm = new Promise((resolve, reject) => {
+            if (true) {
+                resolve({ success: true});
+            } else {
+                reject({ error: true })
+            }
+        })
+
+        return prm;
+
+    }).then(success, error);
+
+}
+

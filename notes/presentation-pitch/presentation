@@ -1,0 +1,208 @@
+
+
+The most important commodity is human attention.
+-   How do I provide value & mainly value?
+-   How do I connect?
+-   How do I make a story off my experiences?
+
+Problems:
+-   Scaling bc everything is built on lambdas (hard limits)
+-   Debugging & testing
+-   Kubernetes migration (they want more instances / services)
+
+Features:
+-   Integrating users from other app
+-   oAuth/Auth0 flow & Authentication server 
+-   Swagger, generating docs + fix & making documentation on building sites/envs 
+-   Scaling TS
+    -   What services did you use?
+    -   What did you do to diagnose problems?
+    -   Why were problems occurring?
+-   Lambdas: Webhooks (conversions, triggers caused events, etc), 
+             database field aggregations, triggers for audit trails, email campaigns
+
+
+Product:
+-   How do you present prodcut and features to engineers?
+-   What is your engagement like with stakeholders & 
+    changes to product?
+
+
+
+Data dog:
+-   Application performance monitoring 
+-   Distributed Tracing
+    -   Tags: business ids, resource endpoints for each service 
+    -   Service map
+        -   Allows to view overall architecture of distributed system
+    -   Also have services to find that n+1 query 
+    -   Trace Search and Analytics
+        -   To scope down and filter where latencies, slow areas or bugs are occuring
+        -   Get to it from a network gui that shows infrastructure (highlighted in red: are bad, in green: are good)
+        -   Service (application) & environment (dev, stage, prod) tag to filter specifically. Next tag could 
+            be customerId for ex if a certain customer reported it 
+        -   Then you can filter by amount of response time & click on really slow requests 
+            -   You'll then see a flamegraph (a trace veiw of the requests and interaction w/ each other)
+                which will show all reqs within that parent slow request (db, other service requests)
+                -   You can check which sub-req takes the longest time to slow down parent req 
+                -   You can also check out errors and see stacktraces ***
+        -   Datadog can help you filter down to certain customers that are facing certain problems.
+            -   So you can identify slow probs/errors through search & log, check stacktraces, fix, then 
+                notify customers about the issue and its fix.
+            -   This is all possible through all the analytics and data collection data dog does
+-   Log levels 
+
+Event sourcing and triggers log trails 
+
+Services and api communiation
+
+Lambdas usage on TS:
+-   
+
+Serverless:
+-   https://www.youtube.com/watch?v=283KrcKcRPw
+-   Is a paradigm for managing application where you do not think about the underlying 
+    infrastructure. Instead of managing servers, containers, & scaling groups you are writng 
+    code that solves customers problems in a first class way
+-   This lets you focus on them vs managing hardware
+-   When someone else manages your hardware in the way your code runs there is a new class of
+    things to monitor.
+    -   Instead of looking at CPU utilization and memory use there are other things that can happen.
+        -   Like coldstarts when your code hasnt ran in a while 
+        -   Throttles
+        -   Timeouts
+        -   Slow synchronous requests 
+        -   UPstream & downstream erros (API gateways, DynamoDB, SNS/SQS, 3rd party API's)
+
+ https://www.youtube.com/watch?v=283KrcKcRPw
+
+
+
+
+
+GOOD QUESTIONS (About tech/architecture & culture):
+-   What do you most look for in your next hire?
+-   What are some of the most challenging engineering problems currently
+    and what tech is the team trying to solve them with?
+-   How does project planning happen in the team?
+-   How are new tools and processes introduced and chosen?
+-   What traits do you look for in your next hire to add to the team?
+-   Whitelabel?
+-   Workflow product where steps are automated?
+-   Whats the culture?
+-   What does a day to day and week to week look like?
+-   Monolith or Microservice?
+-   Graphql or Rest?
+
+
+
+============================================================================================================
+
+
+Capital Groups:
+-   Behavioral 
+-   Code Reviews & Code Quality
+
+
+Digit:
+-   Product Manager
+-   Software Abstraction
+-   Behavioral Interview
+
+
+
+Product:
+-   Who is the problem to be solved?
+-   Who is the user(s)?
+-   How do we optimize the user experience?
+-   How do I colloborate with product team to make this possible?
+-   How do I discuss trade-offs?
+
+-   Examples:
+    -   QuantConnect, ViewQ
+
+
+Software Abstraction:
+-   Ask first what the features are & 
+    what problems are they trying to solve & 
+    what is the scale?
+
+
+Behaviors:
+-   Values, work ethic, & motivations are a good cultural fit 
+-   Have some solid work experience examples
+
+
+
+
+
+
+
+Tolga:
+-   Behavior
+-   He'll tell me a little about the role & what he is looking for 
+-   How do I earn trust of peers 
+-   How did i convince others when they had resistance towards my opinion
+    -   Swagger docs 
+    -   Migration 
+    -   Floodio testing
+-   How do I give feedback and take it
+-   Do I set expectations or reset? & hold commitments for better quality
+-   How do I share knowledge, do I mentor?
+-   When did I have a signigicant professional failure? How did I handle it?
+-   *** Ask him what the expectation so you know how to answer the rest?
+
+
+Andy:
+-   hackerrank
+-   Works for other team but interacts with this team 
+-   How do I ensure correct and maintainable code? **
+-   What do I look for in code reviews??    **
+-   Looks for how to improve quality of a product or solution? Continuous improvements?
+    -   Status quo or trying to exceed standards
+
+
+
+
+
+David:
+-   Works closely with Tolga's team 
+-   What is the most complex coding prob you have solved? **
+-   Looking at short term vs long term? When did I sacrifice short for long 
+    -   At capital long term is more important 
+-   Do you give up easily?
+-   Talk about Quantitative finance exp 
+
+
+Moses:
+-   From Amzn 
+-   Will give a coding problem
+-   Abstraction level (How do abstract feature, etc)
+-   Design review process 
+-   What is the purpose of a design review process?
+-   How do you work on a complex problem & solved with a simple solution? ***
+-   System design overview OR he'll be looking at a project & looking at 
+    the abstraction level to simplify & you look from top & keep looking down
+
+
+Cam:
+-   He might be leading this team **
+-   Reports to Tolga  
+-   Very technical
+-   Example of when I used algo and datastuctures before coding 
+-   Customer focused 
+-   Give me a time when you used customer feedback to improve product improvements
+-   Most complicated customer interactions and how did you improve it or go about it ?
+    -   Who is customer is going to be important
+
+
+
+Usually do not focus on 
+: System design 
+-   Senior II position
+
+They'll ask my react langauge 
+
+
+Ask tolga about react 
+-   Say you talked to Claudia and you have that specific question

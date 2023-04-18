@@ -1,0 +1,5 @@
+The bigger your application, the more difficult it is to migrate to newer stuff. How can we always stay one step ahead? 
+How can we minimize the difficulty of this transition?
+
+**
+Abstraction is a process whereby you hide implementation details from the developer and instead only provide the functionality

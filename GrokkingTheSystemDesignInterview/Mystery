@@ -1,0 +1,176 @@
+Prep - Mystery
+
+
+High-level Focus:
+What kind of projects are a good fit? Our preference is for projects done in a production/company-setting, but if there's a side project that is a particularly good fit, then that's also fine. If you're unsure if a project will be a good fit, ask us beforehand and we can help guide you.
+Specific Focus ***:
+Some sample questions to help guide your prep:
+What was the problem you were solving? Why was it important to solve?
+What was your design process like? How did you approach the problem?
+What was the timeline? What was your role specifically? Who, if anyone, did you collaborate with?
+What were the biggest challenges when executing this project?
+What was the outcome of the project?
+
+Personal Project:
+ICS - Backend
+Configurable & Cross-platform Widgets - Frontend
+
+
+
+Advice:
+Your interviewer will definitely help walk you through expectations here, and if at any point you're unsure, you're always encouraged to ask clarifying questions during the interview. 
+E.g. "Would you like me to focus more on X part of the system or Y part of the system?" and go from there. ******
+If there's an area you aren't familiar with, it's always best to be honest about it rather than try to "fake" it, so just let the interviewer know and the conversation can pivot to something else. ****
+The benefit of architecture questions like this is that they can be pretty open-ended, so there are a lot of directions you can take!
+
+
+
+
+Observation:
+These seem like strategy type questions
+And test of resourcefulness & decision making given tight constraints
+
+
+Prompts:
+Backstory
+Alright look:
+I didn’t work in a corporate setting long. So I don’t have a “ton” of “big company” process experience (although I am trying to gain it, just via startups & learning). But what I do have is “bad” and “good” culture experience especially within remote (local & international => India) & fast growing startups
+Keeping in mind: I had very little “serious” experience at this point (2-4 year junior/mid/seniorish dev & not much corporate experience & thus no “process” exposure)
+I loved this startup… I did everything here
+Versatile culture
+Tom Cruise Boss => Gave me all the freedom (I was going to quit in beginning though -> FAANG + Anup)
+He taught me culture. He always knew how to motivate us & let us “be”
+Joined as a temp originally & bc seemed cool + I would be remote
+Got in bc ran out of money & needed some right away while I continued to work on my project & prepped for FAANG +  but stayed bc of the culture (later)
+Got my friends hired
+Princeton (Phil + Poli-science), Jocelyn (Gamer + smart), & Yong (Chemistry)
+Did I get impatient? Yes
+I trained them like crazy & would invite them over all the time to stay all day and got them dinner. And they learned! :)
+Choosing this project bc it was a very strategic & diversified project that ended up helping the company pivot
+What was the problem you were solving?
+We were poor (2.5 person dev team & 2 offshore ppl at its lowest)
+We needed to be resourceful (scale, iterate, discovery) & do some of everything
+Onboarding
+Increasing payment processor transaction (we were first a payment processing company => our business model)
+We were trying to scale & increase network effect. We were a live events company, that was it… In as many exponential ways we saw possible
+Marketing
+Exponential effect
+Square partnership
+Data-collection
+Integrate into TS (but at same time, it can be on anything, so why not make its own whitelabel product)
+Why was it important to solve?
+We needed money & we needed talent. He were a small team at first just 3 of us & 2 offshore ppl. & we inherited a beat up project… 
+We were building a seated venue product with live events. It was important to have participation & friend engagement.
+We were trying to help our clients grow by empowering them
+We understood it was important to allow our clients to keep their self identity & be in control of their experiences
+To expand key partnership with Square
+Who was generating a lot of traffic to our product
+Promote other product better
+What was your design process like?
+Hired AWS experts for consultation
+Iteratorations + Design team
+Vegas Retreat / Local meetups
+Talked to a lot of clients
+Talked to clients devs too!
+We get into open conversations with our Product/Designer guy (Very nice!)
+How did you approach the problem?
+A ton of reading + research + tech videos*
+Studying diagrams & flows
+Asking questions smarter ppl questions
+“A Cloud Guru”, “Pluralsight”, Documentations, Youtube
+What was the timeline?
+It was an evolving project & was our companies “side-project”
+A specific instance example though:
+TSK -> product evolved: analytic requirements
+Groupon Scale
+Aggregators -> all traffic coming in
+Rate limiter
+User sessions (bc it was in memory…)
+Caching “hot” campaigns
+Fast write traffic
+JMeter & Flood.io
+Postman
+Redocly / Tsoa => Square + Groupon => Pivoting bc TS was going down! Pivoting to ICS & Ecommerce => WooCommerce + Shopify, etc, etc
+Webhooks
+What was your role specifically?
+Architect
+Creator / Engineer
+Designer
+Everything
+Who, if anyone, did you collaborate with?
+Partner teams - Korea
+Product
+Designer
+Ceo
+Anyone in general who was using it to get their perspective (friends, family, acquaintances, etc) - my team especially
+What were the biggest challenges when executing this project?
+Time-constraint (Had to get emergency job bc furloughed - right during pandemic & Ticketing crashed + company made bad sponsorship investment => bad financial => furloughed)
+Usually no time to appropriately plan
+So I had to make easily *REVERSIBLE* decisions
+People not willing to go out of their “comfort” zone or learn something new bc were all tired & working for back pay (during times of low team morale)
+What was the outcome of the project?
+Widget Integration in big Ecommerce websites
+https://icecreamsocial.io/#intro
+Square usage (They were serving merchants & we were serving live-event merchants)
+Add-on revenue tool now for when live events starts up again with more cost to event-managment product
+
+
+
+ICS:
+Addressing what I think they want me to talk about is how I approach problem solving. This was a time of extreme resourcefulness that was needed
+Our team wasn’t well equipped with strong knowledge 
+College grads & offshore
+The company was imploding
+Work-culture was becoming toxic between CEO & CTO
+Contract companies => that were over-engineering
+They brought so much new stuff I hadn’t seen before though
+Partnering up internationally bc the domestic market was too competitive & established
+Key partnerships: Square
+Meowolf + Area51 + SpartanRace + Fiba
+Bad-pay => no-good-talent
+Inherited project (as everything in life) - just for “fun” side-project
+SailsJs
+Nginx
+Functional reqs:
+Invite friend widget (@ conception)
+Affiliate Marketing (next)
+Problem here though was that he never gave us the roadmap so it was so hard to plan ahead
+He was a pivoter, a salesmen, & an explorer
+He understood ppl but didn’t understand architecture
+
+
+RECOURCEFULNESS
+ICS Presentation (Make simple) - Brainstorm
+
+
+Functional reqs:
+Static widgets
+Data collection
+
+
+Non-functional reqs:
+High availability 
+High reliability
+Consistency can take a hit
+
+
+Data-models:
+
+
+Actions:
+
+
+Traffic Channels:
+
+Efficient patterns + datastructurs for actions/trafffic combination:
+
+Service suggestions:
+
+Potential bottle-necks/Iteration => until system becomes better:
+Think of all angles of system while iterating
+
+
+THE TRUE STORY I AM TRYING TO WALK YOU THROUGH IS NOT ARCHITECTURE, I HAD ANOTHER INTERVIEW FOR THAT:
+I AM TRYING TO WALK YOU THROUGH WHAT DECISIONS I MADE BEFORE I HAD A WORLD OF OTHER KNOWLEDGE, WHEN MY MIND WAS AT EARLY STATE IN ITS EVOLUTIONARY PROCESS
+
+

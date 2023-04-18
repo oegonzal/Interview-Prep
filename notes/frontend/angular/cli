@@ -1,0 +1,31 @@
+npm install -g @angular/cli
+
+ng help
+ng generate --help
+
+ng new my-first-project
+cd my-first-project
+ng serve
+
+
+The ng new 
+-   command creates an Angular workspace folder
+-   A workspace can contain multiple apps and libraries
+-   The initial app created by the ng new command is at the top level of the workspace. 
+    When you generate an additional app or library in a workspace, it goes into a projects/ subfolder.
+
+Workspace and project files:
+When you generate an additional app or library in a workspace, it goes into a projects/ subfolder.
+
+The ng config command lets you set and retrieve configuration values from the command line, 
+or you can edit the angular.json file directly.
+
+
+
+Service workers 
+-   are a proxy between the browser and the network. 
+    By intercepting requests made by the document, service workers can redirect requests to a cache, 
+    enabling offline access. 
+Web workers
+-   are general-purpose scripts that enable us to offload processor-intensive work from the main thread
+

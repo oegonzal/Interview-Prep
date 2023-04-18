@@ -1,0 +1,94 @@
+// Implement a function to return an array of arrays based on size
+// Example:
+// Input: [1,2,5,6, 7, 8, 9], size = 3
+// Output: [[1,2,5], [6, 7, 8], [9]]
+
+
+
+function splitToSubarrays(intArray: Array<number>, size: number) {
+    const arrays = [];
+    
+    for (let i = 0; i < intArray.length; i = i + size) {
+        const subarray = intArray.slice(i, i+size)
+        arrays.push(subarray);
+    }
+    
+    return arrays;
+}
+
+
+/**
+* Write a function which takes array of arrays and returns all possible combinations
+*
+*  Input: [["www", "abc"], ["frequence", "frequencerocks"], ["com", "in"]]
+*
+*  Output: ["www.frequence.com", "www.frequence.in", "www.frequencerocks.com", "www.frequencerocks.in", "abc.frequence.com", "abc.frequence.in", 
+*  "abc.frequencerocks.com", "abc.frequencerocks.in"]
+*
+*/
+
+
+
+//  Post solution after some thinking
+function getCombinations(array: Array<Array<string>>) {    
+    const result = [];
+    
+    const stack = [];
+    stack.push(0);
+    
+    while (stack.length > 0) {
+        const lastInd = stack.length-1;
+        if (lastInd < stack[lastInd] || array.length < stack.length) {
+            stack.pop();
+            if (stack.length > 0) 
+                stack[stack.length-1]++;
+        } 
+        else {
+            if (array.length === stack.length) {
+                let str = '';
+                stack.forEach((subInd, ind) => (str += array[ind][subInd]));
+                result.push(str);
+            }
+            stack.push(0);
+        }
+    }
+    
+    return result;
+}
+
+
+function getCombinations(array: Array<Array<string>>) {    
+    const result = [];
+    
+    const stack = [];
+    stack.push(0);
+    
+    while (stack.length > 0) {
+        const peekIndex = stack[stack.length - 1]; // Index: 0, 0
+        const level = stack.length-1; // Level: 0, 1, 2
+        
+        // Value: "www"
+        
+        //    Base step (check out bounds)
+        if (array[level].length-1 < peekIndex) {
+            stack.pop()
+            stack[stack.length - 1]++;
+        }
+        
+        //    On last level add string to result array
+        else if (level === array.index-1) {
+           
+            let str = '';
+            for (let i = 0; i < level; i++) {
+                str += array[i][peekIndex[i]];
+            }
+            
+            result.push(str);
+        }
+        
+        //    Push next level at index 0 (start of subarray)
+        stack.push(0);
+    }
+    
+    return result;
+}

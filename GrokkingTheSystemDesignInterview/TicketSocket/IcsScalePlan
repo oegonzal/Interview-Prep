@@ -1,0 +1,27 @@
+
+
+
+Plan:
+o   Follow Req format
+
+Tools:
+-   Load testing tool (JMeter OR Locust)
+-   APM tool (Datadog or NewRelic)
+
+1   What is ICS?
+    -   ICS is a social media sharing tool where users can share they digital activities
+        like sales purchases with their friends
+
+2   Requirements and Goals of the System
+    -   Functional Requirements
+        1. Client applications should be able to display widget and allow users to send invites 
+        2. System should be able to send webhooks near realtime 
+        3. System should provide API for reports 
+
+    -   Non-functional Requirements 
+        1. System should be highly available
+        2. Should be reliable
+        3. We can give up some consistency (In the interest of availability)
+        4. No more than 200ms latency is acceptable
+
+    -   Extend Requirements:

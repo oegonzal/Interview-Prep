@@ -1,0 +1,25 @@
+
+Important Concepts
+
+- Tiny urls can be used for
+    - Track individual links to anaylze audience
+    - Measure ad campaigns' performance
+    - hide affiliated original URLs
+
+- 80 / 20 rule
+    - 20 percent of the objects generate 80 percent  of the work (traffic)
+    - Helps w/ knowing what to cache
+
+- Api_dev_keys can help limit request usage to prevent malicious users
+    and to be able to throttle users based on api allocated quota
+
+- Unique hasg for url
+    - MD5
+    - SHA256
+
+- Encoding can be base 36 ([a-z,0-9]) or base62([A-z,a-z,0-9])
+    or base 64 if also incluses + and /
+
+- If we use the MD5 algorithm as our hash function, 
+    it will produce a 128-bit hash  value
+- After base64 encoding, we’ll get a string having more than 21 characters (since each base64 character encodes 6 bits of the hash value). Now we only have space for 6 (or 8) characters per short key

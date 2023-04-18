@@ -1,0 +1,25 @@
+
+MonoRepos
+-   Lerna is an example for javascript projects with multiple packages
+-   Versioning
+
+Tutorial (that I'm following)
+https://www.apollographql.com/docs/tutorial/schema/
+
+Sample Project:
+-   https://github.com/apollographql/fullstack-tutorial/tree/master/start/server/src
+
+Apollo Server:
+-   A production-ready, open-source library that helps you implement your data graph's API.
+-   For Appollo server with Lambda
+    -   https://www.apollographql.com/docs/apollo-server/deployment/lambda/
+
+
+
+
+
+https://www.apollographql.com/docs/react/data/local-state/#updating-local-state
+
+Updating local state:
+-   cache.writeData for one-off mutations that do not depend on data already on the cache
+-   Next way is with rresolvers which do depend on data already on the cache

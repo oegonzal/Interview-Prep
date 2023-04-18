@@ -1,0 +1,540 @@
+EXTREMLY IMPORTANT: 
+
+1. BEFORE you code – Make sure you ask a lot of clarifying questions to the interviewer. Treat
+them as your client and make sure you get all the requirements prior to you coding. Show the
+interviewer that you have a process/method/tool kit to understand the requirements.
+
+2. Code in the language you are most comfortable using.
+
+3. Make sure you are thinking out loud as you are solving your coding problems. The interviewer
+needs to understand how you approach the scenario and problem solve. If you get stuck, they
+will give you hints to help you!
+
+4. Remember the power of Pseudo code! Don’t try to write the algorithm right off the bat, make
+sure you understand and have down what you want to code to do, and then write out the
+algorithm.
+
+
+
+IMPORTANT:
+- Build rapport with interviewer 
+- Use story telling to show how you will provide value 
+- Recognize what the question within the question is 
+    -   which means prepare for the common questions ppl ask. 
+        Eg) these are considered the same question:
+            -   What is your greatest strength? What is your best accomplishment in a project? 
+                What do you favor most about yourself?
+
+
+
+
+Top personality traits:
+-   Curious (new techs, creative & problem solver)
+-   Own projects & volunteer for the job 
+-   Speak out & create supporting documents 
+-   Collaborative
+
+
+
+Amazon Leadership Principles:
+
+
+Customer Obsession
+Leaders start with the customer and work backwards. They work vigorously to earn and keep customer trust. 
+Although leaders pay attention to competitors, they obsess over customers.
+
+Ownership
+Leaders are owners. They think long term and don’t sacrifice long-term value for short-term results. 
+They act on behalf of the entire company, beyond just their own team. They never say “that’s not my job."
+
+Invent and Simplify
+Leaders expect and require innovation and invention from their teams and always find ways to simplify. 
+They are externally aware, look for new ideas from everywhere, and are not limited by “not invented here." 
+As we do new things, we accept that we may be misunderstood for long periods of time.
+
+Are Right, A Lot
+Leaders are right a lot. They have strong judgment and good instincts. 
+They seek diverse perspectives and work to disconfirm their beliefs.
+
+Learn and Be Curious
+Leaders are never done learning and always seek to improve themselves. 
+They are curious about new possibilities and act to explore them.
+
+Hire and Develop the Best
+Leaders raise the performance bar with every hire and promotion. 
+They recognize exceptional talent, and willingly move them throughout the organization. 
+Leaders develop leaders and take seriously their role in coaching others. We work on behalf 
+of our people to invent mechanisms for development like Career Choice.
+
+Insist on the Highest Standards
+Leaders have relentlessly high standards — many people may think these standards are unreasonably high. 
+Leaders are continually raising the bar and drive their teams to deliver high quality products, services, 
+and processes. Leaders ensure that defects do not get sent down the line and that problems are fixed so they 
+stay fixed.
+
+Think Big
+Thinking small is a self-fulfilling prophecy. Leaders create and communicate a bold direction that inspires results. 
+They think differently and look around corners for ways to serve customers.
+
+Bias for Action
+Speed matters in business. Many decisions and actions are reversible and do not need extensive study. 
+We value calculated risk taking. 
+
+Frugality
+Accomplish more with less. Constraints breed resourcefulness, self-sufficiency, and invention. 
+There are no extra points for growing headcount, budget size, or fixed expense.
+
+Earn Trust
+Leaders listen attentively, speak candidly, and treat others respectfully. They are vocally self-critical, 
+even when doing so is awkward or embarrassing. Leaders do not believe their or their team’s body odor smells of perfume. 
+They benchmark themselves and their teams against the best.
+
+Dive Deep
+Leaders operate at all levels, stay connected to the details, audit frequently, and are skeptical when metrics and 
+anecdote differ. No task is beneath them.
+
+Have Backbone; Disagree and Commit
+Leaders are obligated to respectfully challenge decisions when they disagree, even when doing so is uncomfortable or 
+exhausting. Leaders have conviction and are tenacious. They do not compromise for the sake of social cohesion. 
+Once a decision is determined, they commit wholly.
+
+Deliver Results
+Leaders focus on the key inputs for their business and deliver them with the right quality and in a timely fashion. 
+Despite setbacks, they rise to the occasion and never settle.
+
+
+
+
+Leadership Principle: 
+-   Tell me about a time when...
+    -   Situation, 
+        behavior (what did you do, what was your action), 
+        outcome (explain in terms of outcome w/ data like percentages)
+
+-   Tips:
+    -   Conference calls & divide & conquer 
+    -   Point of diminishing return (w/ investigation & customer impact)
+
+
+Projects & responses
+- Past projects (including frameworks & tools I used)
+    -   ViewQ
+        -   React Native w/ Expo
+        -   Styled Components
+        -   Redux
+        -   Saga
+
+    -   Admin, boxoffice, tscow, company-manager
+
+    -   ICS widget, ICS lib
+
+    -   Visa Vendor Portal 
+
+    -   Visa Network Risk
+
+    -   Expo app 
+
+    -   Webscraping & audio app
+
+
+Think about the technologies & weaknesses in the implementations on my work project
+Think about maintainable code with JS
+
+Stories:
+-   Localization 
+    -   Customer focused & tokenization
+    -   Moving to cloud based key value updates + better globalization of the keys to prevent duplicates
+-   ICS & Boss presentation
+    -   Cronjob that slowed down the count 
+    -   Running cron at low usage time
+-   KICC processor w/ Korea
+    -   Team member got sick & CTO quit 
+    -   Midnight schedule
+-   Documentation (swagger circ. ref) & on-boarding
+    -   Migration screwed it all up & we had pending onboards
+-   Team meetings to improve & helping my team + Paresh (staying up late, etc)
+    -   No management
+    -   The idea was that he wasn't contributing much but rather his communication was very low 
+-   Webhooks Interface & sequelize
+    -   Database problems: automate migrations now
+-   Flood.io    
+    -   Major lag issues in Korea
+    -   Used a tool to find latency
+-   Storybook & resused components 
+    -   To stop redoing work
+-   Automated testing on ICS
+    -   End-to-end
+-   Disagreed w/ migration push
+    -   Huge infra change
+    -   I did not have visibility to the backend 
+    -   Converting a nosql db to a sql db creates massive complication & state
+-   ViewQ coaching Yong
+-   ViewQ async compliation
+    -   Likes showing up correctly
+    -   Logins/logouts
+    -   notifications
+-   ViewQ 
+    -   Posting updates everyweek & being open to feedback
+    -   Helped us remain accountable
+    -   Estimation of work that we will be able to complete in the next week
+
+-   KBL
+    -   KICC processor & calls w/ teams in diff language
+    -   Flood.io 
+
+-   TSK 
+    -   & not keeping up with their features, nightly calls 
+    -   Time when they wanted access to the codebase 
+
+-   Fairfield 
+    -   4 team coordination & documentation
+
+-   Mlogica Migration 
+    -   Old techs, etc
+
+-   UI library constuction 
+
+-   ICS inheriting buggy codebase 
+    -   Cron 
+    -   Bad logic 
+
+-   Meowwolf & square 
+    -   SquareSync
+    -   UserRoles
+    -   Auth0
+
+-   ViewQ
+    -   Research new tech
+    -   Mistakes I made and techonology I chose later to prevent mistakes (typescript, amplify, graphql)
+
+-   QuantConnect & AI 
+    -   New tech 
+
+-   News notifier & to audio & messge to phone app
+
+-   Working with outsourced peers OR third party companies 
+
+-   Big projects with completely unknown technology (Visa internship 1)
+
+-   Hiearchy & being professional (Visa internship 2)
+
+-   Blockchain classes while being very busy & working 
+    -   Over doing it by taking both etherium & other class, rather than focus being emphasized
+
+
+
+
+
+
+================================================================================================================
+
+Total 24 Questions
+
+Insist on High Standards 
+    o   Leaders have relentlessly high standards - many people may think these
+        standards are unreasonably high. Leaders are continually raising the bar and driving their teams to
+        deliver high quality products, services and processes. Leaders ensure that defects do not get sent down
+        the line and that problems are fixed so they stay fixed.
+
+    1. Describe the most significant, continuous improvement project that you have led. What was the
+        catalyst to this change and how did you go about it?
+
+        ICS Test Driven Development
+        -   Experience lead from TS project, getting tired of losing clients due to ignoring good testing 
+        -   Building a testing suite for ICS using Mocha/chai & postman
+        -   Continuous communication w/ my team & sitting with them to improve it's stability
+        -   Fixing the bugs from the very beginning
+
+
+        Scaling an increasing traffic server
+        -   Scalability issues with our ticketing server
+            -   Flood.io testing 
+                -   JMeter & Groovy learning / research
+            -   Analysis & Diagnosis of our system
+            -   Microservices & AWS stack to break down & fix the specific problems
+            -   Auditing UI request & removing bloat roundtrips
+
+
+    2. Give me an example of a goal you’ve had where you wish you had done better. What was the
+        goal and how could you have improved on it?
+
+        -   ViewQ and the speed of its development 
+            -   Better team communication, brainstorming, & concurrent assignments 
+            -   Better accountability & idea generation
+        -   Teaching Yong sooner
+        -   Path towards learning AI and quantitative finance with QuantConnect, Coursera & FastAI
+        -   Blockchain coarse lack of focus & lack of networking while I had the opportunistic time
+
+
+    3. Tell me about a time when you have worked to improve the quality of a product / service /
+        solution that was already getting good customer feedback? Why did you think it needed
+        continued improvement?
+
+        -   Translations in spanish for our checkout and boxoffice product
+            -   Asked parents/friends/spanish speakers to look as well
+        -   ICS data tracking & categories
+            -   Increase labeling in order to amass data that could be helpful for future data analytics
+        -   ViewQ 
+            -   Randomizer and suggester. People want to be given suggestions
+
+
+Bias for Action
+    o   Speed matters in business. Many decisions and actions are reversible and do not need
+        extensive study. We value calculated risk taking.
+
+        1. Describe a situation where you made an important business decision without consulting your
+            manager. What was the situation and how did it turn out?
+            -   Buidling documentation for Fairfield, Analytica, & other company 
+                Since we were all heavily relying on our platforms to build a common tool, 
+                it was important to have written and clear instructions & information.
+
+        2. Tell me about a time when you had to analyze facts quickly, define key issues, and respond
+            immediately to a situation. What was the outcome?
+            -   The boss said figure it out fast it's a disaster!
+                KBL while they were processing tickets and were at an outage in live realtime
+
+        3. Tell me about a time when you have worked against tight deadlines and didn't have the time to
+            consider all options before making a decision. How much time did you have? What approach did
+            you take?
+            -   Meowwolf and webhooks w/ weird parameters in url query
+            -   KBL when Chris went down 
+            -   I ask myself with the absolute minimum is for the user/customer to accomplish their goal 
+                I ask what they can live with and without in the short term & what can be fixed & improved later
+
+Ownership
+o   Leaders are owners. They think long term and don’t sacrifice long-term value for short-term
+    results. They act on behalf of the entire company, beyond just their own team. They never say “that’s
+    not my job";. 
+
+    1. Tell me about a time when you took on something significant outside your area of responsibility.
+        Why was it important? What was the outcome?
+        -   I started frontend & went full stack & customer service out of necessity, not bc I asked for it, 
+            but bc I volunteered every time we were deficient in a role
+            -   .NET, cloud, migration, test suite, flood testing, payment processors, ICS, dockerization,
+                devops, security
+    2. Give me an example of a time when you didn't think you were going to meet the commitments
+        you promised. How did you identify the risk and communicate it to stakeholders? What was
+        the outcome?
+        -   Boxoffice v2 (angular1 everything tied together like bowl of noodes + I was new to project & had 
+                no proper ability to give good estimate of project migration)
+        -   Square & ticketsocket order syncing with Meowwolf
+    3. Give an example of when you saw a peer struggling and decided to step in and help. What was
+        the situation and what actions did you take? What was the outcome?
+        -   Helping Yong with "settings" bug & his noodle code in the middle of the night when we all had deadlines.
+            I finished my work and although I had little bits left, I saw it was lower priority than 
+            his work so I jumped and helped & looked in the backend for him to see if there were issues 
+
+
+Delivers Results
+o   Leaders focus on the key inputs for their business and deliver them with the right
+    quality and in a timely fashion. Despite setbacks, they rise to the occasion and never settle.
+
+    1. Tell me about a time where you not only met a goal but considerably exceeded expectations.
+        How were you able to do it? What challenges did you have to overcome?
+        -   There were major timelag issues on ICS 
+            -   Ended up discovering it was a cronjob & had to look everywhere in the project for it 
+                since it did not get triggered by any events in the UI/backend, it was timed 
+            -   Had to learn database tuning, functions and triggers
+
+            -   Webhooks for all applications not just admin (triggers on database layer not server layer)
+                -   Less investment if code development later on 
+
+            -   Visa project with vendor portal 
+                -   I added everything from real time colaboration to file uploads, etc 
+                -   And beautiful UI
+
+    2. Give me an example of a time when you were able to deliver an important project under a tight
+        deadline. What sacrifices did you have to make to meet the deadline? How did they impact the
+        final deliverables?
+        -   Tracking for TSK (pageview, signup, etc)
+        -   I got less sleep & used a lot of time on database design learning
+        -   I didn't go with the best solution. Instead of database I should have used an index logger
+
+    3. Tell me about a time you had significant, unanticipated obstacles to overcome in achieving a key
+        goal. Were you eventually successful?
+        -   Learning quantitative finance (mathematics, python, deeplearning, etc)
+            -   Learned it cannot be done with stochastic (random distribution data) & many datapoints + timeseries ranges
+                -   Learned I needed higher mathematics & hearistics
+                -   Invested a lot of time in planning tthat I probably did not reuse
+            
+
+
+Are Right, A Lot
+o   Leaders are right a lot. They have strong judgment and good instincts. They seek
+    diverse perspectives and work to disconfirm their beliefs.
+
+    1. Give me an example of when you have to make an important decision in the absence of good
+        data because there just wasn’t any. What was the situation and how did you arrive at your
+        decision? Did the decision turn out to be the correct one? Why or why not?
+        -   Code sharing with TSK company in Korea 
+            -   Turned out they would not pay their licence fee later for a while until 
+                the app was shut down on them 
+            -   Yes turned out to be good bc it allowed the company to get paid later & maintain
+                intellectual property while easing pressure from clients
+        -   Opposing migration 
+            -   Contract team thought order "no purchaser name" & missing orders were due to NoSql database 
+                I deeply opposed the migration thinking it was due more to bad event driven architecture AND 
+                overriding issues from multiple servers
+
+        -   Teaching my junior devs how to code better and take ownership of projects. I knew this would 
+            save me and the company a lot of time in the long run and also benefit them. I believe it did 
+            workout tremendously later
+
+    2. Tell me about a time when your view on something important was significantly changed by
+        someone that came from a different perspective? What was your reaction? What made you
+        change your mind?
+        -   Graphql for faster UI development. 
+            -   Less roundtrips 
+            -   You get what you ask for (resolvers can retrieve data dynamically)
+            -   Data is normalized for you on front end w/ apollo
+            -   Subscriptions automatic on data changed with amplify technology
+            -   Got this from perspective of front end engineer that doesn't use backend too much
+
+    3. Tell me about a decision for which data and analysis weren’t sufficient to provide the right
+        course and you had to rely on your judgment and instincts. Give me two to three examples.
+        They don’t have to be big strategic decisions – could be big or small.
+        -   Kicc security flawed orders (ppl were able to get more tickets by paying less. By 
+            opening second tab and changing cart amount of TS page but on prev tab paying for 
+            kicc previous lower subtotal)
+        -   No name orders on kicc - relied on async flow experience
+        
+        -   Documentation to scale out onboarding customers
+        -   Transforming product to a reliable rather than feature rich platform bc we were losing 
+            to many clients
+
+    4. Tell me about a time you made a difficult decision and how you knew it was the right solution
+        (probe on how they evaluated the options, if they received input, what data they reviewed, etc.)
+        -   Setting expectations with management & pushing back. I was seeing all the disorder occurring from 
+            their narrow focus on the short term picture and not wanting to miss out on new potential clients
+            -   This was becoming very toxic to our environment
+            -   I usually like to take orders & please but this time I had to resist, create a responible plan,
+                & hold my guns. 
+
+
+Customer Obsession
+o   Leaders start with the customer and work backwards. They work vigorously to
+    earn and keep customer trust. Although leaders pay attention to competitors, they obsess over
+    customers.
+
+    1. Give me an example of a time you used customer feedback to drive improvement or innovation.
+    What was the situation and what action did you take?
+        -   The S was that TS finally wanted to scale onboarding through an Open API.
+            However, many endpoints had been broken or the documentation was extremely poor.
+            Most questions were regarding using our api to build a checkout flow.
+            Over time I noticed this got very repetative so I took all the notes & knowledge I had 
+            about building the checkout flow & compiled some steps.
+            I then spoke to my manager about the massive amount of time to save in dev time & client 
+            time by just improving the docs.
+            I was able to coordinate my team to get our designer & interns to write the docs w/ the help of my notes.
+            This not only saved dev time by cutting down calls & messaging but it allowed clients to scale 
+            automatically.
+    2. Give me an example of your most difficult customer interaction and how you worked through it.
+        What was the outcome?
+        -   There was a time when we were onboarding about 2 really big clients.
+            We are white label which means often times we have to make a lot of custom code. 
+            One client had a really deep deadline coming up & they still had quite a bit of work to do
+            and they were getting very worried.
+            I would get in big calls with their team and other sub-companies where calls would get as big as 
+            20 ppl & I was the only dev from our comapny.
+            I worked through it by giving support when most needed. Documenting emails & delegating work.
+            -   French localizations 
+            -   Data reports
+            -   Making documentation + keeping other teams busy (coordinating among 4 teams & solving 
+                problems being pointed at each other)
+            -   Documenting changing requirements
+
+    3. Tell me about a time a customer wanted one thing, but you felt they needed something else.
+        How did you approach the situation, what were your actions and what was the end result?
+        -   Fairfield thought they wanted aggregate data 
+        -   Convinced them they wanted more granular data
+        -   Square loyalty points & area15
+
+    4. Tell me about a time when you went above and beyond the call of duty for a customer. Why did
+        you take the action you did? What was the outcome?
+        -   Kicc printer problem & really long lines 
+            -   Called printer company 
+            -   Experimented like crazy, had to order a printer & pick up from boss' place, & had to get thermal 
+                paper from store 
+        -   Calls with KICC processing company, translators, poorly written documents (mostly in korean)
+
+
+Have Backbone, Disagree and Commit
+o   Leaders are obligated to respectfully challenge decisions when
+    they disagree, even when doing so is uncomfortable or exhausting. Leaders have conviction and are
+    tenacious. They do not compromise for the sake of social cohesion. Once a decision is determined, they
+    commit wholly.
+
+    1. Tell me about a time that you strongly disagreed with your manager on something you deemed
+        to be very important to the business. What was it about and how did you handle it?
+        -   Sharing access to our api code & DB with a partner company
+        -   Bc we weren't fast enough at making functionality they needed 
+        -   I made a document outlining all the other possibilites we could do to share 
+
+    2. Give me an example of when you took an unpopular stance in a meeting with peers and your
+        leader and you were the outlier. What was it, why did you feel strongly about it, and what did
+        you do?
+        -   Big database migration 
+
+    3. When do you decide to go along with the group decision even if you disagree? Give me an
+        example of a time you chose to acquiesce to the group even when you disagreed. Would you
+        make the same decision now?
+        -   Making a UI library, overkill & overengineering
+
+    4. Give an example when you submitted a good idea to your manager and he/she did not take
+        action on it? How did you handle it? What was the end outcome?
+        -   Regression testing on our api engine
+        -   We lost a lot of clients
+
+
+
+Invent and Simplify
+o   Leaders expect and require innovation and invention from their teams and always
+    find ways to simplify. They are externally aware, look for new ideas from everywhere, and are not
+    limited by “not invented here”. As we do new things, we accept that we may be misunderstood for long
+    periods of time.
+
+    1. Tell me about the most innovative thing you’ve done and why you thought it was innovative
+        (can also probe with: That sounds more evolutionary than revolutionary – tell me about
+        something you’ve done you feel was truly revolutionary? Ask for one or two additional examples
+        to see if it’s a one off or pattern.)
+        -   Webhooks w/ interface for all apps 
+    2. People often say the simplest solution is the best. Tell me about a particular complex problem
+        you solved with a simple solution.
+        -   Swagger documentation ciruclar references
+    3. Tell me about a time you were able to make something significantly simpler for customers.
+        What drove you to implement this change?
+        -   Logs streamed for customer admins about user actions
+
+
+Dive Deep
+o   Leaders operate at all levels, stay connected to the details, audit frequently, and are
+    skeptical when metrics and anecdote differ. No task is beneath them.
+
+    1. Tell me about a time you were trying to understand a problem on your team and you had to go
+        down several layers to figure it out. Who did you talk with and what information proved most
+        valuable? How did you use that information to help solve the problem?
+        -   No name issue in orders
+            -   UI & backend team & customers 
+            -   Made an orders_history table w/ triggers
+
+    2. Tell me about a problem you had to solve that required in-depth thought and analysis? How did
+        you know you were focusing on the right things?
+        -   Focusing on a reward, state, action algorithm 
+        -   I knew I was focusing on the correct path bc I had been going in circles previously & I had 
+            learned that some problems are impossible to solve without certain tools (like loss functions,
+            optimizations equations, unsupervised clusters, etc)
+
+    3. Tell me about a time when you linked two or more problems together and identified an
+        underlying issue? Were you able to find a solution?
+        -   Slow onboarding, bad requirements, & lack of standardization all lead to extreme inefficiency
+            -   Found solution through automation & better processes
+
+
+**Deals with Ambiguity
+o   This is NOT a principle, but it’s a big part of our culture. We don’t always have
+    all the answers but you need to show us that you can work well in an environment that is always
+    changing.
+
+    -   Trial and error 
+    -   Receiving feedback
+    -   Constant learning & improving

@@ -1,0 +1,167 @@
+//  Battle ship game
+
+
+// GLOBALS
+const { useState, useEffect } = React;
+window.styled = window.styled.default;
+// Exercise 
+// https://gist.github.com/dbraga/8209ae72ac74a330fe0c9e7a94a5ca7e
+
+function buildBoard() {
+  let board = [];
+  let xAxis = 'ABCDEFGHIJ'
+
+  xAxis.split("").forEach((x) => {
+    const row = [];
+    for (let i = 1; i<=10; i++) {
+      row.push({id: `${x}${i}`, status: 0 })
+    }
+    
+    board.push(row);
+  })
+  
+  return board;
+}
+
+let board = buildBoard();
+
+
+const player2Ships = {
+  "carrier":  [ "A10", "B10", "C10","D10","E10"],
+  "battleship":  [ "B3", "B4", "B5","B6"],
+  "destroyer":  [ "F3", "G3", "H3"],
+  "submarine":  [ "G1","H1","I1"],
+  "patrol":  ["A9", "B9"],
+};
+
+function checkIfShipIsHit(id) {
+  console.log("checkIfShipIsHit", id);
+  for (let key in player2Ships) {
+    const keys = player2Ships[key];
+    for (let k of keys) {
+      if (k === id) 
+        return true;
+    }
+    
+  };
+  
+  return false;
+}
+
+function Board() {
+
+  return (
+    <div style={{ display: 'flex'}}>
+      {board.map((row) => {
+        return (
+          <div className="BoardRow">
+            {row.map(({ id, status }) => {
+                  return (<Square key={id} id={id} status={status} onFire={checkIfShipIsHit} />)
+                })
+            }
+          </div>
+         )
+      })}
+    </div>
+  );
+}
+
+const squareStatus = {
+  0: 'unvistied',
+  1: 'hit',
+  2: 'miss'
+}
+
+function Square({ id, onFire }) {
+  const [isVisited, setIsVisited] = useState(false);
+  const [status, setStatus] = useState(0);
+  
+  function fire() {
+    if (!isVisited) {
+      setIsVisited(true);
+      
+      let newStatus = onFire(id) ? 1 : 2;
+      setStatus(newStatus);
+    }
+    
+    console.log(id);
+  }
+  
+  return (
+    <div className="Square" 
+          onClick={fire}
+          style={getSquareStyle(status)}>
+    </div>
+  )
+}
+
+
+function getSquareStyle(status) {
+  const style = {
+    border: '1px solid black',
+    height: '20px',
+    width: '20px'
+  }
+  
+  if (status === 0) {
+    style.background = 'white';
+  } else if (status === 1) {
+    style.background = 'blue'
+  } else {
+    style.background = 'black';
+  }
+  
+  return style;
+}
+
+const SquareStyles = {
+  background: 'white',
+  border: '1px solid black',
+  height: '20px',
+  width: '20px'
+}
+
+/**
+  Board
+  - state
+    - P2 (ships)
+  
+  - fire()
+  
+  
+  sqaure({ onFire })
+  - hasShip
+  - onFire (click)
+    
+  - State
+    - Blue 
+    - X
+    - blank
+
+*/
+
+
+
+/*
+
+Carrier, size 5
+Battleship, size 4
+Destroyer, size 3
+Submarine, size 3
+Patrol Boat, size 2
+
+*/
+
+// const player1Ships = {
+//   "carrier":  [ "A9", "B9", "C9","D9","E9"],
+//   "battleship":  [ "A3", "A4", "A5","A6"],
+//   "destroyer":  [ "F2", "G2", "H2"],
+//   "submarine":  [ "G1","H1","I1"],
+//   "patrol":  ["A10", "B10"],
+// };
+
+
+// const player2Moves = ["H10", "C7", "D10", "H2", "I4", "E8", "G4", "J3", "D6", "B9", "G9", "J10", "F8", "B8", "G6", "A4", "D9", "I9", "I8", "E1", "D7", "B5", "H6", "H1", "F2", "E2", "F1", "C10", "J1", "B6", "H8", "F3", "H3", "B1", "J6", "D4", "A5", "H5", "E4", "A7", "D5", "C2", "C5", "J5", "J9", "J8", "G3", "F4", "C1", "B10", "D8", "H9", "C9", "C6", "G10", "A1", "A2", "F5", "H4", "I10", "C3", "J7", "I1", "H7", "I3", "I2", "J2", "C8", "F7", "A10", "E10", "E6", "A8", "E3", "B7", "D1", "F9", "F10", "D3", "A6", "B2", "I6", "G7", "G2", "G5", "E9", "E5", "B4", "D2", "J4", "C4", "I7", "G8", "G1", "A3", "F6", "I5", "A9", "B3", "E7"];
+
+
+ReactDOM.render( <Board />, document.getElementById("app"));

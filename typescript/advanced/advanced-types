@@ -1,0 +1,86 @@
+
+
+Type Guards and Differentiating Types
+
+let pet = getSmallPet();
+
+// Each of these property accesses will cause an error
+if (pet.swim) {
+  pet.swim();
+} else if (pet.fly) {
+  pet.fly();
+}
+To get the same code working, we’ll need to use a type assertion:
+
+let pet = getSmallPet();
+
+if ((pet as Fish).swim) {
+  (pet as Fish).swim();
+} else if ((pet as Bird).fly) {
+  (pet as Bird).fly();
+}
+
+
+Using type predicates
+To define a type guard, we simply need to define a function whose return type is a type predicate:
+
+*****
+function isFish(pet: Fish | Bird): pet is Fish {
+  return (pet as Fish).swim !== undefined;
+}
+
+
+
+Using the in operator
+The in operator now acts as a narrowing expression for types.
+
+For a n in x expression, where n is a string literal or string literal type and x is a union type, 
+the “true” branch narrows to types which have an optional or required property n, and the “false” branch 
+narrows to types which have an optional or missing property n.
+
+function move(pet: Fish | Bird) {
+  if ("swim" in pet) {
+    return pet.swim();
+  }
+  return pet.fly();
+}
+
+
+
+Interfaces vs. Type Aliases
+As we mentioned, type aliases can act sort of like interfaces; however, there are some subtle differences.
+
+One difference is that interfaces create a new name that is used everywhere. Type aliases don’t create a new 
+name — for instance, error messages won’t use the alias name. In the code below, hovering over interfaced in an editor 
+will show that it returns an Interface, but will show that aliased returns object literal type.
+
+
+
+String Literal Types
+String literal types allow you to specify the exact value a string must have. In practice string literal 
+types combine nicely with union types, type guards, and type aliases. You can use these features together to 
+get enum-like behavior with strings.
+
+type Easing = "ease-in" | "ease-out" | "ease-in-out";
+class UIElement {
+  animate(dx: number, dy: number, easing: Easing) {
+    if (easing === "ease-in") {
+      // ...
+    } else if (easing === "ease-out") {
+    } else if (easing === "ease-in-out") {
+    } else {
+      // error! should not pass null or undefined.
+    }
+  }
+}
+
+let button = new UIElement();
+button.animate(0, 0, "ease-in");
+button.animate(0, 0, "uneasy"); // error: "uneasy" is not allowed here
+
+
+The compiler checks that manufacturer and model are actually properties on Car. 
+The example introduces a couple of new type operators. First is keyof T, the index type query operator. 
+For any type T, keyof T is the union of known, public property names of T. For example:
+
+let carProps: keyof Car; // the union of ('manufacturer' | 'model' | 'year')

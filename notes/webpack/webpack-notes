@@ -1,0 +1,97 @@
+https://www.youtube.com/watch?v=lFjinlwpcHY
+
+Webpack
+-   Creates a dependency graph
+-   Intelligently puts all of dependencies into modules 
+
+-   Naturally when creating a program it will be seperated by files
+
+eg)
+<html>
+    <script src="file1"></script>
+    <script src="file2"></script>
+    <script src="file3"></script>
+</html>
+There was a problem with this:
+-   Naming them wrong
+-   AAnd adding them in the wrong order (some depend on others)
+
+Webpack takes care of above issues
+
+It needs to know:
+-   Entry point of application
+-   Which transformations, if any, to make on your code
+-   Location to put code on 
+
+
+Transformation with loaders
+-   Webpack is only able to translate javascript and json files out of the box 
+    -   Which is why we need loaders for like css, svg, etc (things other than json and javascript)
+    -   Loaders allow you to import these other types of files 
+    -   Loaders can also run transformation on files before they are added to final transformation output 
+        Eg) style-loader will inject that into the dom, runs after css-loader which allows transforming css 
+            files 
+    -   most popular loader is babel-loader 
+        -   Which transforms next generation javascript to form browser understands
+
+
+1) Webpack graps the entry point located at `./app/index.js`
+2) It examines all of our `import` and `require` statements and creates a dependency graph. 
+3) Webpack starts creating a bundle, whenever it comes across a path we have a loader for, it
+    transforms the code according to that loader then adds it to the bundle.
+4) It takes the final bundle and outpuuts it at `dist/index_bundle.js`
+
+
+Loaders: Individual files before or while the bundle is being generaated
+Plugins: After the bundle has been created (more powerful less restrictive version of loader)
+
+
+
+HtmlWebpackplugin
+Generates an index.html page, puts in our /dist folder with a <script> tag that references 
+the newly created bundle
+
+EnvironmentPlugin
+Will want to set react process env to production and this can be done with EnironmentPLugin 
+-   will remove warning messages with this config for example
+
+Running Webpack
+on package.json 
+scripts: {
+    build: "NODE_ENV='production' webpack" // Runs webpack config file
+}
+npm run build
+
+
+webpack DevServer
+development server for webpack 
+doesn't generate /dist. Stores files in cache.
+live reload
+
+on change it will quickly update code and rerun it
+
+
+
+
+
+
+https://blog.andrewray.me/webpack-when-to-use-and-why/
+
+The Good
+Static assets in a dependency graph offers many benefits. Here's a few:
+
+Dead asset elimination. This is killer, especially for CSS rules. You only build the images and CSS into your dist/ folder that your application actually needs.
+Easier code splitting. For example, because you know that your file Homepage.js only requires specific CSS files, Webpack could easily build a homepage.css file to greatly reduce initial file size.
+You control how assets are processed. If an image is below a certain size, you could base64 encode it directly into your Javascript for fewer HTTP requests. If a JSON file is too big, you can load it from a URL. You can require('./style.less') and it's automaticaly parsed by Less into vanilla CSS.
+Stable production deploys. You can't accidentally deploy code with images missing, or outdated styles.
+Webpack will slow you down at the start, but give you great speed benefits when used correctly. You get hot page reloading. True CSS management. CDN cache busting because Webpack automatically changes file names to hashes of the file contents, etc.
+Webpack is the main build tool adopted by the React community. This makes finding help easier, and understanding Webpack more valuable.
+
+The Bad
+Webpack isn't perfect and has some pitfalls.
+
+The documentation is awful. I won't sugarcoat this. The language is often confusing, such as "webpack takes modules with dependencies and generates static assets representing those modules." What? Even the page layout is problematic, with random sidebar entries you can't click on, and animated logos while you're trying to read.
+The source code is similarly painful.
+Configuring Webpack is a minefield for newcomers. The configuration file syntax is confusing. It helps to look at established examples from boilerplate projects.
+Webpack is maintained mostly by one person. The rapid community adoption and the thrust into the spotlight means the ecosystem lags far behind the maturity of React. This has side effects, such as the poor quality of the documentation.
+Webpack introduces a nasty mini language in a string: require("!style!css!less!bootstrap/less/bootstrap.less"); This syntax is almost never used, and barely explained, but it's all over the documentation. This string language is one of of Webpack's biggest design flaws in my opinion.

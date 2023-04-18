@@ -1,0 +1,192 @@
+HTML5
+
+
+
+-   Q: What is page meta data?
+    A: metadata stores information about webpage that is not necessarily visible to user
+        unless they open page source
+
+-   Q: What is the usage of viewport for?
+    A: Allows devs to take control of a page's dimensions and scaling 
+        It is different for different device sizes
+
+-   Q: What are the attributes supported by meta tag?
+    A:  charset – Specifies the character encoding for the HTML document.
+
+        content – Gives the value associated with the http-equiv or name attribute.
+
+        http-equiv – Provides an HTTP header for the information/value of the content attribute.
+
+        name – Defines a name for the metadata.
+
+        scheme – Specifies a scheme to interpret the value of the content attribute. Not supported in HTML5.
+
+
+-   Q: What are the media element tags introduced in HTML5?
+
+    A: 
+        The new media element tags introduced by HTML5 are listed below:
+
+        <audio>: Used for multimedia like sounds, audio streams, or music, embed audio content without 
+            any additional plug-in requirement like the flash player.
+        <video>: Used for video content like video streams or movie clips, embed video content, etc.
+        <source>: Used for multiple media resources in media elements, such as audio, video, picture, etc.
+        <embed>: Used for external applications or embedded content (a plug-in).
+        <track>: Used for adding subtitles or other files containing text in video or audio elements 
+            as the respective media play on a web page.
+
+
+-   Q: What are semantic tags in HTML?
+    A: 
+      Semantic HTML provides meaning to the web page as opposed to just presentation. 
+      A <p> tag, for example, indicates that the enclosed text is a paragraph. This is both 
+      semantic and presentational as we as humans know what paragraphs are, and the browsers 
+      know how to display them.
+
+    On the other hand, tags such as <b> and <i> are not semantic markup. They only tell the browser 
+    how the text should look (bold or italic), and do not add meaning to the markup. In semantic HTML, 
+    these are replaced by <strong> for strong text and <em> for emphasized text respectively.
+
+-   Q: What are the aspects to consider when developing multilingual sites?
+    A: There are several aspects to consider while designing a multilingual site. Basic things 
+    include setting the default language, using Unicode encoding, being aware of standard font 
+    sizes and text direction, using the ‘lang’ attribute, and being aware of language word length 
+    (which may affect layout).
+
+
+-   Q: What is the purpose of <!Doctype html>?
+    A: The <!DOCTYPE> declaration is written at the top of every HTML5 page, and it instructs the web 
+    browser about the version and type of HTML being used in building the web document. This allows 
+    the browser to handle and load the web document properly.
+
+
+
+-   Q: Advantages of HTML5?
+    A: 
+    HTML5 is the most recent rendition of HTML. HTML5 allows the creation of easier and more interactive 
+        websites by embedding video, audio, and graphics on the web page.
+
+    HTML5 supports multimedia technology and graphical content to the web without using any third-
+        party plugins.
+
+    Some of the most important features added by HTML5 include:
+
+    Geolocation
+    Offline Application Cache
+    Client-side database
+    Error Handling
+    New Structure and new multimedia elements.
+    Browser Support and compatibility.
+    Supports Some New Application Programming Interface (API) like:
+
+    Browser History Management
+    Drag and Drop
+    2D drawing on a web page
+    Time media playback
+    Supported Applications include:
+
+    Web Workers – JavaScript
+    Local File Access
+    Application Cache
+    Local data storage
+    Local SQL databases
+
+
+-   Q: List out page structure elements in html?
+    A:
+    Here is a list of page structure elements in HTML5:
+
+    <header> - Used to define header for a document or a section
+    <nav> - Used to define container for navigation links
+    <section> - Used to define a section inside a document
+    <article> - Used to tag an independent self-contained article
+    <aside> - Defines the content separately (just like a sidebar)
+    <footer> - Used for tagging a footer inside a document or a section
+    <details> - Used to define any additional details
+    <summary> - Used to define a heading inside the <details> element
+
+
+-   Q: Given a certain website, what are the ways you could optimize its assets and reduce page load time?
+    A:
+    As a basic optimization rule, we can decrease the download size of our web page contents and make fewer HTTP requests.
+
+    To optimize website assets, we can follow the below techniques:
+
+    File compression
+    File concatenation
+    Offloading assets
+    -   To other services like the browser (which may already have certain libs like JQuery)
+    Re-organizing & Refining code
+    Properly naming all assets
+    -   So they get loaded only on needed bases in app 
+    Using CSS Sprites for Images
+    Disabling e-tags
+    Using internal and external style sheets and minimizing inline CSS
+    Using a CDN (content delivery network) for media files and hosting
+    Hosting our website’s assets on different domains while also reducing DNS lookups
+    Using a domain that is cookie-free to place the assets and splitting them among different domains
+
+-   Q: What are the different types of storage in HTML5?
+    A: 
+    In HTML5, data can be stored in two ways : session storage local storage
+
+    Session Storage: The data or details from only the user’s current browsing session are stored. 
+    Once the user closes the browser, the storage data gets removed automatically.
+
+    Local Storage: The data stays safe and does not get cleared automatically when the user closes 
+    the browser. The data instead needs to be deleted manually to remove it from storage.
+
+
+
+-   Q: What is the difference between server-sent events and Web sockets in HTML5?
+    A:
+    Websockets connections can provide both ship statistics to the browser and acquire information 
+    from the browser. A real-life example of an application that might use WebSockets is a chat application.
+
+    server-sent events or (SSE) connections can solely push statistics to the browser. Online inventory 
+    prices or Twitter’s updating timeline or feed are excellent examples of a utility that ought to benefit 
+    from SSE.
+
+
+-   Q: What is an <iframe>, and what is it used for?
+    A:
+    The <iframe> tag is used to specify a browsing context that is nested, or, in other words, 
+    an inline frame. The <iframe> tag allows outside documents to be inserted in the main HTML 
+    document with great ease. A common example of usage of inline frames is in online advertising, 
+    where the contents of the iframe can be an ad from a third party.
+
+    iframes introduce security risks. When an iframe is added to a page, the website becomes vulnerable 
+    to cross-site attacks
+
+
+-   Q: Why are CSS links placed in <head></head> tag?
+    A:
+    Style sheets are linked in the head section of the HTML markup, allowing the browser to format and 
+    render the markup as it goes. If you place the style details at the bottom of the document, the browser 
+    must restyle and render the whole document from the top.
+
+    First of all, it takes longer: if a browser needs to wait before it meets the end of a document 
+    before the style details can be added, it will probably have to render the page again, making the 
+    process slower. Secondly, it’s going to look unprofessional. This scenario varies from the scripts 
+    included as the scripts can block loading until they are completed, meaning you could load them as 
+    late as possible.
+
+
+-   Q: Please list down all the building blocks that constitute HTML5.
+    A:
+    Semantics
+    Connectivity and communication with servers
+    Offline storage
+    Multimedia
+    2D/3D graphics and effects
+    Performance and integration
+    Device access
+    Styling
+
+
+
+
+
+
+
+

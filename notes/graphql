@@ -1,0 +1,197 @@
+
+LEARN:
+-   Queries & how to make them resuable
+-   Error handling (fetches, updating/writing data not there, requesting fetch data not there )
+-   Managing queries, fragments, resolvers, & cache policies (type policies, field policies, etc) to be clean & organized
+
+
+Tomorrow: 
+Apply-for-interviews, PPP, Midwest letter, 
+rest-of-app
+-   At least local state w/ Apollo *****
+    -   To add/edit stock w/ predictions 
+    -   To add stocks to a folder 
+    -   To move an equity/folder
+-   Create add/edit page
+-   Create layout & basic css
+    -   Dashboard:
+        -   1 page size for each account
+        -   Horizontal  scrolling on watchlist
+        -   Navbar with "Create Account" btn & links + company name
+        -   Eventually drag and drop & equity movement among folders
+
+    -   Watchlist page:
+        -   Select type of list (type: watch | entry)
+        -   Equity selection & a side bar to show stored scraped data + cause/effect notes
+
+    -   Prediction page:
+        -   Basic layered page to select trends
+
+
+Make app very simple (simple styling, testing, & docs)
+-   Then move to react-native, w/ same backend setup (just pull it) :)
+
+
+
+REPLACEMENTS:
+-   They want to remove Apollo Local State and replace with Cache Policies 
+    -   This may be a future roadmap for Apollo 4
+    -   Removing resolver logic
+    -   Apollo 3 still very experimental (They want to see what works together and what doesn't)
+    -   Local state removal would reduce bundle size by more than a 1kb
+    -   Cache Policy api vs Local state api give 2 kind of overlapping API's 
+        -   Focus more on Cache Policys
+    -   You can cache with Object.storage in cache Api merge function to reduce expensive computation
+        @ the field level
+
+-   JUST LEARN: ***********************
+    -   Apollo React Hooks API
+    -   Apollo Cache Policies API instead of Local Storage API w/ resolvers
+        -   For now use this as if it were a Redux
+        -   Cannot write async logic on read policies so use reactive variables instead so they update UI on completion
+    -   read/write Queries/Fragments API
+
+
+
+
+Local State:
+
+Reactive Variables:
+-   Broadcasts to queries in local state / stores local state 
+-   Rerenders components in react 
+
+Cache Policies:
+-   Preprocessing on any query or mutation 
+-   Allows for settings rules on reads, merges, identifying objects/data-types, etc
+
+Local management in Graphql
+-   local resolver map
+-   think of each field in tree as a function (so a tree of functions, that resolve)
+-   @client deal with internal state (rather than remote)
+-   Both local & backend resolvers are similar in strucute and make
+
+-   Resolver arguments
+    fieldName: (obj, args, context, info) => result;
+
+    An example:
+
+    import { ApolloClient, InMemoryCache } from '@apollo/client';
+
+    const client = new ApolloClient({
+    cache: new InMemoryCache(),
+    resolvers: {
+        Mutation: {
+        toggleTodo: (_root, variables, { cache }) => {
+            cache.modify({
+            id: cache.identify({
+                __typename: 'TodoItem',
+                id: variables.id,
+            }),
+            fields: {
+                completed: value => !value,
+            },
+            });
+            return null;
+        },
+        },
+    },
+    });
+
+-   Updating state will be done by using FRAGMENTS and calling them on resolvers 
+    -   setResolver and addResolver are pretty important
+    -   Tools to use:
+        -   Cache.modify
+        -   Cache.identify
+
+
+-   Follow up code from above to toggle todo:
+
+    import React from "react"
+    import { gql, useMutation } from "@apollo/client";
+
+    const TOGGLE_TODO = gql`
+    mutation ToggleTodo($id: Int!) {
+        toggleTodo(id: $id) @client
+    }
+    `;
+
+    function Todo({ id, completed, text }) {
+        const [toggleTodo] = useMutation(TOGGLE_TODO, { variables: { id } });
+        return (
+            <li
+            onClick={toggleTodo}
+            style={{
+                textDecoration: completed ? "line-through" : "none",
+            }}
+            >
+            {text}
+            </li>
+        );
+    }
+
+
+-   Resolvers in Graphql work by
+    -   First checking if a resolver exists for query
+    -   Then checking the cache directly
+
+
+-   Cache Policies is the bigger focus (more than resolvers)
+
+-   Type Policy
+    -   Used to instruct cache on how to interact with type objects
+
+    type TypePolicy = {
+    // Allows defining the primary key fields for this type, either using an
+    // array of field names, a function that returns an arbitrary string, or
+    // false to disable normalization for objects of this type.
+    keyFields?: KeySpecifier | KeyFieldsFunction | false;
+
+    // If your schema uses a custom __typename for any of the root Query,
+    // Mutation, and/or Subscription types (rare), set the corresponding
+    // field below to true to indicate that this type serves as that type.
+    queryType?: true,
+    mutationType?: true,
+    subscriptionType?: true,
+
+    fields?: {
+        [fieldName: string]:
+        | FieldPolicy<StoreValue>
+        | FieldReadFunction<StoreValue>;
+    }
+    };
+
+    // Recursive type aliases are coming in TypeScript 3.7, so this isn't the
+    // actual type we use, but it's what it should be:
+    type KeySpecifier = (string | KeySpecifier)[];
+
+    type KeyFieldsFunction = (
+    object: Readonly<StoreObject>,
+    context: {
+        typename: string;
+        selectionSet?: SelectionSetNode;
+        fragmentMap?: FragmentMap;
+    },
+    ) => string | null | void;
+
+-   Modify your queries to request an id field for the favoriteBook.author objects, or by specifying custom 
+    keyFields in the Author type policy, such as ["name", "dateOfBirth"]
+    -   To prevent cache from not mergin data into objects that it cannot tell are the same
+
+
+    const cache = new InMemoryCache({
+        typePolicies: {
+            Book: {
+            fields: {
+                author: {
+                merge(existing, incoming, { mergeObjects }) {
+                    // Correct, thanks to invoking nested merge functions.
+                    return mergeObjects(existing, incoming);
+                },
+                },
+            },
+            },
+        },
+    });
+
+    Invokes nested merge functions (mergeObjects(existing, incoming);)
+    instead of doing field overrides like { ...existing, ...incoming }

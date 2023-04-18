@@ -1,0 +1,111 @@
+document retrievers:
+
+getElementById
+getElementsByName
+getElementsByTagName
+getElementsByTagNameNS
+getElementsByClassName
+querySelector
+querySelectorAll
+
+
+javascript has a global object called "window"
+"document" is the object representation of the dom. And it also lives as a field 
+of "window"
+
+
+
+
+-   Q: What is the difference between feature detection and feature inference?
+    A:
+    Feature Detection: verifies if a feature works in a specific browser
+    Feature Inference: assumes a feature exists in other browsers if it exists in one of them
+
+-   Q: Which option regarding “attribute” and “property” is correct?
+    A: 
+    attribute: is written in HTML
+    property: is in DOM objects
+
+
+
+<body id="body" type="text">
+  <input id="input" type="text" value="Hello">
+  <script>
+    console.log(input.type); 
+    console.log(body.type); 
+  </script>
+</body>
+
+Q: What will be the output of the code above (lines 4-5)?
+
+A:
+text
+undefined
+
+
+
+
+
+
+Q: Which of the following are true about DOM properties?
+A: .value property of the DOM object provides you with the property value
+
+
+
+-   : accesses information of the browser environment you are using. 
+    This applies neither to feature detection nor feature inference; it is the definition of 
+    the User-Agent. When you visit a browser, it sends a user-agent string to the host; this 
+    string contains information about the browser environment you are navigating.
+
+
+
+-   An attribute is written in the HTML document. The HTML tags may have attributes, 
+    e.g., the tag input has the attributes type, value, name, etc. From this definition, 
+    we know that one of the Options B & D could be correct.
+
+    When the HTML document is parsed and converted to a DOM object model, these attributes 
+    are converted to DOM properties.
+
+
+
+-   The browser parses standard attributes in an HTML document and creates the corresponding 
+    DOM properties.
+
+    In the code given, the following attributes are defined:
+
+    12
+    <body id="body" type="text">
+    <input id="input" type="text" value="Hello">
+    Here, type is not a standard attribute of the body tag, whereas, id, type, and value are all 
+    standard attributes of the input tag. Hence, when these attributes are parsed, the DOM object 
+    will contain the following properties:
+
+    body.id  //body 
+    input.id  //input
+    input.type  //text
+    input.value  //Hello
+    As you can see for all standard attributes, the corresponding properties are created. 
+    However, this does not happen for the non-standard attribute type in body. 
+    Hence, the following will return undefined.
+
+
+-   
+    Option A: Correct. Majority of the DOM properties such as input.type, input.value, and body.id 
+    are of string type; however, there are some properties that aren’t, such as the input.checked 
+    property. input.checked is a boolean value that returns true if the checkbox is checked and 
+    false otherwise.
+
+-
+    Option A: Correct. Majority of the DOM properties such as input.type, input.value, and body.id are 
+    of string type; however, there are some properties that aren’t, such as the input.checked property. 
+    input.checked is a boolean value that returns true if the checkbox is checked and false otherwise.
+
+    Option B: Incorrect. DOM properties can be modified; it is the HTML attributes that can never be changed.
+
+    Option C: Incorrect. Changing the value of an attribute always changes its corresponding DOM property’s 
+    value; however, vice versa is not always true. For example, changing input.value does not change the 
+    value of input.getAttribute('value').
+
+
+    Option D: Correct. You can access the value of a DOM property using .value with the following 
+    syntax: attribute.value.

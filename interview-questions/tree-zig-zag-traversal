@@ -1,0 +1,103 @@
+I will post the coding question into this shared document for you to read and code.
+Zig Zag Traversal of an Unbalanced Binary Tree
+Problem Description
+The goal of this question is to come up with an algorithm and code to traverse the unbalanced binary tree in a breadth-first zig zag fashion, starting in one direction and then reversing and heading the other and repeating until no further nodes to traverse.
+
+Here is an example tree:
+
+
+Following the direction of the arrows in the graph the first level with node A would be traversed left to right, the second level with nodes B & C would be traversed right to left, etc.
+
+The printing out the name of the tree node the example tree would produce the following output:
+
+A C B D E F J I H G K L M N
+
+You can assume that there is a class or interface that has only the following methods:
+GetName - will return a string name for the given node, you can’t assume that the name is unique because the tree may contain millions of nodes with possibly duplicate names
+GetLeft - will return a Node pointer or nil/Null for the left child node
+GetRight - will return a Node pointer or nil/Null for the right child node
+There are no cycles in the tree and the only other requirement is that you can’t modify the Node class/interface. I advise candidates to come up with a workable algorithm, talking through it every step of the way so I can provide hints and questions along the way. Once a suitable algorithm is designed we will code it up in the language of your choice below. I will treat this as a whiteboard coding exercise, so it doesn’t have to be perfect but should reflect good coding style, use of begin/end blocks, etc and no “and a miracle happens functions” :-)
+
+
+
+Class TreeNode {
+	Left: TreeNode;
+	Right: TreeNode;
+	Name: string;
+
+	GetName();
+	GetLeft();
+	GetRight();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Class Tree {
+	Root: TreeNode;
+	constructor(root) {
+		this.Root = root;
+	}
+	
+	ZigzagTraversal() {
+		Let queue = []
+		queue.unshift(this.root); //enqueue
+
+		Let isRight: boolean = true;
+		Let childrenList: Array<TreeNode> = [];
+
+		while(queue.length > 0) {
+			//	[A], [C, B], [D, E, F], [J, I , H, G]]
+
+			For (let n of queue) {
+				console.log(n.name, “ “);
+
+				If (isRight) {
+					// Going left to right on next level
+childrenList.push(n.Left)
+childrenList.push(n.Right)
+
+// children: [B, C], [G, H, I, J]
+				}
+				Else
+				{	
+// Going right to left on next level
+childrenList.push(n.Right)
+childrenList.push(n.Left)
+// Children: [F, E, D]
+				}
+			}
+
+			Queue = reverse(childrenList);
+			isRight = !isRight;
+		}
+	}
+}
+
+// A C B D E F J I H G
+A C B D E F J I H G K L M N
+
+
+
+// Root is always right first (then zigzag)
+
+
+

@@ -1,0 +1,217 @@
+Study this system design tutorial:
+https://www.youtube.com/playlist?list=PLMCXHnjXnTnvo6alSjVkgxV-VH6EPyvoX
+
+Main system design concepts:
+1. Load-balancing
+2. Caching
+3. Database schema design
+4. Slave-master replications
+5. Database sharding
+6. API design
+
+
+Also learn about data streams:
+-   Kineses
+-   Datadog logging
+
+
+Gateway Service
+-   Consisten Hashing
+-   AWS API Gateway
+-   Takes username & password
+-   Asks profile service if authentication is needed
+    -   profile service handles rights
+    -   Then gateway can redirect req to correct
+        service 
+
+
+Tinder service: 
+
+clients contact api gateway 
+=> contacts profile service to chec if user 
+    can access certain service 
+
+=> Image service 
+    -   Has a DFS (Distributed Files System)
+        and has a database with 
+        id, imageurl, profileId
+
+
+HTTP:
+-   2 ways of talking client to server 
+-   client asks server for data
+-   Client-server communication protocol
+    so cannot have chat.
+    -   This type of communication has to do 
+        polling
+
+
+Tinder chatting feature:
+-   Should not use HTTP bc polling is inefficient
+-   Should use a different protocol like XMPP
+    -   Need a pushing mechanism
+    -   Happens through websockets connections
+        -   TCP connection: make a connection &
+            maintain it
+
+Sessions service:
+-   Tracks the connections open between 2 users
+    for chat 
+    -   database: userId, connectionId
+
+Distributed database:
+-   Cassandra & Dynamo
+
+Sharding:
+-   Horizontal Partitioning
+-   Partion data based on interval ranges of a field 
+    in the data
+
+Load Balancing:
+-   Consistent hashing 
+
+
+// https://mariadb.com/resources/blog/database-master-slave-replication-in-the-cloud
+Master slave architecture:
+-   if master fails slave takes over (there is a swap)
+-   Reader database becomes a master database
+
+Master-slave replication enables data from one 
+database server (the master) to be replicated to 
+one or more other database servers (the slaves). 
+The master logs the updates, which then ripple 
+through to the slaves. The slave outputs a message 
+stating that it has received the update successfully, 
+thus allowing the sending of subsequent updates. 
+Master-slave replication can be either synchronous 
+or asynchronous. The difference is simply the 
+timing of propagation of changes. If the changes 
+are made to the master and slave at the same time, 
+it is synchronous. If changes are queued up and 
+written later, it is asynchronous.
+
+
+
+
+Instagram Feed:
+
+-   We have multiple UserFeed services 
+-   LoadBalancer takes care of routing 
+    reqs to UserFeed services
+-   Too expensive to ask LB everytime
+    so we need to store snapshots in Gateway 
+    -   State of all services,where they exist,
+        & how to access
+    -   Periodically updated every 10 seconds
+-   When req gets to Gateway it checks stored 
+    snapshot
+-   Load is balanaced by consistent hashing 
+    -   can hash by userId to get its UserFeed
+
+-   UserFeed communicate with:
+    -   Follow and Posts services 
+    -   getUserFollowedBy(userId)
+        foreach => getPostsByUser(userId)
+    -   Does not scale bc it can bombard server 
+
+    -   Precompute solution instead
+        -   When someone posts something:
+            Update users following & relevant 
+            users/groups, etc 
+    
+    -   On system down we can do brute force approach
+        that is slow.
+    -   Then, just use a caache and build on top of it
+        with queues that push out tasks
+    -   LRU for only updating active users
+        -   to not waste resources on infrequent 
+            users
+    -   Websockets can be used for pushing out 
+        notifications instead of polling which 
+        takes more resrouces
+
+    -   Celebrity example: 
+        -   millions of ppl to update at once 
+            -   use batch algo
+            -   Or can use pull model in this case 
+                bc celebrity has to many items to 
+                push so its better individual users
+                pull at their own time
+
+
+Other type of services:
+-   Chat (multipe services)
+-   profile
+-   Image 
+-   Activity
+-   Session
+
+
+
+
+
+
+What is Distributed Caching? Explained with Redis
+-   https://www.youtube.com/watch?v=U3RkDLtS7uY&list=PLMCXHnjXnTnvo6alSjVkgxV-VH6EPyvoX&index=11&t=2s
+
+
+-   Cache common use case: 
+    -   Save network requests
+    -   To avoid recomputation
+    -   To reduce DB load (hit cache instead)
+
+-   Database (infinite information)
+-   Cache (Relevant information - predictive information)
+    -   Predict what will be used 
+
+
+
+Cache bad when:
+-   Poor eviction policy (extra cache calls when they are not 
+        actually used)
+-   Thrashing
+    -   Constantly inputing and outputing without ever using 
+        results 
+-   Consistency
+    -   Updataing info on db but missing cache
+
+
+In-memory vs global cache:
+global:
+    -   More persistent and server crash proof 
+In-memory:
+    -   Fast response times
+
+
+Write through vs write back cache:
+
+Write through:
+-   Update cache first and then update cache 
+
+write back:
+-   Update database first and then cache 
+
+
+
+
+
+Batch streaming vs Stream Processing
+
+
+Batch:
+-   Ad-hoc or scheduled Processing
+-   Collection of data 
+
+
+Stream: 
+-   Real time Processing
+-   Continuous data 
+
+
+Micro Batch:
+-   Collection of data & processing continuously in short span of time
+
+
+
+https://www.upsolver.com/blog/streaming-data-architecture-key-components
+

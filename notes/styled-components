@@ -1,0 +1,170 @@
+Overall:
+-   Very simple tool to use 
+-   Mainly to support 
+    -   Reusablity
+    -   Theming
+    -   Name collision prevention
+
+-   TIPS:    
+    -   Just worry about css & component building
+    -   Worry about how to make theme easily global
+    -   Don't over think it. DONE!
+
+
+
+-   Pass along a classname:
+    -   Usually to make eligible for interpolation (when browser fills in intermediate vals
+        from init to target/value user assigns element to get to in animiation)
+
+class A extends React.Component {
+  render() {
+    return <div className={this.props.className} />
+  }
+}
+
+const StyledA = styled(A)``
+
+const B = styled.div`
+  ${StyledA} {
+  }
+`
+
+
+
+Style Objects:
+-   Also possible to make these in js
+
+// Static object
+const Box = styled.div({
+  background: 'palevioletred',
+  height: '50px',
+  width: '50px'
+});
+// Adapting based on props
+const PropsBox = styled.div(props => ({
+  background: props.background,
+  height: '50px',
+  width: '50px'
+}));
+render(
+  <div>
+    <Box />
+    <PropsBox background="blue" />
+  </div>
+);
+
+
+
+Refer to other components:
+
+const Link = styled.a`
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background: papayawhip;
+  color: palevioletred;
+`;
+const Icon = styled.svg`
+  flex: none;
+  transition: fill 0.25s;
+  width: 48px;
+  height: 48px;
+  ${Link}:hover & {
+    fill: rebeccapurple;
+  }
+`;
+const Label = styled.span`
+  display: flex;
+  align-items: center;
+  line-height: 1.2;
+  &::before {
+    content: '◀';
+    margin: 0 10px;
+  }
+`;
+render(
+  <Link href="#">
+    <Icon viewBox="0 0 20 20">
+      <path d="M10 15h8c1 0 2-1 2-2V3c0-1-1-2-2-2H2C1 1 0 2 0 3v10c0 1 1 2 2 2h4v4l4-4zM5 7h2v2H5V7zm4 0h2v2H9V7zm4 0h2v2h-2V7z"/>
+    </Icon>
+    <Label>Hovering my parent changes my style!</Label>
+  </Link>
+);
+
+
+
+
+Theming: 
+-   Pass in a provider
+-   Theme will get inherited in the props.theme prop when you pass down 
+    on prop or provide the ThemeProvicer from react context
+
+
+import { useContext } from 'react';
+import { ThemeContext } from 'styled-components';
+
+const MyComponent = () => {
+  const themeContext = useContext(ThemeContext);
+
+  console.log('Current theme: ', themeContext);
+  // ...
+}
+
+
+// Define our button
+const Button = styled.button`
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+  /* Color the border and text with theme.main */
+  color: ${props => props.theme.main};
+  border: 2px solid ${props => props.theme.main};
+`;
+// Define what main theme will look like
+const theme = {
+  main: "mediumseagreen"
+};
+render(
+  <div>
+    <Button theme={{ main: "royalblue" }}>Ad hoc theme</Button>
+    <ThemeProvider theme={theme}>
+      <div>
+        <Button>Themed</Button>
+        <Button theme={{ main: "darkorange" }}>Overidden</Button>
+      </div>
+    </ThemeProvider>
+  </div>
+);
+
+
+// Define our button, but with the use of props.theme this time
+const Button = styled.button`
+  color: ${props => props.theme.fg};
+  border: 2px solid ${props => props.theme.fg};
+  background: ${props => props.theme.bg};
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border-radius: 3px;
+`;
+// Define our `fg` and `bg` on the theme
+const theme = {
+  fg: "palevioletred",
+  bg: "white"
+};
+// This theme swaps `fg` and `bg`
+const invertTheme = ({ fg, bg }) => ({
+  fg: bg,
+  bg: fg
+});
+render(
+  <ThemeProvider theme={theme}>
+    <div>
+      <Button>Default Theme</Button>
+      <ThemeProvider theme={invertTheme}>
+        <Button>Inverted Theme</Button>
+      </ThemeProvider>
+    </div>
+  </ThemeProvider>
+);

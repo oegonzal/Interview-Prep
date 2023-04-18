@@ -1,0 +1,338 @@
+from clr import AddReference
+AddReference("System")
+AddReference("QuantConnect.Common")
+#AddReference("QuantConnect.Jupyter")
+AddReference("QuantConnect.Indicators")
+from System import *
+from QuantConnect import *
+from QuantConnect.Data.Custom import *
+#from QuantConnect.Data.Market import TradeBar, QuoteBar
+#from QuantConnect.Jupyter import *
+from QuantConnect.Indicators import *
+from datetime import datetime, timedelta
+import matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
+
+
+
+
+from structs import DetailedApex, LinkedApex
+
+
+
+
+       
+'''
+    Struct that is consisted of a 2-way linked list
+    Each Node or Apex in the list represents a reversal in price change at some point in time
+    The price from one Apex_i to another Apex_j represents the an interval of intersection 
+    @ those 2 prices interval
+    - It is possible that somewhere ABOVE OR BELOW in that linked list there exists another
+      apex with a timestamp that is between 2 adjacent apexes in the linked list
+      This apex would be a local/abs max/min between both pts
+'''
+class PriceLinkedList:
+    # Linked list struct bc we can intercept at any given point between terminals (linkedlist more efficient than array)
+    def __init__(self, init_apex):
+        if init_apex is None or not isinstance(init_apex, LinkedApex):
+            raise Exception("Must initialize with a LinkedApex")
+        
+        # pters to extremes (head & tail of linked list)
+        self.max_apex = init_apex
+        self.min_apex = init_apex
+        
+        self.last_apex = init_apex # last added apex to linked list reference
+        self.was_last_dec = None # 'None' init value when only one pt, 'True' if last ext added decreased in price from its previous
+    
+    
+    # Function adds a new apex to the linked list
+    # Input: LinkedApex object
+    def addApex(self, new_apex):
+        base_apex = self.last_apex
+        
+    
+        is_dec = True if new_apex.extrema.price < base_apex.extrema.price else False # new_apex '/' base_apex (takes '/' form when decreasing is True) 
+        
+        price_level = None
+        if (new_apex.extrema.price == base_apex.extrema.price):
+            return # we do not want to override prev pt if same price
+        elif is_dec:
+            price_level = self.addDecreasingApex(base_apex, new_apex)
+        else:
+            price_level = self.addIncreasingApex(base_apex, new_apex)
+            
+        
+        # Important to keep track of this for smoothing linkedlist correctly 
+        self.was_last_dec = is_dec
+        self.last_apex = new_apex
+        
+        return price_level
+        
+        
+    # (new_apex) 
+    #         '\' base_apex (this is the pattern '\')
+    def addIncreasingApex(self, base_apex, new_apex):
+        sig_apex = None
+        new_price = new_apex.extrema.price
+        is_dec = True if new_apex.extrema.price < base_apex.extrema.price else False
+        same_trend = True if (self.was_last_dec == is_dec) else False
+        
+        
+        # Find first apex new_apex does not overlap in the upside
+        last_overlapped_apex = None
+        nonoverlaped_apex = base_apex # ** pter to find first non-overlapped apex
+        while nonoverlaped_apex is not None and nonoverlaped_apex.extrema.price < new_price:    
+            last_overlapped_apex = nonoverlaped_apex
+            nonoverlaped_apex = nonoverlaped_apex.higher_apex
+        
+        
+        # Get volatility apex created by overlap
+        if last_overlapped_apex is not None:
+            sig_apex = self.getSupportLevelApex(new_apex, last_overlapped_apex)
+        
+        
+        # Attach side trend is moving towards - increasing side
+        if nonoverlaped_apex is None:
+            self.max_apex = new_apex  # Update max apex in PriceLinkedList struct
+        else:
+            new_apex.higher_apex = nonoverlaped_apex
+            nonoverlaped_apex.lower_apex = new_apex
+        
+        
+        # Attach side apex is moving agaisnt now (decreasing side)
+        if (same_trend):
+            # Continuing run from last apex so smooth by removing last apex
+            new_apex.lower_apex = base_apex.lower_apex
+            base_apex.lower_apex.higher_apex = new_apex
+        else:
+            # Reversing from last apex so attach to last apex (also works for base case- when only 1 apex on linked list so far bc original self.was_last_dec is None)
+            new_apex.lower_apex = base_apex
+            base_apex.higher_apex = new_apex
+        
+        return sig_apex
+        
+        
+    #            '/' base_apex (this is the pattern '\')
+    #   (new_apex)      
+    def addDecreasingApex(self, base_apex, new_apex):
+        sig_apex = None
+        new_price = new_apex.extrema.price
+        is_dec = True if new_apex.extrema.price < base_apex.extrema.price else False
+        same_trend = True if (self.was_last_dec == is_dec) else False
+        
+        
+        # Find first apex new_apex does not overlap in the upside
+        last_overlapped_apex = None
+        nonoverlaped_apex = base_apex # ** pter to find first non-overlapped apex
+        while nonoverlaped_apex is not None and nonoverlaped_apex.extrema.price > new_price:    
+            last_overlapped_apex = nonoverlaped_apex
+            nonoverlaped_apex = nonoverlaped_apex.lower_apex
+        
+        
+        # Get volatility apex created by overlap
+        if last_overlapped_apex is not None:
+            sig_apex = self.getResistanceLevelApex(new_apex, last_overlapped_apex)
+        
+        
+        # Attach side trend is moving towards - decreasing side
+        if nonoverlaped_apex is None:
+            self.min_apex = new_apex  # Update max apex in PriceLinkedList struct
+        else:
+            new_apex.lower_apex = nonoverlaped_apex
+            nonoverlaped_apex.higer_apex = new_apex
+        
+        
+        # Attach side apex is moving agaisnt now (increasing side)
+        if (same_trend):
+            # Continuing run from last apex so smooth by removing last apex
+            new_apex.higher_apex = base_apex.higher_apex
+            base_apex.higher_apex.lower_apex = new_apex
+        else:
+            # Reversing from last apex so attach to last apex (also works for base case- when only 1 apex on linked list so far bc original self.was_last_dec is None)
+            new_apex.higher_apex = base_apex
+            base_apex.lower_apex = new_apex
+        
+        return sig_apex
+        
+        
+    # When getting min apex between new_apex & right_apex, new_apex isn't needed bc not on Linkedlist yet
+    def getSupportLevelApex(self, new_apex, right_apex):
+        # scan down & get lowest apex between new_apex & current apex we crossed timestamp
+        peak_apex = None
+        running_apex = right_apex
+        while running_apex.lower_apex is not None:
+            current_extrema = running_apex.lower_apex.extrema
+
+            # Get lowest apex in between new_apex_ts < lowest_apex_ts < overlapped_apex_ts
+            if current_extrema.index < right_apex.extrema.index:
+                # Lowest one is magnitude & apex of importance
+                peak_apex = current_extrema
+                #print ("current_extrema.index < right_apex.extrema.index " + current_extrema.index + " " + right_apex.extrema.index)
+
+            running_apex = running_apex.lower_apex
+        
+        # Build apex with extra details here in order to return
+        detailed_apex = None
+        if peak_apex is not None:
+            price = peak_apex.price
+            magnitude = (right_apex.extrema.logPrice - peak_apex.logPrice)
+            timestamp = peak_apex.index
+            
+            left_timestamp = new_apex.extrema.index
+            left_price = new_apex.extrema.price
+            
+            right_timestamp = right_apex.extrema.index
+            right_price = right_apex.extrema.price
+            
+            detailed_apex = DetailedApex(price, magnitude, timestamp, left_timestamp, left_price, right_timestamp, right_price)
+        
+        return detailed_apex
+    
+    
+    def getResistanceLevelApex(self, new_apex, right_apex):
+        # scan down & get lowest apex between new_apex & current apex we crossed timestamp
+        #print ("getResistanceLevelApex")
+        peak_apex = None
+        running_apex = right_apex
+        while running_apex.higher_apex is not None:
+            current_extrema = running_apex.higher_apex.extrema
+
+            # Get lowest apex in between new_apex_ts < lowest_apex_ts < overlapped_apex_ts
+            if current_extrema.index < right_apex.extrema.index:
+                # Lowest one is magnitude & apex of importance
+                peak_apex = current_extrema
+                #print ("Index comparison (timestamp)")
+
+            running_apex = running_apex.higher_apex
+        
+        # Build apex with extra details here in order to return
+        detailed_apex = None
+        if peak_apex is not None:
+            price = peak_apex.price
+            magnitude = (right_apex.extrema.logPrice - peak_apex.logPrice) # we want negative version bc decreasing
+            timestamp = peak_apex.index
+            
+            left_timestamp = new_apex.extrema.index
+            left_price = new_apex.extrema.price
+            
+            right_timestamp = right_apex.extrema.index
+            right_price = right_apex.extrema.price
+            
+            detailed_apex = DetailedApex(price, magnitude, timestamp, left_timestamp, left_price, right_timestamp, right_price)
+        
+        return detailed_apex
+        
+        
+    def getApexesInList(self):
+        remaining_extremes = []
+        
+        
+        # Find Support points
+        center_apex = self.min_apex
+        while center_apex.higher_apex is not None:
+            center_extrema = center_apex.extrema
+            
+            # Get left node
+            later_node = None
+            later_tracker = center_apex
+            while later_tracker.higher_apex is not None:
+                later_tracker = later_tracker.higher_apex
+                
+                later_extrema = later_tracker.extrema
+                if center_extrema.index < later_extrema.index:
+                    later_node = later_tracker
+                    
+                    
+            
+            # Get right node
+            sooner_node = None
+            sooner_tracker = center_apex
+            while sooner_tracker.higher_apex is not None:
+                sooner_tracker = sooner_tracker.higher_apex
+                
+                sooner_extrema = sooner_tracker.extrema
+                if center_extrema.index > sooner_extrema.index:
+                    sooner_node = sooner_tracker
+            
+            
+            
+            # If left and right node are not none add node to list
+            if sooner_node is not None and later_node is not None:
+                
+                peak_apex = center_apex.extrema
+                price = peak_apex.price
+                timestamp = peak_apex.index
+                
+                magnitude = (min(sooner_node.apex.logPrice, later_node.apex.logPrice) - peak_apex.logPrice)
+                
+                left_timestamp = sooner_node.extrema.index
+                left_price = sooner_node.extrema.price
+                
+                right_timestamp = later_node.extrema.index
+                right_price = later_node.extrema.price
+                
+                detailed_apex = DetailedApex(price, magnitude, timestamp, left_timestamp, left_price, right_timestamp, right_price)
+                
+                # Finally add most extreme finding (magnitude for this node)
+                remaining_extremes.append(detailed_apex)
+            
+            
+            center_apex = center_apex.higher_apex
+            
+            
+        
+        # Find Resistance points
+        center_apex = self.max_apex
+        while center_apex.lower_apex is not None:
+            center_extrema = center_apex.extrema
+            
+            # Get left node
+            later_node = None
+            later_tracker = center_apex
+            while later_tracker.lower_apex is not None:
+                later_tracker = later_tracker.lower_apex
+                
+                later_extrema = later_tracker.extrema
+                if center_extrema.index < later_extrema.index:
+                    later_node = later_tracker
+                    
+                    
+            
+            # Get right node
+            sooner_node = None
+            sooner_tracker = center_apex
+            while sooner_tracker.lower_apex is not None:
+                sooner_tracker = sooner_tracker.lower_apex
+                
+                sooner_extrema = sooner_tracker.extrema
+                if center_extrema.index > sooner_extrema.index:
+                    sooner_node = sooner_tracker
+            
+            
+            
+            # If left and right node are not none add node to list
+            if sooner_node is not None and later_node is not None:
+                
+                peak_apex = center_apex.extrema
+                price = peak_apex.price
+                timestamp = peak_apex.index
+                
+                magnitude = (max(sooner_node.apex.logPrice, later_node.apex.logPrice) - peak_apex.logPrice)
+                
+                left_timestamp = sooner_node.extrema.index
+                left_price = sooner_node.extrema.price
+                
+                right_timestamp = later_node.extrema.index
+                right_price = later_node.extrema.price
+                
+                detailed_apex = DetailedApex(price, magnitude, timestamp, left_timestamp, left_price, right_timestamp, right_price)
+                
+                # Finally add most extreme finding (magnitude for this node)
+                remaining_extremes.append(detailed_apex)
+            
+            center_apex = center_apex.lower_apex
+        
+        return remaining_extremes
+        
+    

@@ -1,0 +1,136 @@
+
+// You are given a log file for click events (for a shopping website) and each line is formatted in:
+// datetime,request_id,product_name
+// e.g. 202007012020,111-111-111,nba t-shirt
+// We want to build to a library (for a analytics service) to answer the following questions
+
+
+// 1. How many products in total got clicked between startTime and endTime?
+// 2. What is the most popular product between startTime and endTime?
+// 3. What is top 3 products per category between startTime and endTime // getCategories API -> a list of categories, "nba tshirt" => [sport,fashion]
+
+
+
+
+interface DataRetrieve {
+    
+}
+
+//  Short term:
+//  List of strings
+//  -   Generic (datatype)
+//  Short term (fits into memory)
+//  -   Paging, batching
+
+
+class ShoppingLogService {
+    constructor(DataSource) {
+        this.dataSource = DataSource; // [string, string, ...]
+    }
+    
+    // 1. How many products in total got clicked between startTime and endTime?
+    getProductByTimeInterval(startDate: Date, endDate: Date): number {
+        // e.g. 202007012020,111-111-111,nba t-shirt
+        const listOfLogStrings = this.dataSource.length;
+        const productMap = {};
+        
+        for (let i = 0; i < listOfLogStrings; i++) {
+            const curLog = listOfLogStrings[i];
+            const [timestamp, requestId, productName] = curLog.split(",");
+            
+            if (timestamp >= startDate && timestamp <= endDate) {
+                productMap[productName] = true;
+            }
+        }
+        
+        const unqProductsCount = Object.keys(productMap).length;
+        return unqProductsCount;
+    }
+    
+    getMostPopularProduct(startDate: Date, endDate: Date) {
+        const listOfLogStrings = this.dataSource.length;
+        const productMap = {};
+        
+        let mostPopular = { productName, count };
+        let maxCounts = -1;
+        
+        
+        for (let i = 0; i < listOfLogStrings; i++) {
+            const curLog = listOfLogStrings[i];
+            const [timestamp, requestId, productName] = curLog.split(",");
+            
+            if (timestamp >= startDate && timestamp <= endDate) {
+                if (!productMap[productName]) {
+                    productMap[productName] = 0;
+                }
+                
+                productMap[productName]++;
+                
+                //  Check if product is most popular
+                if (productMap[productName] > maxCounts) {
+                    mostPopular = {
+                        productName,
+                        count: productMap[productName]
+                    }
+                    
+                    maxCounts = Math.max(maxCounts, productMap[productName])
+                }
+                
+            }
+        }
+        
+        return mostPopular;
+    }
+    
+    // 3. What is top 3 products per category between startTime and endTime // getCategories API -> a list of categories, "nba tshirt" => [sport,fashion]
+    getTopProductsPerCategory(startDate: Date, endDate: Date) {
+        
+        const categoryMap = {
+            'category': [{ productName, count }, ...] // sorted by clicks & get top 3
+        };
+        
+        //  Cache for knowing when to call categoryAPI and stroes product popularity count
+        const productMap = {
+            'product': { count }
+        }
+        
+        
+        //  Most clicks
+        //  Category of a product
+        
+        
+        for (let i = 0; i < listOfLogStrings; i++) {
+            const curLog = listOfLogStrings[i];
+            const [timestamp, requestId, productName] = curLog.split(",");
+            
+            if (!productMap[productName]) {
+                productMap[productName] = { count: 0 };
+            }
+            
+            if (timestamp >= startDate && timestamp <= endDate) {
+                
+                //  Cache this per category ()
+                const categories = getCategories(productName);
+                
+                categories.forEach(category => {
+                    productMap[productName].count++;
+                    
+                    
+                    categoryMap[category].push({ productName, count: productMap[productName] });
+                })
+            }
+        }
+        
+        
+        
+    }
+    
+    getDatasource() {
+        return this.dataSource;
+    }
+    
+    setDatasource() {
+        // sets
+    }
+    
+}

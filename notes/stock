@@ -1,0 +1,694 @@
+Securities:
+Common vs Preferred Stock - What is the Difference?
+
+
+
+Kai:
+No Unemployment Insurance
+No retirement plan
+Low pay
+No promotion / role organization
+Risk (Only thing that was holding me there was the equity, but when you stop paying everyone & ask for them to work, it looks really bad)
+
+Explain:
+I want to see where we’re at bc we haven’t talked
+Talk about the stock options
+And also explain the decision I made.
+I felt I wasn’t getting the full picture
+But I was trying to get back to work
+
+Conversation Directive:
+Extending expiration in which I can buy contracts
+Time to read the contract (I don’t want to feel rushed)
+Fair neg. New investment & loans will increase interest rate for future, dilute, & lower eval (as oppose as to when we were supposed to get inv)
+
+
+
+
+Get back on the boat (Kai & Mark Covid negotiation):
+Get cash
+Get unemployment benefits
+
+Stock market money with algo
+Ask more questions, take control of more of the features @ TS, build relationships & increase decision making
+Keep learning! (Negotiation, relationship building, Serverless/AmplifyCLI/CloudFormation, UI/SVG/AR, Quants/Stats/calc, DL, BL, valuetransfer/markets/ideas)
+What is the split between preferred stock and common stock? (Class A & B) 
+Which preferred stock is eligible for convertible preferred (Has some of the upside potential common stock has, but also preferred)
+Does the preferred stock have dividends
+Also who have been the investors? (Mark & Kai forsure)
+There are so many ways I can get fucked over which is why I don’t feel comfortable taking stock as well as that I am getting underpaid & compensated for my skillset & thus my time is being exploited. You guys know it & think we don’t know it.
+
+
+-   TS stock has VERY little liquidation 
+    & almost no bargaining power for none founders
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+
+
+TODO:
+-   Read old contract
+-   Make new email for them
+-   Give them the option. Give them a way for you to create value
+    -   Tell them what I will do: stabilize the api, make onboarding easier & their selling easier, server scaling
+    -   Getting us more traffic
+    -   We only have 5 ppl and we have like 5 projects to work on @ the same time
+    -   I'll communicate with clients & help with technical onboard as much as possible
+
+
+
+
+
+
+
+
+
+
+    Listen guys, this is a high risk situation for me. And high risk means I want 
+    higher reward. I wasn't a fan of the whole "voluntary" backpay idea in March when we were 
+    in the worst part of the year. I felt like too much risk was being pushed to 
+    the contractors & employees with low transparency of where the company was at financially. 
+    Things were conveyed very differently to me at the end of 2019 and were miscommunicated. 
+    These reasons can explain my current frusteration today.
+
+
+    Here is what I want to do, in my order of importance:
+    -   I want to finish up ts-store & infrastructure taking over Chris & Sanjays work & get that 
+        done asap (bc it seems to not be done yet)
+    -   I want to finish my plan for scaling clients rapidly & seamlessly (google doc)
+    -   I want to support meowwolf & area15 & other clients if needed with Jocelyns help 
+    -   I want to stabilize the api & make more deployment tests
+
+
+    I know this is where the work is needed most IMO though it is also where we have the least 
+    capable people in our TS team. They will have to dive in and teach themselves everything.
+
+    
+-   At some point we have to accept the team is too small and the complexity of the projects is getting too big.
+    What I can offer is full focus on increasing the ability to scale the project, onboard clients & increase it's value
+    as fast as possible. You guys are amazing sales ppl with great partnerships but that won't do you any good if 
+    we keep sidetracking our few engineers with new features and sacrificing the onboard potential of our project.
+    At the rate we're being managed we won't sell this company until at least another 5 years go by. And like i've prev 
+    said backends are getting easier to build bc of the serverless service era that is revolutionizing. This good bc 
+    we are taking advantage of it but also bad bc others can too.
+    There is no point onboarding big clients if we keep moving too slow in constant bug fixes caused by bad code 
+    & if we keep losing clients as a result of it.
+
+
+-   Why do I want more?
+    You guys must be aware that I have been very low cost since the beginning.
+    My first year I was paid peanuts 65k. Second around 80k and my third around the same ~85 
+    (lower than my latest yearly salary resulting to the low cash stock & my furloughing).
+    My total cost these last 3 years has been about 230k as a contractor not as an employee (In salary).
+    I now qualify for Senior Engineer roles with full benefites and $160k+ salaray & maybe more if I 
+    land forbes 20 tier company like where I was before TS. I am not being greedy I am only 
+    evaluating my market price and what makes sense.
+    My stock in the company is extremely high risk & at the present I prob only own about 30k worth.
+    Will things get better. No doubt. But it is speculative, a second shut down can still occur in fall/winter 
+    & the companies cash pile is minimal. And I would not be compensated in zero risk security like cash.
+
+    If you guys that me asking for more is not justified consider what I can do:
+    I've been essential to the TECHNICAL
+    development of ICS in korea as well as for TS movement in Korea when Chris was in a Coma.
+    I took a basic and very buggy ICS api from Mando & Ron and turned it into the affiliate feature packed API that it became.
+    I probably would have prevented the whole API complete migration mistake if I had been exposed to the API sooner
+    during the same time as MLogica (since I strongly spoke against it since its conception) and which resulted in losing clients, time, & 
+    in my guess a MASSIVE amount of cash as a result.
+    
+    The Anup & MLogica mesh were patches I largely had to contribute fixing and still deal with. 
+    Additionally, I have highly trained our current team to be where it is today to keep us moving.
+    If TS Enterprise has been losing profit and moving slowly development wise in the past couple years 
+    I doubt it is the consequence of my decisions.
+
+-   I've been nothing but transparent with you guys. Maybe a little bit too much.
+    --Today I am learning new techs & prepping for a job at a top tier company in case shit gets bad. 
+    --I do not want to stunt my profressional growth & lose massive time so I have to mitigate my risk.
+    I have options and so do you because I know there are literally thousands of talented devs. 
+    But we can still work together and especially as you said before, EventBrite is getting sued and losing customers.
+    A void we could fill if we have the infrastructure ready when things recover. This is something I can be excited about.
+
+
+    You guys know I am easy to work with bc I have shown it in the last 3 years. 
+    Don't let my current frusteration blind you of that.'
+
+    --------
+    Hey sorry Mark some urgent family stuff came up yesterday and I couldn't get back at the right time. So I tried to  
+write back as early as I could today.
+As discussed I also wanted to ask these extra questions:
+
+Kai -
+    -   What is the total Liquidation Preference? Are they at 1X, 2X, 3X, etc 
+    -   Do the investors have Participation Rights?
+    -   Does the company hold the right to repurchase their vested stock from employees 
+    -   Are there any Cancellation Plan for the stocks, forfeiture, or redemption?
+    -   Is there a trigger clause? What are the terms as
+
+Mark - I also wanted to see what would be the planned course of what is needed in the next 2 months?
+Would it still be mainly ICS focused? Or would it be some work with Meowwolf and Area15 as things may be opening up?
+I was speaking to Joseph and It seems that there is still work to be done on the new storefront and infrastructure project.I'd be interested in trying to get completed as soon as possible.
+Best,Oscar
+    --------
+
+
+    Here are some remaining questions that I have:
+    1. What is the total Liquidation Preference? Do the investors have Participation Rights?
+    2. If the company were purchased today at the most recent VC valuation, what would my shares be worth?
+    3. If the company were purchased today at 2X the most recent VC valuation, what would my shares be worth? 
+    3. If the company were purchased today at 10X the most recent VC valuation, what would my shares be worth?
+
+    -   I will need time to review the contract
+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+How will we prevent future investors from getting too much preferred stock?
+Is it possible for company holdings like ICS to get sold without common shareholder consent & at a price that 
+    would lower the companies valuation?
+    -   Ask that all these questions be documented along with your contract
+I need time to review & have a lawyer review it
+
+A clause to prevent:
+     “incomprehensible” clawback provision, which gave the company had the right to repurchase their vested stock from
+      employees -- effectively cutting them out of profits from the sale.
+
+      I was still an employee last 3 months, I want vestment for them
+      dragging rights 
+      Get in an LLC
+      
+    
+-   Decline any ***clawback*** or company repurchase rights for vested shares before hire.
+-   Ask for backup documentation along with your startup offer letter
+-   Beware of Cancellation Plans.
+-   If you find a clawback clause after you’ve signed the agreement, negotiate
+-   Consider challenging a stock option clawback if you are laid off
+
+
+What is the company credit grade?
+I want to know the preferential payout details
+I want to know what percentage I have of the outstanding and common pool 
+I want to have pre and post protection of my stocks and an extended buyout time
+-   Can my company take back my shares? Are there any clawback clauses?
+    -   It may be couched in language such as “company repurchase rights,” “redemption” or “forfeiture.” 
+        But what it means is that the company can “claw back” your vested stock options before they become valuable
+        
+Last, because two thirds of employees know squat about acquisition-based vesting acceleration triggers, they often sign offer 
+letters that give them no protection against being demoted or fired before or after (but in connection with) an acquisition. 
+The result? Situations like Skype where the PE firm acquirer conspires with Andreessen & Horowitz to fire employees ahead of 
+and after the acquisition to free up more shares/$$ for them.
+
+A trigger clause gives you partial or full vesting acceleration should you be a) fired without cause; b) put into a role 
+inferior to that for which you were hired; or c) upon acquisition. Given its importance, employees' profound lack of knowledge in this area is why a 
+much higher percentage of VCs drive luxury cars while you drive Pinto's.
+
+
+
+
+
+
+
+
+
+
+
+
+Types of Convertible Preferred Stock:
+-   Straight preferred - regular dividends (times of hardship may be cut & not paid to this category or common stock)
+-   Cumulative preferred - gets missed dividends 
+-   Convertible preferred - Can be converted to shares of common stock
+    -   Converted for a predetermined conversion price & after a certain period of time or particular date
+    -   Main reason is to take advantage of capital gains to take advantage of companies increase value of common stock 
+    -   Typically offer slightly lower dividend rates than straigh preferred stock
+-   Participating preferred
+    -   Offers potential for additional percentage of profit over & above 
+        fixed dividends. Really good on profitable years.
+        Can get revenue also once other interest & dividend payments have been met  
+
+-   Callable preferred 
+    -   Stock that can be repurchased or called at a fixed price after a stated date & fixed price
+        Allows issuer (company) to revaluate its dividend payments and conversion arrangements 
+        & issue new stock if it so chooses.
+        In return for this concession corporations will often pay the holders a premium
+        or a higher dollar amount for the called shares 
+
+
+All tend to have:
+-   Company ownership
+-   Qualities of fixed income Securities
+-   Dividend preference to common stock
+
+
+In bankruptcy,
+bond holders aka debt holders get paid first 
+followed by preferred shareholder 
+& then common shareholders
+
+
+prefered stocks - do not participate in the growth of a company
+- They do not have a maturity date so makes them like really long term bonds
+
+
+Really good video on preferred shares:
+https://www.youtube.com/watch?v=rRlkvFVTqvM
+
+
+
+
+
+
+
+
+
+
+
+http://stockoptioncounsel.com/blog/negotiating-equity-what-is-the-total-preference/2014/2/13#
+Preferred Stock "Liquidation Preference"
+If the Liquidation Preference is high, you might want to negotiate for more shares to make 
+up for the loss in value you can expect when the company is acquired.
+
+As a startup employee, you'll be getting Common Stock (as options, RSUs or restricted stock). 
+
+When venture capitalists invest in startups, they receive Preferred Stock. Preferred Stock comes 
+with the right to preferential treatment in merger payouts, voting rights, and dividends. If the 
+company / founders have caved and given venture capitalists a lot of preferred rights - like a 3X 
+****Liquidation Preference**** or Participating Preferred Stock , those rights will dramatically reduce your 
+payouts in an acquisition.
+
+
+But some company founders give preferred stockholders multiple Liquidation Preferences or Participation 
+Rights that cut more dramatically into employee stock payouts in an acquisition.
+
+
+Preferred stock may also have "Participation Rights," which would change our first example above to give preferred 
+stockholders an even larger portion of the acquisition price.
+
+Without Participation Rights, Preferred Stockholders must choose to either receive their Liquidation Preference 
+or participate in the division of the full acquisition price among the all stockholders. In the first example 
+above, the preferred stockholders held 20% of the company and had a $5 million Liquidation Preference. 
+When the company was acquired for $15 million, the preferred stockholders had the choice to receive their $5 million 
+liquidation preference or to participate in an equal distribution of the proceeds to all stockholders. 
+The equal distribution would have given them $3 million (20% of $15 million acquisition price), so they chose 
+to take their $5 million liquidation preference, and the remaining $10 million was divided among 20 million shares 
+of common stock.
+
+**
+With a **Liquidation Preference**, 
+-   preferred stockholders are guaranteed to be paid a set dollar amount of the acquisition 
+    price, even if that guaranteed payout is greater than their percentage ownership in the company.
+
+But some company founders give preferred stockholders multiple Liquidation Preferences or Participation Rights 
+that cut more dramatically into employee stock payouts in an acquisition.
+
+
+
+
+
+
+In our example with a 1X Liquidation Preference but adding a Participation Right, the Participating Preferred Stock 
+would receive their $5 million Liquidation Preference AND a portion of the remaining $10 million of the acquisition 
+price equal to their % ownership in the company.
+
+$5 million Liquidation Preference + ((5 million shares / 25 million shares outstanding) * $10 million) = $7 million
+
+Common stockholders would receive (20 million shares common stock / 25 million shares outstanding) * $10 million = $8 million.
+
+Our hypothetical employee who held 1% of the company would receive $100,000 (.01 * $10 million) or 0.67% of the acquisition price.
+
+
+
+
+
+*********
+Employee Focus – Calculating Your Payout
+
+If you are an employee of a startup, you can use Liquidation Preference as shorthand for the minimum price the company 
+would have to be acquired for before any employees would be paid out. 
+
+If the acquisition price is less than the Liquidation Preference, common stockholders will get $0 in the acquisition.
+
+
+If the preferred stockholders have Participating Preferred Stock, 
+Your Payout = (Acquisition Price – Liquidation Preference) * Your % of All Outstanding Stock
+
+If the preferred stockholders have Non-Participating Preferred Stock, you will receive the lower of:
+
+Your Payout = (Acquisition Price – Liquidation Preference) * Your % of Common Stock OR
+
+Your Payout = Acquisition Price * Your % Ownership
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+WHAT I WANT IN MY NEXT CONTRACT
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+
+
+
+EVENT BRITE:
+
+(USD)	Dec 2019	Y/Y
+Revenue	82.66M	8.89%
+Net income	-13.75M	-
+Diluted EPS	-0.16	-
+Net profit margin	-16.64%	-
+Operating income	-19.37M	-
+Net change in cash	-64.48M	-
+Cash on hand	420.71M	3.92%
+Cost of revenue	34.2M	9.53%
+
+2019	$327M
+2018	$292M
+2017	$202M
+2016	$133M
+
+Mkt cap	1.09B @ 12.52$ (06/09/2020)
+Feb/2020 @ 20$ (pre-covid) market cap ~ 1.85B
+
+
+
+
+
+
+
+LIVE NATION: 
+
+Full Year 2019 – Financial Performance
+Revenue Up 7% to $11.5 Billion ****
+
+Operating Income Up 19% to $325 Million
+Adjusted Operating Income Up 14% to $943 Million
+Event-Related Deferred Revenue Up 10% to $1.2 Billion as of December 31
+
+
+2019 Core Business Drivers
+
+Live Nation Concerts Attendance of 98 Million, Up 5%
+Sponsorship & Advertising Revenue Up 17%
+Presence Deployed in Over 700 Venues with 120 Million Fans
+
+Market cap today: 11.50B @ $53.42  (06/09/2020)
+
+Feb/2020 @ 68$ (pre-covid) market cap ~ 14B
+
+
+
+
+
+
+Frequence:
+2020
+grew 8% over 2019
+41.7 million for 2020
+Grew 33% in the 4th quarter vs prior 4th quarter 
+Hired 37
+
+NOTE:
+-   Very good progress given it was a COVID year 
+    and a lot of advertisers cut their budget
+
+
+
+TICKETSOCKET INC: 
+
+3.5M Revenue
+Valuation marketcap @ 2.50 => 50 Mil (precovid)
+They want to give it @ $0.74 which they say is a 70% discount on a predicted equity round that they couldnt
+    close last year
+
+When compared with bigger healther EB at their peak valuation in 2020 TS is valuating itself 
+    @ 100x (100x puts it at EB revenue) more so 5B vs EB 1.85B
+    -   Makes ~100x more revenue
+
+
+When compared with bigger healther LiveNation at their peak valuation in 2020 TS is valuating itself  
+    @ 3285x more so 164.2B vs LiveNation 14B
+    -   Makes ~3285x more revenue
+
+
+
+
+
+
+*****
+*** Participation rights (which is called Participating Preferred Stock), (ask if they have this)
+-   They would receive their Liquidation Preference ***and*** participate in the distribution of the remaining proceeds.
+*** 3X Liquidation Preference - If a preferred stock holder say invests 5mil and on exit they get 3x this
+*********
+
+dragging rights 
+
+
+
+
+*********************************************************************************
+
+1. What is the total Liquidation Preference? Do the investors have Participation Rights?
+
+2. If the company were purchased today at the most recent VC valuation, what would my shares be worth?
+
+3. If the company were purchased today at 2X the most recent VC valuation, what would my shares be worth? 
+3. If the company were purchased today at 10X the most recent VC valuation, what would my shares be worth?
+
+
+
+How will we prevent future investors from getting too much preferred stock?
+Is it possible for company holdings like ICS to get sold without common shareholder consent & at a price that 
+    would lower the companies valuation?
+I need time to review & have a lawyer review it
+
+A clause to prevent:
+     “incomprehensible” clawback provision, which gave the company had the right to repurchase their vested stock from
+      employees -- effectively cutting them out of profits from the sale.
+
+
+Trigger Clause:
+a) fired without cause; 
+b) put into a role inferior to that for which you were hired; or 
+c) upon acquisition.
+
+
+
+
+-   Get in an LLC
+    -   To protect myself
+
+You guys do not want to disclose balance sheets even though I am investing my time 
+-   Kai's 2.50$ price is extremely over valued when compared to bigger cash heavy companies like 
+    live nation and event brite. 
+
+-   LLC ICS selling & how will that come into play (How will that reduce the value of the company)
+
+
+
+Ask that all these questions be documented along with your contract
+
+-   I want continual vestment of the 3 months I was off. I worked for peanuts my first year and half & 
+    it's also not my fold the company didnt account for bad times with a cash reserve. I am not paying for that.
+    I didn't want to furlough. Becuase of that & low transparency I got no income & I got screwed.
+    -   The equity is the premium paid to keep me. Not my fault the company couldn't pay cash. You saved in income
+        by not paying me & keeping me in furlough & I stay by not getting another job w/ more benefits.
+    
+
+
+
+Tips: (https://www.forbes.com/sites/dianahembree/2018/01/10/startup-employee-alert-can-your-company-take-back-your-vested-stock-options/#208b02626e49)
+-   Decline any ***clawback*** or company repurchase rights for vested shares before hire.
+-   Ask for backup documentation along with your startup offer letter
+-   Beware of Cancellation Plans.
+-   If you find a clawback clause after you’ve signed the agreement, negotiate
+-   Consider challenging a stock option clawback if you are laid off
+
+
+Longer time of expiration to buy my contract & clear langauge
+
+
+What is the company credit grade?
+I want to know the preferential payout details
+I want to know what percentage I have of the outstanding and common pool 
+I want to have pre and post protection of my stocks and an extended buyout time
+-   Can my company take back my shares? Are there any clawback clauses?
+    -   It may be couched in language such as “company repurchase rights,” “redemption” or “forfeiture.” 
+        But what it means is that the company can “claw back” your vested stock options before they become valuable
+
+
+**************************
+CONCLUSION:
+
+Okay I know it is a risk 
+But I believe it can withstand if we keep our heads low & keep it alive 
+
+
+ONLY THING LEFT TO NEGOTIATE:
+-   Documentation of my contract edits & time to review vague language in contract
+    -   Longer time of expiration to buy my contract (Instead of 3 months it's 10 years)
+    -   No Clawback clause of any type 
+    -   Trigger clause of of full vesting acceleration should any of 3 cases occur (fired, demotion, company exit)
+
+-   How much time I'll work per week (30 or 60, half or full)
+    -   If I work more I get more stock BUT less TIME for my projects 
+
+-   Amount of cash I'll receive (2k or 3k for the amount of time I am doing)
+    -   If I am nice here I can prob improve relationship slightly here ONLY SLIGHTLY. Real fixing will happen over time
+
+REMEMBER:
+-   THIS is only for 2 months 
+    So I should take higher cash & in 2 months more stock
+
+***********************************************************************************************************
+
+
+
+
+
+*****
+If you're a early stage startup employee, and you're working for a CEO who refuses to share such details, be suspicious. 
+Or maybe even go find a new job, because you're working for a jerk.
+
+https://www.forbes.com/sites/dianahembree/2018/01/10/startup-employee-alert-can-your-company-take-back-your-vested-stock-options/#208b02626e49
+Can your startup take back your vested stock options? Check your contract for a “clawback” clause
+
+
+
+https://www.businessinsider.com/this-22-year-veteran-of-startups-says-employees-are-getting-screwed-by-vcs-and-ceos-2014-3
+
+
+
+
+"One way startup employees get screwed is when the nature of Preferred shareholders' (i.e. founders & VCs) preference multiple 
+is withheld from them. Because they are not told (during the hiring/negotiation process) of the Preference structure 
+(Standard vs Participating) nor do they typically know to ask, it's only after years of work and post-acquisition that 
+they find out they made, say, 40% less per Common share than they thought they would. This has happened to at least 20 
+people I know, and is one of the systematic ways non-founding startup employees get screwed by founders & VCs. Put simply, 
+95%+ startup employees naturally & naively assume Common & Preferred shareholders get paid the same amount, but that's only 
+true in ~10-20% of startup exits."
+
+Another example is that of prospective startup hires not being told the number of shares outstanding when they get their offer 
+letter. As my survey proved, this is the case with most startup employees, and it happens because a) founders & VCs knowingly 
+keep this information to themselves as much as possible so they can make employees think 10,000 shares, for example, is big 
+number; and b) non-founding startup employees know so little that they succumb to the feeling that they'll be seen as pushy 
+if they push too hard to get info on # of shares outstanding; I have seen this happen hundreds of times, and twice in the 
+past 2-3 weeks with Sr Dir & VP-level people.
+
+Last, because two thirds of employees know squat about acquisition-based vesting acceleration triggers, they often sign offer 
+letters that give them no protection against being demoted or fired before or after (but in connection with) an acquisition. 
+The result? Situations like Skype where the PE firm acquirer conspires with Andreessen & Horowitz to fire employees ahead of 
+and after the acquisition to free up more shares/$$ for them.
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+IMPORTANT TIPS
+
+Highlights: (http://sellingbliss.blogspot.com/2014/03/startup-employees-are-getting-screwed.html)
+
+Only 38.5% of respondents know within 2% accuracy the total number of shares outstanding in the startup they work at.
+
+72% don't know what the preference structure is at their startup. You might want to, for two reasons:
+
+1. Whether your startup is Standard or Participating Preferred can have a 30-40% effect on the value of your common shares 
+    in a liquidity event;
+
+2. I can virtually guarantee you that if the preference structure at the startup you work at or are interviewing 
+    with is gonna f#&k you in the keister 
+    upon liquidity, you never asked the right question and your employer consciously avoided disclosing what 
+    you'd have wanted to know.
+
+Only 9% legally have any control over what role & responsibilities they'll have post-acquisition. 
+Now do you understand why so few startup employees 
+are truly happy with their role within the acquirer? 
+Reality is management oftentimes doesn't think it through - either in terms of the employees' best 
+interests or, frankly, the best long-term interests of the acquirer - because
+    a) they have no incentive to; and 
+    b) you the Common shareholders haven't used your leverage to gain basic 
+        control over what happens post-acquisition.
+
+
+A strong majority (66.7%) of startup workers don't know what the industry average is for equity given 
+to people in similar positions. This wouldn't 
+be an issue for you, the Common, if 50% of you weren't expecting that your startup options will be worth $100K-$1M and 20.6% $1M+. 
+It's a dog-eat-dog startup world, and you 66.7% are wearing Milkbone underwear.
+
+
+Only 29.5% of you are certain you have any type of trigger clause in your employment agreement with the startup you're at, 
+and even fewer (10.7%) negotiated that language. A trigger clause gives you partial or full vesting acceleration should you be 
+a) fired without cause; 
+b) put into a role inferior to that for which you were hired; or 
+c) upon acquisition. Given its importance, employees' profound lack of knowledge in this area is why a 
+    much higher percentage of VCs drive luxury cars while you drive Pinto's.
+
+
+Dreamers Dream, But Lawyers Wake Them Up
+
+42.3% of respondents expect their startup equity to be worth $100K-$1M after 4 years' vesting, and 25.6% expect $1M+. 
+[Generously] assuming $100-$150K annual salary, people are clearly dreaming that their startup equity will have a big 
+& positive (quite possibly life-changing) impact on income. 
+Yet, only 23.1% have had two or more liquidity events. 
+I realize in retrospect that I should've asked people what, if any, money they made from their equity in those exits, 
+but anecdotally I've heard from several people that by no means did liquidity events always correlate to income events for them.
+
+So what does this all mean? Two things really:
+
+1) A strong majority of non-founding startup employees don't know what they need to about startup equity, and as a result are putting 
+themselves at the mercy of founders and investors for receipt of a chunk of change that they largely expect to change their lives;
+
+2) The glaring lack of knowledge on the part of Common shareholders at startups is a major contributing factor to the huge gap between 
+startup equity income expectations and reality for non-founding startup employees.
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+EVENT BRITE HAS A TON OF PREFERED STOCKS ISSUED BUT => THEY ARE A UNICORN COMPNAY AND THERE VALUATION MADE UP FOR IT 
+-   HOWEVER THIS DOES NOT MEAN THAT EMPLOYEES GOT SCREWED BEFORE AN IPO OR LATER INVESTMENT / ACQUISITION
+Event Brite preferred stock **** Talks about common stock value lowering in value over time
+https://angel.co/blog/liquidation-preference-your-equity-could-be-worth-millions-or-nothing
+What was our most recent valuation?”
+“What is our current yearly growth rate?”
+“How much would the company need to sell for before my equity has value?”
+
+If your most recent valuation is close to or exceeds the needed sale price, your equity offer has value. 
+If the needed sale price is much higher than the company's most recent valuation, though, you have something 
+to consider: Based on its current growth rate, how many years would you need to stay before its value comes 
+close to that needed sale price? Are you comfortable investing that much time?
+
+
+
+$0.50 is pretty generous because I have no control over negotiation on how dilution will take effect later + 
+liquidation preference & participation rights. Event brite had so many rounds of investment before they their IPO. 
+They had more than 400M of liquidation preference
+
+
+
+
+
+
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+END OF DEAL
+--------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------

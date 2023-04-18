@@ -1,0 +1,35 @@
+
+
+- Ask many questions bc specific functionality can change whole design significantly
+    - eg) a web crawler & types of media it fetches & stores
+- Always ask for the Functional Requirements
+- State what complications with target goal are
+- Estimate read and write traffic
+- Create an API of functional reqs
+    - To show you know what important parameters/inputs are needed for an operation to work fully
+        according to functionality
+- Choose an optimal database / datastorage
+    - if no relationships than nosql is best
+- Consider Input/Output ( Read vs Write )
+- Client bandwidth & experience
+- Its all about how to setup so it is easy to scale later
+- Services for simplifying state machine & process that leads to result. 
+    eg) webcrawler
+    1. URL frontier: To store the list of URLs to download and also prioritize which URLs 
+        should be crawled first.
+    2. HTML Fetcher: To retrieve a web page from the server.
+    3. Extractor: To extract links from HTML documents.
+    4. Duplicate Eliminator: To make sure the same content is not extracted twice unintentionally.
+    5. Datastore: To store retrieved pages, URLs, and other metadata.
+
+- Goal after getting functional req & asking specific Qs on narrowing functionality
+    - Create high level components of the process operations
+    - There should be a lifecycle & specific states take care of specific tasks
+        & specific transitions/transitional flows that lead to other states
+    - Have modularity & extensibility in mind so this can be abstract in case
+        there are many "types" that can run through the pipeline
+    - Then start designing how each component can be be distributed among multiple 
+        machines/hardware
+    - Efficiency is important so pick best algorithms and datastructures to manage
+        flow of data from state to state & transitions & across distributed system
+        for scale & optimal resource usage

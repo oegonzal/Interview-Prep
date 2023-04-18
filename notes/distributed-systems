@@ -1,0 +1,21 @@
+Load balancing
+
+Using **consistent Hashing** to distribute load among multiple servers
+-   Consistent hashing works when a request's id gets hashed so it is "likely" to land uniformly on the total 
+    available number of servers
+-   The way request ids are generated is with a sort of UUID that is uniformly distributed. So if you take 
+    the mod of a uniform distribution you are likely to distribute load evenly as the randomly generated Ids
+    come in
+-   Load factor would be 1/n where n is the number of servers 
+
+What about when you need to add more servers?
+-   The problem with this though is when you change the number of servers all of a sudden all requests have to 
+    be routed differently bc they're moduling algorithm changes (eg, r%n -> r%(n+1))
+    -   This can be bad bc all of a sudden new bucket ends up reshaping how servers are representing the load distributuio
+    -   Think pie chart & see this vid: https://www.youtube.com/watch?v=K0Ta65OqQkY&t=133s
+-   Consistent Hashing minimizes this change & when a new server is added it takes a "bit" of each server so that 
+    every server keeps most of its load consistent
+    -   You want to keep the load balancing consisted in order to not mess up caching. Cache that is formed from 
+        consisten requests going to the same server matters (You don't want it to get dumped bc of change of request 
+        redirection)
+-   Keep in mind requests ids can represent userId, appId, etc

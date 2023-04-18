@@ -1,0 +1,115 @@
+
+-   Q: What is the main function of the DOM?
+    A: 
+    The Document Object Model ( DOM) is an application programming interface (API) for both HTML 
+    and XML applications. This defines the logical document structure, and how to access and 
+    modify a document.
+
+    Programmers can build documents using the Document Object Model, navigate their structure, 
+    and add, alter, or remove elements and content. Using the Document Object Model, something 
+    contained in an HTML or XML document may be read, modified, removed, or added.
+
+    The HTML DOM defines all HTML elements’ objects and properties, and the methods (interface) 
+    to access them.
+
+-   Q: What is the purpose of the HTML5 DOM node tree?
+-   A: 
+    The HTML markup layout includes a hierarchy of elements in the HTML DOM view, which is 
+    represented in a tree format. It consists of a root node and child nodes, which have a 
+    tree of syntax and a semantic tree.
+
+    The structure consists of a document that is the root element, <html>, from where the tree starts.
+
+    It consists of sub-elements like <head> and <body> and other text and attributes written in the 
+    HTML format.
+
+-   Q: List the main class of methods involved in the HTML DOM.
+    A:
+    The HTML5 DOM provides methods to simplify tasks for web developers, and the methods are as follows:
+
+    x.getElementById(id) – gets the element associated with a specified id.
+    x.getElementsByTagName(name) – gets all the elements using the tag name that is associated with it.
+    x.appendChild(node) – inserts a child node to x and appends the child node at the end of the tree.
+    x.removeChild(node) – removes a child node from x and removes it from the tree area as well.
+
+
+-   Q: What is the function of the DOM according to the W3C standards?
+    A:
+    The HTML DOM is used to add, remove, and change the elements of HTML. DOM considers the 
+    entire element in an HTML document as a node and it treats all of them using the same standards.
+
+    The document is being given in the document node and all the elements of the HTML are present in the 
+    element node.
+    The text used in the HTML elements is for the text nodes and allows the further use of properties.
+    HTML usually consists of the attribute and it is stored in the attribute node that allows easy 
+    modification of the properties.
+
+
+-   Q: How would you define the “Node Tree” in the HTML DOM?
+    A: 
+    Using the HTML DOM, we can represent a node tree structure of all nodes present in an HTML document.
+
+    All nodes in an HTML document are related to each other in a node tree structure and using this 
+    node tree structure; we can access every node of the HTML document.
+
+    In the tree structure, we start from the root node i.e., the <html> element, and go down to the 
+    lowest level nodes of the tree. An example of sub-elements is that of <head> and <body> and other 
+    text and attributes written in the HTML format.
+
+-   Q: Describe the three main Node properties in the DOM.
+    A:
+    nodeName: provides information on the attribute node and other nodes. nodeName is in 
+    read-only format, and it is the parameter that acts as a tag name.
+
+    nodeValue: specifies the value of each node. The node value can be elementwise, or it can 
+    be text wise. Another node’s value can also be provided.
+
+    nodeType: returns the type of the node used. nodeType is in the read-only format.
+
+
+-   Q: List some commonly used properties and methods of the HTML DOM?
+    A:
+    Properties and methods help us to define the HTML DOM programming interface.
+
+    Properties of HTML DOM. Let e be a node object or an HTML element.
+
+    e.innerHTML : returns the inner text value of e.
+
+    e.nodeName : returns the name of e.
+
+    e.nodeValue : returns the value of e.
+
+    e.parentNode: returns the parent node of e.
+
+    e.childNodes: returns the child node of e.
+
+    e.attributes: returns the attribute nodes of e.
+
+    Methods that we use in the HTML DOM.
+
+    e.getElementById(id) : gets the element with a specified id in an HTML document.
+
+    e.getElementsByTagName(name) : gets all elements with a specified tag name in an HTML document.
+
+    e.appendChild(node): inserts a child node to e or increases the number of child nodes of e.
+
+    e.removeChild(node) : removes a child node from e in an HTML DOM.
+
+
+
+
+-   The nodeValue of an attribute node is the attributeValue
+-   The nodeValue for element nodes is null.
+-   The nodeValue for text nodes is the text itself.
+-   The nodeName of an attribute node is the attribute name.
+-   The nodeName of an element node is the same as the tag name.
+-   The nodeName always contains the uppercase tag name of an HTML element.
+
+
+-   Q: Which of the following is true about the DOM?
+    A:
+    API that treats HTML and XML documents as tree structures with nodes
+    The DOM is constructed in the browser as the page loads
+    document.getElementById() is used to select a node in DOM
+
+

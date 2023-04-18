@@ -1,0 +1,284 @@
+Span & Div
+https://htmldog.com/guides/html/intermediate/spandiv/
+
+
+Semantically meaningful
+https://www.w3schools.com/html/html5_semantic_elements.asp
+
+
+Layout tutorial
+https://learnlayout.com/position-example.html
+
+
+CSS
+https://www.w3schools.com/css/css3_flexbox.asp
+
+
+# Before election & vaccine: list of quality undervalued stocks, reallocation on PLs triggered, risk mitigation
+
+# MAIN AND ONLY SHORT TERM GOALS:
+# Research part w/ quality stocks (screener & makesure they are safe (eg. no pending bankruptcy))
+# + Risk mititgator (drawdown + diversification + long/short)
+# + Zig-zag strategy (taking advanatage of levels of chosen basket of stocks)
+
+
+# ****** By end of this month JULY (most basic, perfect in August w/ Quant + Research)
+# GOAL: Good volatility trigger + good PL estimator + de/leverager + diversification + short/long
+#  + volatility screener + hold strats from research project + RISK MITIGATION + profit locking/sending-back-to-bank
+
+
+# PLAN: finish today & finish rolling volatility + sig PL detection + lev/delev algo (small pos. only)
+# Backtest on recent data & paper trade to confirm. Figure out as u go, have fun, be fast.
+# SETUP piles & high volatilities
+# Build 2 wrappers on top of this:
+# - One to detect high scores within a region & low score areas
+# - Another to find the most optimal entry price based on recent activity
+
+
+
+class Apex:
+    def __init__(self, price, magnitude, timestamp, left_timestamp = None, \
+                 left_magnitude = None, right_timestamp = None, right_magnitude = None):
+        self.price = price
+        self.magnitude = magnitude
+        self.timestamp = timestamp
+        
+        self.left_timestamp = left_timestamp
+        self.left_magnitude = left_magnitude
+        self.right_timestamp  = right_timestamp
+        self.right_magnitude = right_magnitude
+
+class PLineInterval:
+    def __init__(self, lowerApex, higherApex, nextInterval = None, prevInterval = None):
+        self.apex = apex
+        self.lowerApex = lowerApex
+        self.higherApex = higherApex
+        
+        self.nextUpperInterval = nextInterval
+        self.nextLowerInterval = prevInterval
+        
+class PriceLine:
+    # Linked list struct bc we can intercept at any given point between terminals (linkedlist more efficient than array)
+    def __init__(self):
+        self.maxInterval = None
+        self.minInterval = None
+        self.lastInterval = None # Last added interval to priceline linkedlist
+        
+    def update(self, prev_ext, current_ext):
+        # Create interval
+        lowerApex = prev_ext if prev_ext.price < current_ext.price else current_ext
+        higherApex = prev_ext if prev_ext.price >= current_ext.price else current_ext
+        new_interval = PLineInterval(lowerApex, higherApex)
+        
+        # Base: very first interval should initiate list & break
+        if self.lastInterval is None:
+            self.maxInterval = new_interval
+            self.minInterval = new_interval
+            self.lastInterval = new_interval
+            return interval
+        
+        # Build: update prevs upper or lower bounds if necessary
+        currentInterval = self.lastInterval
+        self.getNewUpperBound(new_interval, currentInterval)
+        self.getNewLowerBound(new_interval, currentInterval)
+        
+        # Update: Note the last interval added to linkedlist
+        self.lastInterval = new_interval
+       
+    '''
+        new_interval is new the new interval we want to update the price line with
+        baseInterval is the interval where we want to attach the base interval to build off from
+            (usually is the last interval that was appended)
+        returns volatility_list
+            volatility_list contains a list of the intervals that were overlapped by new_interval
+    '''
+    def getNewUpperBound(self, new_interval, base_interval):
+        # Must have a base unit to continue algo
+        if self.lastInterval is None:
+            raise Exception("updateUpperbound needs a self.lastInterval")
+            
+        # Cannot attach an interval that is unattached to last interval placed in PriceLine struct
+        if new_interval.upperApex.price < self.lastInterval.lowerApex.price:
+            raise Exception("Intervals must be connected with last interval that was added")
+        
+        # New interval is not headed towards upperbound (In this Fn check only interval heading up in price)
+        if new_interval.upperApex.price == self.lastInterval.lowerApex.price:
+            # Price did not move (just stayed in same pt in price from prev tf)
+            # Do not update to new extrema, we need old one to be able to have a tf spread
+            print ("NOTE: new_interval.upperApex.price == self.lastInterval.lowerApex.price")
+            return
+        
+        # Logic for overlapping upwards in price **
+        overlapped_intervals = []
+        
+        # Get all intervals overlapped by new_interval starting from base_interval
+        # in the increasing price direction
+        current_interval = base_interval
+        while currentInterval is not None 
+            \ and new_interval.lowerApex.price <= currentInterval.lowerApex.price
+            \ and new_interval.upperApex.price >= currentInterval.lowerApex.price:
+                
+            overlapped_intervals.append(current_interval)
+            current_interval = current_interval.next
+        
+        # NOTE: current_interval represents 'last' overlapped interval
+        
+        # If we reached the end than our interval is creating a new high
+        if current_interval.next is None:
+            self.maxInterval = new_interval
+            base_interval
+        
+         
+        # On overlap of an interval edge (signifies we overlapped an apex)
+        # Find what it's magnitude is by scanning down for lowest apex within 2 init timestamps
+        # Merge from min apex to latest to form a new interval in the PL
+        # InversionOfControl here to pass on volatility unit => logrange => lockedInPLs list
+        
+        else:
+            # current_interval.next.lowerApex = new_interval.upperApex
+
+
+            # Update next interval's lowerbound to its new bound
+            current_interval.next.lowerP = new_interval.upperP
+
+            # Make new connections (for garbage collection)
+            new_interval.next = current_interval
+            current_interval.next.prev = new_interval
+            current_interval.next = None
+
+            # TODO:
+            # WHAT HAPPENS IF NEW INTERVAL REMOVES EVERYTHING??
+
+            # remove overlapped intervals
+            # update new next interval if its lowerP gets undercut
+            # if interval is new max, update self.maxInterval
+        
+        return overlapped_intervals
+        
+        
+    def getNewLowerBound(self, interval, currentInterval):
+        if self.lastInterval is None:
+            raise Exception("updateLowerbound needs a self.lastInterval")
+        
+        # No update needed here (most likely a upperbound update)
+        if interval.lowerP >= self.lastInterval.upperP:
+            return
+        
+        # Get lowest interval 'interval' overlaps
+        while currentInterval.prev is not None and interval.lowerP < currentInterval.next.upperP:
+            currentInterval = currentInterval.prev
+            
+        if self.minInterval is None:
+            self.minInterval = interval
+        
+        
+        
+class Graph:
+    def __init__(self):
+        self.axis = []
+    
+    def buildGraph(self, extremas):
+        root_apexes = [] # by price
+        priceline = PriceLine()
+        lastExt = None
+        
+        
+        # On each apex check left & right & get magnitude
+        # right can be max seen so far above current price
+        # Upon every iteration look back @ prev unfulfilled apexes
+        # Remove the ones that belong to a bigger parent
+        # On memoizer I need to remove the pts that get overlapped by another
+        # - so each of these need to have a range p1 to p2 of what they cover
+        # - basically I am tracking a vertical price line
+        
+        extremaData = extremas[0:2] #TEST DATA
+        
+        ext_len = len(extremaData)
+        for apexInd in reversed(ext_len): # iterate from newest to oldest data
+            curExt = extremas[apexInd]
+            if lastExt is None:
+                continue
+            
+            priceline.update(lastExt, curExt)
+            #Check right w/ momoizer
+            
+            lastExt = curExt
+            #for runnerInd in range(apexInd+1, ext_len):
+                #print("iteration")
+                
+        
+        # Record apexes above k% (say 5%) in magnitude
+        # Take log of price magnitude (this only works for fixed rranges)
+        # Create apex & include it on range struct
+        
+        # Take snapshots (by recording location of each apex on each range)
+        # Snapshots: Represent a sig trend & are chronological
+        # Save sig channels found in the most recent activity that hold pretty well
+        
+        # Return struct
+    
+    def addApexVolatilityUnit(self):
+        print ("Not implemented yet")
+        # Take log of the unit's magnitude
+        # Check if the axis has a spot for it, if not extend the list
+        
+    def extendAxis(self, index):
+        print ("Not implemented yet")
+        
+    def adjustPL(self):
+        print ("Not implemented yet")
+        
+    def createSiblings(self):
+        print ("Not implemented yet")
+        
+    def recordParent(self):
+        print ("Not implemented yet")
+
+        
+class Helper:
+    def getSeriesMinAndMax(self, hist_series):
+        series = hist_series.describe()
+        abs_min = series["low"]["min"]
+        abs_max = series["high"]["max"]
+        
+        return abs_min, abs_max 
+        
+    def getPLHotspots(self):
+        print ("Not implemented yet")
+        # Calculate group_size
+        # Scan from top of range to bottom with group_size
+        # Find best fit by finding group with most ordered highest magnitude apexes
+        # Scout surrounding of group to find potential better fit & include near sig apexes
+        
+    def getLatestPLEntryOnHotspot(self):
+        print ("Not implemented yet")
+        
+    # Make a datastructure w/ index of time ranges (to, from) & prices (p_low, p_high)
+    def collectVolatility(self, hist_series):
+        print("Not implemented yet")
+        print(hist_series)
+        
+        # Get highest & lowest price in order to create volatility tabular structure
+        abs_min, abs_max = self.getSeriesMinAndMax(hist_series)
+        
+        # Make log range struct
+        # Scan data & get volatility (from newest to oldest)
+        # Make memoize (left & right)
+        
+        # Analyze | Expand | Adjust PL & Islands | Record | Repeat
+        # Scan | Memoize | Match opposites | Record origin Apex
+        
+        # ONLY care about the pricetarget (current_price perspect, so look back from there)
+        # Find channels from there out (Find increasing significance ones going out)
+        # No need to scan all data in history just pertinent one (Scanning too much can be bad & obscure results)
+        # Find best fit on least data & expanding channels
+        
+        # BINGO: I need to somehow memoize trends in order, since that is what we use to draw PLs for the price_target
+        # And on analysis I look back for those trends just like I would do manually
+        
+        # High debt| No room for messing up | Algo is time sensitive | Get back to research & risk management ASAP | running out money & time
+    
+    def convertExtremaPricesToLogs(self, extremas):
+        for i in range(len(extremas)):
+            extremas[i].price = np.log(extremas[i].price) # Consider scaling w/ 100x
+            

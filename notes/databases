@@ -1,0 +1,96 @@
+***
+https://www.alexdebrie.com/posts/dynamodb-no-bad-queries/
+
+
+OPtimizing graphql 
+https://blog.logrocket.com/designing-graphql-server-optimal-performance/
+
+Does the GraphQL server support server-side caching?
+Does its schema-first or code-first approach hinder development?
+Does it support subscriptions?
+Is it easy to implement and extend?
+Does it support async operations?
+Does it enable federation?
+Does it enable you to create custom directives?
+And several others
+
+These above are all GOOD QUESTIONS one should naturally be asking
+
+When using a new tech always ask:
+-   concerning performance, 
+-   productivity,
+-   extensibility,
+-   usability,
+-   and others
+
+
+
+DynamoDB does not have foreign keys. It is a NoSQL database that doesn't support that kind of relational data. 
+There is no data integrity maintained between tables, so this sort of behavior is not built in. If you want to 
+have this sort of behavior, you will have to model your data storage in DynamoDB a different way.
+
+From the FAQ explaining that it is not a relational database:
+
+While Amazon DynamoDB tackles the core problems of database scalability, management, performance, and 
+reliability, it does not have all the functionality of a relational database. It does not support complex 
+relational queries (e.g. joins) or complex transactions. If your workload requires this functionality, 
+or you are looking for compatibility with an existing relational engine, you may wish to run a relational 
+engine on Amazon RDS or Amazon EC2. While relational database engines provide robust features and functionality, 
+scaling a workload beyond a single relational database instance is highly complex and requires significant time and expertise.
+
+
+
+**** Really good article on sharding
+https://www.digitalocean.com/community/tutorials/understanding-database-sharding
+-   Database management is hard
+-   Sharding may require major changes to application level logic
+
+
+
+Application performance & design are most important to performance and throughput
+https://www.oreilly.com/library/view/heroku-up-and/9781449341381/ch03.html
+
+
+
+Applications aren’t fast by accident; their developers take the time to understand and measure, 
+and then improve areas found to be lacking. Performance is gained by careful work and can be lost 
+with negligence. Setting aside time dedicated to measuring and improving speed is crucial. 
+Consider taking a few hours at the end of the week with your team to look at application performance. 
+Institutionalizing “Fast Fridays” can be a great way to shave off some of the performance debt that 
+gets built up between rushed deadlines and shipped features
+
+
+
+Backend optimizations and frontend performance boosts, background workers, and full-text search engines, 
+but at the end of the day the only thing that matters is that your site responds faster and remains scalable.
+
+
+My conclusion:
+
+Best way to keep applications highly performant:
+-   Constant measurement of performance & dedicating time to performance & removing negligent code
+-   Good knowledge of the system design to now bottlenecks & improvements & restructures
+
+
+DynamoDB Design patterns:
+https://www.jeremydaly.com/takeaways-from-dynamodb-deep-dive-advanced-design-patterns-dat403/
+
+
+
+ETL
+In computing, extract, transform, load is the general procedure of copying data from one or more 
+sources into a destination system which represents the data differently from the source or in a different context than the source
+
+
+
+
+ORM:
+-   A bad query occurs due to a recent live update
+-   Check inclusivity and exclusivity of fields in 
+    ORM. It could be an extra join is being done due 
+    to some ids being excluded and a really bad 
+    query being produced 
+
+
+CI/CD
+-   For docker and ICS?

@@ -1,0 +1,11 @@
+
+-   Use a validator
+    -   Eg) backend use a validator on incoming reqs for correct data and types
+-   Be overly descriptive
+
+
+
+Questions:
+-   How to handle imports and exports in a module so that there is no big list of imports/exports?
+    -   Group imports into its own lib?
+-   How do I avoid circular dependencies?

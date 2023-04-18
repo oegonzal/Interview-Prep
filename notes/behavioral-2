@@ -1,0 +1,133 @@
+Behavioral:
+    Rapport (before & after, connecting & relationship building)
+    Resume & experience
+    Stories
+    Personality traits
+        Pros
+        Cons
+    QUICK TOGO’s MEMORIZED
+    Questions 
+        Role 
+        Company
+
+
+Rapport:
+-   Goal
+    -   Increase impression of yourself, spark a sense of trust & connection ****
+    -   To show interviewer you think alike
+    -   To prove you can get the job done
+    -   Be concise, succinct, & focused in your talking and ideas that are communicated
+        & do not swich/movearound bc it'll confuse the listener. Do not stutter & pause
+        bc it shows low confidence & you don't know what you're saying respectively
+
+-   Tips:
+    -   Dress and groom well
+    -   Mirroring (where possible)
+    -   Echo your interviewer's responses to show you're listening
+    -   Repeat some of their comments back to them, and show you approve of what they say
+    -   Show enthusiasm. Cannot stress this one enough
+        -   It is often the ones that show most enthusiasm that get the role
+
+-   Questions:
+    -   How has your week/weekend been going/go? How is your day going?
+    -   Have you been adapting well to the whole covid change?
+    -   Do you enjoy interviewing?
+
+
+
+Resume & experience:
+
+    TS Api backend
+        Event driven infrastructure (to prevent system down situations, high traffic)
+        C# & .NET
+        Queueing, S3, lambdas, DynamoDb 
+        Monolith to services, AWS cloud
+        Postgres
+        Redis
+    ICS api backend
+        Nodejs, express
+        From scratch, Campaign marketing tool to manage influencers and online sales
+        Restful api
+        Tracking & data collection
+        Docker, EC2 and lambdas
+        Webhooks and triggers
+    On own time: Graphql
+        Resolver architecture
+        And single point api
+    Integrations:
+        Payment processors - webhooks with square
+        Auth0 - openID protocol and JWT tokens
+            OICD Authentication => redirected to your OpenID site where you login & then back to the website
+
+
+
+
+Frontend:
+    Build components for box-office, admin portal, and checkout app
+    Build ICS widget and admin portal
+    Resusable components & prevented code duplication
+        Global components like modals, alerts, etc summoned in terms of actions rather than code duplication
+    Themable global components architecture & library
+    Cloudflare distribution
+    Styledcomponents to prevent css collision
+    Webpack & gulp tasks for configurations - minification, bundling, dependency graph
+
+
+
+Stories:
+-   Amazon STAR
+-   Look at behavioral file w/ amazon questions w/ stories
+
+
+
+
+
+
+Personality:
+-   Driven & Hungry (forai & finance)
+-   Task-oriented person (do not like wasting time)
+    -   Self-starting attitude
+    -   Can build from scratch 
+    -   Comfortable with the unknown
+-   Ownership
+    -   I focus on being the person that takes care of a problem and figures it out
+-   Calculative risk taking 
+    -   Esp considering limitied resources like time, research, & money
+-   Goal-oriented
+-   Collaborative
+    -   More together
+    -   Teach others
+-   Outspoken & supportive documents
+-   Open & not sensitive to constructive feedback
+
+
+Improvements:
+-   Very collaborative before working & with mid/easy level tasks 
+    -   With very deep tasks I become consumed by work
+-   Sometimes I do not know the correct decision and often being the lead I don't have access 
+    to someone with more knowledge so I go with the decision I think is best  & sometimes it doesn't work out 
+    -   But I always learn & look back to why it didn't work
+-   I was not strong in stress testing 
+-   I was not strong in data normalizating
+-   I was not strong in event driven architectures
+-   Sometimes I overaanalyze how a solution should be made bc I do not want to introduce too much complexity,
+    more particularly with REALLY big tasks,
+    however I am constantly trying to take smaller risks that can be reversed rather than overinvesting in study 
+    and not getting any feedback from the actual experimentation I am doing
+    (This happens all the time when I am reseraching new technologies to fix old bad practices I felt I had - statemanagemnt
+    and doing finance research on jupyter)
+-   Weakness in personal life:
+    I tend to find gravitate towards high independence & managing all my actions and outcomes to be based solely
+    on how I executed the plan. Sometimes it is very hard to find a good team, however I am compensating for this 
+    by constantly trying to increase my patience AND my relationship building.
+-   Managing expectations
+    Esp when boss overpromises & hangs around in poker planning and oversells simplicity of tasks 
+    Sometimes leads to underdelivering & missing deadlines
+    We don't get full documentation & features from boss
+-   https://www.quora.com/What-are-some-good-weaknesses-during-an-interview-for-a-Software-Engineer
+
+
+End of interview:
+-   Ask if they have anymore questions for you 
+-   Address them by their name & mention you really enjoyed speaking with them 
+-   Show enthusiasm for the role & hope that you move forward

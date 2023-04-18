@@ -1,0 +1,530 @@
+
+Chapter 4: Trees and Graphs
+
+
+4.1. Implement a function to check a binary tree is balanced (subtree left or right cannot differ by height of more than 1)
+
+-   Case 1: An edge case 
+    -   2 scenarios (+ 2 on opposite side)
+    o            o
+     \          /
+      o        o       
+        \       \
+         o       o
+
+
+-   Case 2: Having to rebalance a whole section of a tree longer than just terminal
+    -   Think of a case where all nodes are going to just one end from the  root
+        Then you  will need to create a new root 
+
+
+
+
+Rules:
+-   Create new root if balance is offsetting too much on one side 
+-   Bubble this up
+-   Must choose a side  to shift re-balance to while new root node is being selected (say default it is left)
+-   Each parent node to have a balance on it (Think of all having it)
+-   After placing a root node, new balance should bubble upwards 
+    (height of left & height of right & balance = left_height - right_height)
+    -   Goal on rebalancing is to "pack higher level"
+-   Adding  new node to a tree should start from bottom
+
+
+Steps:
+-   Rebalnce happens from parent node that has the dis-balance 
+-   Lower other side by one level to offset the disbalance (and this possibly highers prev side)
+-   Lower parent node on side opposite of where the higher height is coming from 
+    (it would have to go in-order placement -> bottom left)
+-   Pack left (make bigger root parent node the root candidate)
+
+-   Swap root w/ side we want to increase in height 
+-   Keep swaping until the root gets to its correct spot (or tree meets appropriate balancing AND left-right node conditions)
+-   If swap occurred with a null then other child should be promoted to parent
+-   Keep performing this until all nodes are balanced 
+
+
+
+
+function TreeNode(value, left, right) {
+    this.value = value;
+    this.left = left;
+    this.right = right;
+}
+
+
+function BSNode(value, left, right) {
+    TreeNode.call(this, value, left, right); // Inheritance
+
+    this.balance = 0;
+    this.left_height = 0; 
+    this.right_height = 0;
+}
+
+BSNode.prototype = new TreeNode();  // https://stackoverflow.com/questions/27642239/what-is-polymorphism-in-javascript
+
+
+For just checking if balanced (not to rebalance):
+
+Steps:
+-   Get to leaf nodes 
+-   Pass up height to parents
+-   If parent ever gets height > 1 then return false
+    Else return true at root Node
+
+Options:
+-   Recursively
+-   Iteratively
+
+Implementation:
+
+-   Process left node first, then right : Mark left as visited
+-   If null, return 0
+-   If height > 1 return false 
+-   Otherwise return Math.max(left.height, right.height)
+-   Done
+
+
+
+let visit_state = {
+    last_height: 0,
+    left_visited: false,
+    right_visited: false,
+};
+
+//  Iterative
+function IsTreeBalanced(root) {
+    let max_height = 0;
+    let last_height = 0;
+
+    let init = {
+        root,
+        ...visit_state
+    };
+
+    const stack = [init];
+
+    while (stack.length > 0) {
+        const parent = stack[stack.length - 1];
+
+        //  parent node could be a null if leaf was pushed to stack
+        if (!parent) {
+            last_height = 0;
+            stack.pop();
+        }
+        else if (!parent.left_visited) {
+            parent.left_visited = true;
+            stack.push(parent.left);
+        } 
+        else if (!parent.right_visited) {
+            parent.right_visited = true;
+            parent.last_height = last_height;
+            stack.push(parent.right);
+        }
+        else {
+            last_height = Math.abs(parent.last_height - last_height); // left_child_heigt - right_child_height
+            max_height = Math.max(max_height, last_height);
+        }
+    }
+
+    return max_height > 1;
+}
+
+
+--------------
+
+
+//  Recursive
+function IsTreeBalanced(node) {
+    if (!node) {
+        return true;
+    }
+
+    if (IsBalanced(node) > 1 ) {
+        return false;
+    } else {
+        return IsTreeBalanced(node.left) && IsTreeBalanced(node.right); 
+    }
+}
+
+function IsBalanced(node) {
+    if (!node) {
+        return 0;
+    }
+
+    return 1 + Math.abs( IsBalanced(node.left) - IsBalanced(node.right) );
+}
+
+
+
+
+function IsTreeBalanced(node) {
+    return IsBalanced(node) > -1
+}
+
+function IsBalanced(node) {
+    if (!node) {
+        return 0;
+    }
+
+    let left_height = IsBalanced(node.left);
+    if (left_height == -1) {
+        return -1;
+    }
+
+    let right_height = IsBalanced(node.right);
+    if (right_height == -1) {
+        return -1;
+    }
+
+    let height_diff = left_height - right_height;
+    if (Math.abs(height_diff) > 1) {
+        return -1;
+    } else {
+        return 1 + Math.max(left_height, right_height);
+    }
+
+    return 1 + height;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4.2. Given a directed graph, design an algorithm to find out whether there is a route 
+    between 2 nodes 
+
+Nodes: [n_0, ..., n_n]
+Edges: [e_0, ..., e_m] where e_i =>  (n_i1, n_i2)
+
+- Use Breadth first search or depth first search
+ -  Remember BFS is a little tricker than DFS bc you have to mark visited state: { visited, visiting, unvisited }
+ -  Node has to be able to store the state bc it is what's getting pushed into the queue
+
+enum VisitedState {
+    UnVisited,
+    Visiting,
+    Visited
+}
+
+function areConnected(graph : Graph, start: Node, end: Node) => boolean {
+    // Check problem is valid - start & end not null 
+    if (!start || !end) {
+        return false;
+    }
+
+    if (start == end) {
+        return true;
+    }
+
+    // Initate state of Nodes in graph to unvisited 
+    graph.nodes.forEach((node, ind) => {
+        node.state = VisitedState.UnVisited;
+    })
+
+    // Make queue and add starter Node to start BFS & mark as visiting
+    let queue = [];
+    start.state = VisitedState.Visiting;
+    queue.push(start);
+
+    while(queue.length) {
+        //  dequeue from queue & mark as visited
+        const cur_node = queue.shift();
+
+        if (cur_node == null) {
+            continue;
+        }
+
+        cur_node.state = VisitedState.Visited;
+
+        //  get all connected nodes if unvisited & mark as visiting + add to queue 
+        cur_node.to_nodes.forEach((node, ind) => {
+            
+
+            //  If we hit the end Node return true 
+            if (node.state == VisitedState.UnVisited) {
+                if (node == end) {
+                    return true;
+                }
+
+                node.state = VisitedState.Visiting;
+                queue.push(node);
+            }
+        });
+    }
+
+    //  If all possible paths from start Node have been exhausted, then start does not have a path to end
+    return false;
+}
+
+
+4.3. Produce a binary search tree of an in-order array with minimal height (unq integer vals)
+
+-   I believe there  can be many solutions if tree is not a full & complete tree (total_nodes = h^2 - 1)
+
+-   Think about oposite prob: get inorder array given a tree (can I reverse engineer this?)
+    -   Alg: Bottom-up: traverse until we hit the leaf nodes with null pters, then push left then middle then right.
+
+-   Simplify:
+    -   with 1 => 1
+    -   with 2 => 1 <- 2
+    -   with 3 => 1 <- 2 -> 3
+    -   It seem like the middle node always want to be in the middle so as to center for the left & right trees 
+        -   Could we do this, recurse by taking midpt of array & then repeating for left & right 
+    -   Top-down approach, as soon as we get the midpt we add it to the tree & we move on to subtrees, terminate
+        when all paths have hit just the single node
+
+
+class TreeNode<T> {
+    public value: T;
+    public left: TreeNode;
+    public right: TreeNode;
+
+    constructor(value: T) {
+        this.value = value;
+    }
+}
+
+function CreateInOrderTree(inOrder[]: integer) => TreeNode {
+    return makeTree(inOrder, null);
+}
+
+function makeTree (inOrder[] : integer) => TreeNode {
+    // If array length is 0 then return null; & don't add anything
+    if (inOrder.length == 0) {
+        return null;
+    }
+
+    //  Get midpt and add immediately to BSTree (but if node is null, create one)
+    const mid_pt = inOrder.length / 2;
+    const new_node = new TreeNode(inOrder[mid_pt]);
+
+    TreeNode node = new TreeNode(inOrder[mid_pt]);
+
+    //  Create left child node, Call start to midpt - 1 (left)
+    node.left = makeTree(inOrder.slice(0, mid_pt - 1), node);
+
+    // Create right child node, Call midpt + 1 to end (right)
+    node.right = makeTree(inOrder.slice(mid_pt + 1), node);
+
+    //  Return the parent node
+    return node;
+}
+
+
+
+// Iterative version: 
+-   We would need a whole copy of n memory if graph but since we're doing DFS algo instead of BFS 
+    and bc it is not a graph meaning no cycles: Then we can just use out own stack and store our own 
+    state which would be memory O(height) max instead of N.
+-   In iterative memory O(n) mainly when its a graph and node needs to keep a state even when removed 
+    from queue or stack as "visited" or "visiting" 
+    But if node will only ever get visited once then it makes sense to just use memory O(height) struct
+
+
+enum VisitedState {
+    UnVisited,
+    Visiting,
+    Visited
+}
+
+class TreeNode<T> {
+    public value: T;
+    public left: TreeNode;
+    public right: TreeNode;
+
+    constructor(value: T) {
+        this.value = value;
+    }
+}
+
+class StackTreeItem {
+    public node: TreeNode;
+    public split_pt: integer;
+    public left_visit_state: VisitedState;
+    public right_visit_state: VisitedState;
+
+    constructor(node, split_pt) {
+        this.node = node;
+        this.split_pt = split_pt;
+        this.left_visit_state = VisitedState.UnVisited;
+        this.right_visit_state = VisitedState.UnVisited;
+    }
+}
+
+function CreateInOrderTree(inOrder[]: integer) {
+    if (inOrder.length == 0) {
+        return null;
+    }
+
+    let mid_pt = inOrder.length / 2;
+    let root = new TreeNode(inOrder[mid_pt], mid_pt);
+    let item = new StackTreeItem(root);
+
+    const stack = [];
+    stack.push(item);
+
+    while (stack.size > 0) {
+        const { node, split_pt, left_child_heigt, right_visit_state } = stack[stack.length - 1];
+
+        if (left_visit_state == VisitedState.UnVisited) {
+            const mid_pt = (split_pt - 1) / 2;
+            let new_node = new TreeNode(inOrder[mid_pt]);
+
+            node.left = new_node;
+
+            left_visit_state = VisitedState.Visited;
+            stack.push(new_node, mid_pt);
+        }
+        else if (right_visit_state == VisitedState.UnVisited) {
+            const mid_pt = (stack.length - split_pt) / 2;
+            let new_node = new TreeNode(inOrder[mid_pt]);
+
+            node.right = new_node;
+
+            right_visit_state = VisitedState.Visited;
+            stack.push(new_node, mid_pt);
+        }
+        else {
+            stack.pop();
+        }
+    }
+
+    return root;
+}
+
+
+
+4.4. Given a binary tree, design an algorithm which creates a linked list of all the nodes at each depth 
+     (e.g., if you have a a tree with depth D, you'll have D linked lists).
+
+-   Basically make a linked list of each level in the tree 
+-   Each level downwards is an extra layer (So we need to keep track of level state)
+-   I can do in order so linked list is sorted if Binary search tree 
+
+
+class Node<T> {
+    public value: T;
+    public next: Node;
+
+    constructor(value) {
+        this.value = value;
+    }
+}
+
+class TreeNode<T> {
+    public value: T;
+    public left: TreeNode;
+    public right: TreeNode;
+
+    constructor(value: T) {
+        this.value = value;
+    }
+}
+
+class LinkedListTail {
+    public tail: Node<T>;
+    public level: integer;
+
+    constructor(tail: Node, level: integer) {
+        this.tail = tail;
+        this.level = level;
+    }
+}
+
+class QueueTreeItem {
+    public node: TreeNode;
+    public level: integer;
+
+    constructor(node, level) {
+        this.node = node;
+        this.level = level;
+    }
+
+    get level(): integer {
+        return this.level;  // get accesor allows something like this:  return this.level - 1;
+    }
+
+    set level(level: integer) {
+        this.level = level; // set accesor allows something like this:  this.level = level + 1;
+    }
+}
+
+
+
+//  Should I do stack or queue (Lets do queue to challenge myself + it goes by levels)
+//  In hindsight stack in-order makes more sense, in order to prevent having to iterate all the way to end of node list 
+//  when we want to add a new node
+
+//  Acutally I take it back. W/ a stack you still have to traverse to end. Use queue. put all nodes in level at once.
+//  And bc all same level nods get placed at a time, have a pter that pts to end of current level node list.
+//  Upon new level, change it to end of new linked list 
+
+function listEachLevelInTree(root: TreeNode) => Node<integer>[] {
+
+    let layers = new Array<integer>();
+
+    if (root == null) {
+        return layers;
+    }
+
+    const rootQueueItem = new QueueTreeItem(root, 0);
+    let queue = [];
+    queue.push(rootQueueItem);
+
+    //  Create LinkedListTail to keep track of current level & tail
+    let tail_state = new LinkedListTail(null, 0);
+
+    while (queue.length > 0) {
+        const { node, level, } = queue.shift();
+
+        if (node.left != null) {
+            const left_node = new QueueTreeItem(node.left, level + 1)
+            queue.push(left_node);
+        }
+
+        if (node.right != null) {
+            const right_node = new QueueTreeItem(node.right, level + 1)
+            queue.push(right_node);
+        }
+
+        const new_level_node = new Node(node.value);
+
+        if (tail_state.level == level) {
+            tail_state.tail.next = new_level_node;
+        }
+        else {
+            tail_state.level = level;
+            layers[level] = new_level_node
+        }
+
+        tail_state.tail = new_level_node;
+    }
+
+    return layers;
+}
+
+
+
+4.5.
+
+
+4.6.
+
+
+4.7.
+
+
+4.8.
+
+
+4.9.

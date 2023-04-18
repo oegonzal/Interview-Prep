@@ -1,0 +1,16 @@
+https://www.educative.io/courses/grokking-the-system-design-interview?affiliate_id=4793322061168640
+
+Images:
+-   Mutability
+-   Transactions (Acid)
+    -   In the context of transaction processing, the acronym ACID refers to the four key properties of a transaction: 
+        atomicity, consistency, isolation, and durability. All changes to data are performed as if they are a single 
+        operation
+-   Indexes
+-   Access controls
+
+File vs  Blob
+
+File:
+-   Cheaper
+-   Faster

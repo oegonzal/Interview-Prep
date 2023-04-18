@@ -1,0 +1,77 @@
+
+1. Look at the problem
+    -   How do we take the exact same problem & simplify it (make it exact same but smaller w/ less complexity
+        that the human mind can understand better) ?
+    -   Ask interviewer:
+        - What most important resource:
+            -   Computation?
+            -   Memory?
+            -   Time & simplicity of implementation?
+    -   Program to interface and scalable
+        -   Interface means you do not have to change implementation. It is a one size fits all & it calculates
+            one thing for any type of object or data
+
+    *   Think about components
+    *   Think about **Fractals**
+
+2. Imagine a finite state machine
+    -   Find all the possible states that a problem can be in.
+    -   Work to simplify the finite state machine BY understanding the problem REALLY REALLY WELL.
+    -   Find the best way CPA it, most work w/ least amount of REPEATABLE steps***
+
+
+3. Don't brute force, rather, break down the steps
+    -   Brute forcing never works bc then the amount of exponential complications increases like crazy & 
+        you won't be able to track it.
+        Stick to the simple *repetative* steps that have to keep occuring. AND solve those.
+        If you do not refine that skill then there is no point in 
+        ting the problem correct bc
+        you are solving it wrong.
+
+
+
+Recursive probs:
+-   How do I get to the most base step?
+-   Don't keep track of state, it can alternate based on what dimension or alternative it is, just keep track of the steps
+    & what the correct decision is in each specific state 
+-   Connect this flow
+
+
+
+
+
+System Design Problem:
+-   Ask about it's scale 
+-   Ask about it's performance reqmt 
+-   Ask about if it needs an API
+
+-   Talk outloud
+-   Ask many questions:
+    -   On type of models & alternatives
+        -   Figure out their props
+        -   What are their actions & behaviors
+    -   How many users?
+    -   How many transactions per second?
+    -   Think about a system that will actually be implemented by someone
+    -   What kind of services? 
+        -   Order service, payment service, etc
+    -   Create dialogue, feel as if you are on the team & figuring it out together & it'll go to customers
+    -   API 
+        -   domain/resource/param
+        -   HTTP POST
+        -   Would this api work for some or all the models?
+        -   Will it work with many transactions?
+    -   Make services (books, order, search, payment, etc)
+        -   Do they need their own database? Can they write to different databases? etc
+        -   How do they interact with each other?
+        -   Do you need different services or can you group to one?
+    -   When you get to UI 
+        -   Ask if your desing is good enough 
+        -   Do they also want a recommendations feature, what else is needed, etc
+        -   How does the result look after an action is made?
+
+
+
+
+
+

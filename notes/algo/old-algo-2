@@ -1,0 +1,190 @@
+class DetailedApex:
+    def __init__(self, price, magnitude, timestamp, left_timestamp = None, \
+                 left_magnitude = None, right_timestamp = None, right_magnitude = None):
+        self.price = price
+        self.magnitude = magnitude
+        self.timestamp = timestamp
+        
+        self.left_timestamp = left_timestamp
+        self.left_magnitude = left_magnitude
+        self.right_timestamp  = right_timestamp
+        self.right_magnitude = right_magnitude
+
+        
+class LinkedApex:
+    def __init__(self, extrema):
+        self.apex = extrema
+        self.higher_apex = None # Next higher in price
+        self.lower_apex = None # Next lower in price
+
+class PriceLinkedList2:
+    # Linked list struct bc we can intercept at any given point between terminals (linkedlist more efficient than array)
+    def __init__(self, init_apex):
+        if init_apex is None or not isinstance(init_apex, LinkedApex):
+            raise Exception("Must initialize with a LinkedApex")
+        
+        self.max_apex = init_apex
+        self.min_apex = init_apex
+        
+        self.last_apex = init_apex
+        self.was_last_dec = None # init value when only one pt
+        
+    def update(self, new_apex):
+        base_apex = self.last_apex
+        
+        # TODO: Add apex here & make NEXT connection
+        
+        
+        is_dec = True if new_apex.apex.price < base_apex.apex.price else False
+        same_trend = True if (self.was_last_dec == is_dec) else False
+        
+        if (new_apex.apex.price == base_apex.apex.price):
+            return # we do not want to override prev pt if same price
+        
+        if (same_trend):
+            # Continuing run from last apex
+            print ("")
+            # Remove last apex
+        else:
+            # Reversing from last apex
+            print ("")
+            # Continue
+        
+        # Important to keep track of this for smoothing linkedlist correctly 
+        self.was_last_dec = is_dec
+        
+        self.last_apex = new_apex
+        
+    def addApex(self):
+        print("not implemented")
+
+'''
+    Struct that is consisted of a 2-way linked list
+    Each Node or Apex in the list represents a reversal in price change at some point in time
+    The price from one Apex_i to another Apex_j represents the an interval of intersection 
+    @ those 2 prices interval
+    - It is possible that somewhere ABOVE OR BELOW in that linked list there exists another
+      apex with a timestamp that is between 2 adjacent apexes in the linked list
+      This apex would be a local/abs max/min between both pts
+    OPTIMIZATIONS:
+    - Memoizing the scanning down to find the mins, can be repetative with each update
+      - Do this by saving on an apex (its possible to scan ONLY once, min/max between 2 pts)
+    - OR BETTER, COMBINE INTERVALS
+'''
+class PriceLinkedList:
+    # Linked list struct bc we can intercept at any given point between terminals (linkedlist more efficient than array)
+    def __init__(self, init_apex):
+        if init_apex is None or not isinstance(init_apex, LinkedApex):
+            raise Exception("Must initialize with a LinkedApex")
+        
+        self.max_apex = init_apex
+        self.min_apex = init_apex
+        self.last_apex = init_apex
+        
+    def update(self, new_apex):
+        base_apex = self.last_apex
+        
+        if (new_apex.apex.price == base_apex.apex.price):
+            return # we do not want to override prev pt if same price
+        
+        if new_apex.apex.price > base_apex.apex.price:
+            self.addIncreasingInterval(base_apex, new_apex)
+        else new_apex.apex.price < base_apex.apex.price:
+            self.addDecreasingInterval(base_apex, new_apex)
+        
+        self.last_apex = new_apex
+    
+    # On overlap of an interval edge (signifies we overlapped an apex)
+    # Find what it's magnitude is by scanning down for lowest apex within 2 init timestamps
+    # Merge from min apex to latest to form a new interval in the PL
+    # InversionOfControl here to pass on volatility unit => logrange => lockedInPLs list
+    def addIncreasingInterval(self, base_apex, new_apex):
+        sig_apex = None
+        min_apexes = {}
+        new_price = new_apex.apex.price
+        
+        # Find first apex new_apex does not overlap in the upside
+        trailing_apex = None
+        first_nonoverlaped_apex = base_apex
+        while first_nonoverlapping_apex is not None and first_nonoverlaped_apex.apex.price < new_price:
+            # NOTE: Scanning is important when overlapping other intervals
+            if first_nonoverlaped_apex is not None: # when none we have an abs max, no need to scan
+                min_apex = self.getMinApex(first_nonoverrlaped_apex)
+                
+                if min_apex is not None:
+                    min_apexes[min_apex.timestamp] = min_apex
+                
+            trailing_apex = first_nonoverlaped_apex
+            first_nonoverlaped_apex = first_nonoverlaped_apex.higher_apex
+            
+        
+        # Attach higher side of new apex
+        if first_nonoverlaped_apex is None:
+            # Update max apex in PriceLinkedList struct
+            self.max_apex = new_apex
+            trailing_apex.higher_apex = new_apex
+            new_apex.lower_apex = trailing_apex
+        else:
+            new_apex.higher_apex = first_nonoverlaped_apex
+            first_nonoverlaped_apex.lower_apex = new_apex
+        
+        # Attach lower side of new_apex
+        base_apex.higher_apex = new_apex
+        new_apex.lower_apex = base_apex
+        
+        return min_apexes
+        
+    def addDecreasingInterval(self, next_apex):
+        new_price = new_apex.apex.price
+        
+        # Find first apex new_apex does not overlap in the downside
+        trailing_apex = None
+        first_nonoverlaped_apex = base_apex
+        while first_nonoverlapping_apex is not None and first_nonoverlaped_apex.apex.price > new_price:
+            trailing_apex = first_nonoverlaped_apex
+            first_nonoverlaped_apex = first_nonoverlaped_apex.lower_apex
+        
+        # Attach lower side of new apex
+        if first_nonoverlaped_apex is None:
+            # Update min apex in PriceLinkedList struct
+            self.min_apex = new_apex
+            trailing_apex.lower_apex = new_apex
+            new_apex.higher_apex = trailing_apex
+        else:
+            new_apex.lower_apex = first_nonoverlaped_apex
+            first_nonoverlaped_apex.higher_apex = new_apex
+        
+        # Attach higher side of new_apex
+        base_apex.lower_apex = new_apex
+        new_apex.higher_apex = base_apex
+        
+    # When getting min apex between new_apex & right_apex, new_apex isn't needed bc not on Linkedlist yet
+    def getMinApex(self, right_apex):
+        # scan down & get lowest apex between new_apex & current apex we crossed timestamp
+        min_apex = None
+        running_lower_apex = right_apex
+        while running_lower_apex.lower_apex is not None:
+            lower_apex = running_lower_apex.lower_apex.apex
+
+            # Get lowest apex in between new_apex_ts < lowest_apex_ts < overlapped_apex_ts
+            if lower_apex.index < right_apex.apex.index:
+                # Lowest one is magnitude & apex of importance
+                min_apex = lower_apex
+
+            running_lower_apex = running_lower_apex.lower_apex
+        
+        # Build apex with extra details here in order to return
+        price = min_apex.logPrice
+        magnitude = (right_apex.apex.logPrice - min_apex.logPrice)
+        timestamp = min_apex.index
+        detailed_apex = DetailedApex(price, magnitude, timestamp)
+        
+        return detailed_apex if min_apex is not None else None
+    
+    # Graph section (with logs)
+    
+    # Range section (lib & PL list)
+    
+    # Slider (get older data until beginning of equity or specific time)
+        
+        

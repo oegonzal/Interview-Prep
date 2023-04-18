@@ -1,0 +1,27 @@
+Event-loop
+
+Single-threaded concurrency model of nodejs
+-   Based on nonblocking IO operations
+
+Typically a system consists of many events:
+-   Keyboard
+-   Mouse
+-   Requests
+
+
+Node
+-   Uses event base model 
+-   Takes requests and puts into single threaded event queue
+-   Event loop runs indefinitely
+    -   If it takes a nonblocking request it will process it and prepare a response
+    -   If is blocking it will delegate it to a worker thread and thread pool to 
+        work on the blocking io operation. 
+        The blocking IO operation may be associated with a callback function. When the 
+        blocking operation is complete it'll prepare the response back to the queue & 
+        it'll be finished there and then it'll send it back to client 
+
+
+Threaded server
+Keep in mind that in a threaded server the programmer has to keep track and account for 
+synchronization of state between different threads in a process. This tends to be harder than
+working with an event-loop server

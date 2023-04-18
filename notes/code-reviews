@@ -1,0 +1,38 @@
+
+Declaritive variables
+
+&
+
+Colocate logical steps in algorithm 
+    to make more sense of it
+    esp. in nested structures
+
+
+
+Pros:
+-   Committers are more motivated to push better code 
+-   Sharing Knowledge (Application or engineering type knowledge)
+-   Consistency (Maintains same standard between devs)
+-   Legibility (more reusable, bug-free, and future proof)
+-   Accidental error
+-   Complaiancce
+
+
+Before Code Review:
+-   Modulize commits to specific tasks (so as to not combine tasks in a single code review & confuse reviewer)
+-   Add description of what goals of the changes are
+
+
+
+
+What I look for:
+-   Elegant and simple code 
+-   It should have some sort of test
+-   It should be readable, maintainable, and production quality
+-   It should have a readme file with instructions for the ease of review 
+-   Better commites (for code releases)
+
+test('object assignment', () => {
+    expect(2 + 2).toBe(4);
+    expect(data).toEqual({one: 1, two: 2});
+}

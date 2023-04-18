@@ -1,0 +1,481 @@
+- Practice
+    - For the mock system design challenges I am doing
+
+Building a Facebook Messenger:
+- Text base instant messaging
+Reqs:
+- Should support one-on-one conversations between users
+- Messenger should keep track of online/offline status of users
+- Messenger should support the persistent storage of chat history
+
+Non-functional
+- real-time chatting experience w/ minimum latency
+- should be highly consisten
+    - usrs should see the same chat history on all their devices
+    - high availibility is desirable; we can tolerate lower availibility 
+        in the interest of consistency
+Extended:
+- Groups chats
+- Push notifications: should be able to notify users of new messages when they 
+    are offline
+
+
+Brainstorm / Ideas:
+
+Starting w/ models:
+- Users
+    - id, name, email, 
+
+- friends
+    - user
+    - userFriendId
+
+- Conversation
+    - id
+    - userMemberId
+
+- Messages
+    - id
+    - timestamp
+    - text
+    - userId
+    - groupId
+
+Datastore
+- We can use an sql database since data is relational
+    - we friend relations
+    - We care about consistency so being acid compliant is important
+- Conversations can be stored in nosql
+    - since they can be contained
+    - Or they can be in sql & then cached in noSql services
+
+Brainstorm => tracking user status
+- There is a user client app
+- When the user is online, the client app is active on their phone
+- When it is active it can send a periodic message to the server
+- A rule can be that if the user is on for longer than a minute he/she is
+    considered active
+- If server stops receiving periodic messages from user than
+    user can be considered not on anymore & there can be a timestamp of 
+    when they were on
+- From the point ActiveUserService detects this it can queue an event
+    so friends can be notified 
+
+
+
+High-level Design for messaging functionality
+- Central Server manages communication between client users
+- User A sends message & receives acknowledgement
+- Stores message in server then sends to User-B
+- User B receives the msg and sends acknowledgment to the server
+- Server notifices User A that message has been delived successfully to User B
+
+
+How to keep track of all open connections?
+- Use a hash table where 'key' would be the userId and 'value' would be 
+    the connection object.
+- So when the server receives a message for a user, it looks up that user
+    in the hash table to find the connection object & sends the message
+    on the open request
+
+- How many chat server do we need?
+    -  A modern server can handle 50k concurrent connections at any time, 
+        so if we need to support 500 million connections, we would need 10k servers
+
+- How do we know which server holds the connection to which usr?
+    -   We can introduce a software load balancer in front of our chat servers;
+        that can map each UserId to a server to redirect the request
+    - Think of a load balancer as the hashmap
+
+- sequence number and acknowledgement on db server is important to ensure
+    message ordering consistency is the same in all devices
+
+
+
+Terminology:
+- Threads
+- CPU
+- Memory
+- Input/output
+- Bandwidth
+- Throughput
+- Connections
+
+
+
+Storing & retreiving messages from the db:
+- Whenever a chat server retrieves a new message -> needs to store to DB, 2 options:
+    - start a thread which will work w/ db to store message
+    - Send an async request to the db to store the message
+- Things to keep in mind when designing db:
+    -   how to efficiently work w/ db connection pool
+    -   how to retry failed requests
+    - where to log these request that failed even after retries
+    - how to retry these logged requests (that failed after the retry) 
+        when all the issues have been resolved
+
+We need to choose a db that can handle huge frequency of small updates
+    writes & can fetch a range of records quickly
+    - Hbase is good for this
+
+Clients can efficiencly request data via pagination & viewport size
+
+
+Design Summary: Clients will open a connection to the chat server to send a message; the server will then pass it to the requested user. All the active users will keep a connection open with the server to receive messages. Whenever a new message arrives, the chat server will push it to the receiving user on the long poll request. Messages can be stored in HBase, which supports quick small updates and range-based searches. The servers can broadcast the online status of a user to other relevant users. Clients can pull status updates for users who are visible in the client’s viewport on a less frequent basis.
+
+So we will find the shard number by “hash(UserID) % 1000” and then store/retrieve the data from there. This partitioning scheme will also be very quick to fetch chat history for any user. In the beginning, we can start with fewer database servers with multiple shards residing on one physical server. Since we can have multiple database instances on a server, we can easily store multiple partitions on a single server. Our hash function needs to understand this logical partitioning scheme so that it can map multiple logical partitions on one physical server.
+
+
+We should not shard based on messageId since we are use Hbase and it works
+best storying colocated & ranged data together
+
+
+
+Fault tolerance and Replication#
+What will happen when a chat server fails? Our chat servers are holding connections with the users. If a server goes down, should we devise a mechanism to transfer those connections to some other server? It’s extremely hard to failover TCP connections to other servers; an easier approach can be to have clients automatically reconnect if the connection is lost.
+
+Should we store multiple copies of user messages? We cannot store only one copy of the user’s data because if the server holding the data crashes or is down permanently, we don’t have any mechanism to recover that data. For this, either we have to store multiple copies of the data on different servers or use techniques like Reed-Solomon encoding to distribute and replicate it.
+
+Group chat#
+We can have separate group-chat objects in our system that can be stored on the chat servers. A group-chat object is identified by GroupChatID and will also maintain a list of people who are part of that chat. Our load balancer can direct each group chat message based on GroupChatID, and the server handling that group chat can iterate through all the users of the chat to find the server handling the connection of each user to deliver the message.
+
+In databases, we can store all the group chats in a separate table partitioned based on GroupChatID.
+
+
+
+----------------------------------------------------------------------
+
+Designing Twitter:
+
+Functional Reqs:
+- User should be able to post new tweets
+- A user should be able to follow other users
+- Should be able to mark tweets as favorites
+- The service shoud be able to create & display a user's timeline
+    consisting of top tweets from all the people the user follows
+- Tweets can contain photos and videos
+
+Non-functional Requirements:
+- Highly available
+- Accpetable latency of system is 200ms
+- Consistency can take a hit in interest of availability;
+    if a user doesn't see a tweet for whle, it should be fine
+
+Extended:
+- Searching for tweets
+- Replying to tweet
+- Trending topics - current hot topics
+- tagging other users
+- Tweet noticiations
+- who to follow? suggestions
+- moments
+
+
+Brainstorm:
+- There should be a cap on limit a user can post to maintain consistent
+    data storage
+- There will be a very high read request and a high write but not as high as read
+- We need to be able to store big objects like pictures and videos
+- frined table
+- favorites table => user to post
+- Post table
+- User feed
+
+
+
+
+
+
+
+Rate Limiter System Design
+
+
+Data Sharding and Caching
+
+We can shard based on the ‘UserID’ to distribute the user’s data. For fault tolerance and replication we should use Consistent Hashing. If we want to have different throttling limits for different APIs, we can choose to shard per user per API. Take the example of URL Shortener; we can have different rate limiter for createURL() and deleteURL() APIs for each user or IP.
+
+
+
+
+Designing Twitter Search**
+Requirement/Goal:
+- Design a system that can efficiently store & query tweets
+
+Brainstorm:
+- Think of a system that for a user, they an enter search terms,
+    and an optimal result of tweet lists will come back to them
+    that are most relevant to what they want to find
+
+System API:
+- search(api_dev_key, search_terms, maximum_results_to_return, sort, page_token)
+
+Parameters:
+- api_dev_key (string): The API developer key of a registered account. This will be 
+    used to, among other things, throttle users based on their allocated quota.
+- search_terms (string): A string containing the search terms.
+    maximum_results_to_return (number): Number of tweets to return.
+- sort (number): Optional sort mode: Latest first (0 - default), Best matched (1), 
+    Most liked (2).
+- page_token (string): This token will specify a page in the result set that should 
+    be returned.
+
+Returns: (JSON)
+- A JSON containing information about a list of tweets matching the search query. 
+    Each result entry can have the user ID & name, tweet text, tweet ID, creation time, number of likes, etc.
+
+
+Thinking Process:
+
+User Lands on client
+->
+Types a search text & triggers search in a typeahead
+->
+(Assume this is happening at a scale of millions per small timeframe)
+->
+Text goes to backend
+- Most likely to some loadbalancer that helps direct user search
+    to some other servers
+-> 
+Server with datastructure that will help facilitate the search
+like word indexing
+- Ignore common filler words like "the" and "or" and "of"
+- Prioritize key and trending words
+- Use a hash to point to servers that have indexes of specific words
+- Use algo to get words in search and find tweets with most similar match
+    to it
+- Elastic search may be able to help w/ this just going off memory
+    - We should use a struct that can intersect blocks of tweets
+    - & interection should narrow on most overlapping keywords in search
+    - to make this very fast...
+
+Solution to above is:
+- When building the index
+    - iterate through all the words of a tweet & calc the hash for each
+        word to find the server where it would be indexed
+    - to find all tweets containing a specific word we have to query
+        only the server which contains this word
+    - To prevent a server from saving too many tweetIds from a word 
+        or prevent a server from getting overwhelmed from "hot" words
+        we can apply Consistent Hashing algorithm
+        to repartition the data
+    - Doing consistent hashing then means we have to call multiple servers
+        to get all tweets w/ words in search & an aggregate server will 
+            aggregate the result together for the user
+- Tweet => collection of words
+- Server => wordhashKeyMap => ServerTweetIdList
+
+- To have strong fault tolerance index servers can have replicates
+    if the main server and the replicates go down then we can have 
+    a reverse index server =>
+    it would store a map where the key is the serverId
+    and the value are the tweetIdSet so that the index server can 
+    be quickly rebuilt.
+    This would be much faster than going through data store,
+    and hashing every tweetID to get hash for consistent hashing and thus
+    getting the server location for all words
+
+
+
+
+Design a Web Crawler:
+- A web crawler is a software program that browses the World Wide Web in a methodical and automated manner. It collects documents by recursively fetching links from a set of starting pages. Many sites, particularly search engines, use web crawling as a means of providing up-to-date data. Search engines download all the pages to create an index on them to perform faster searches.
+
+
+
+
+
+System#
+Let’s assume we need to crawl all the web.
+
+Scalability: Our service needs to be scalable such that it can crawl the entire Web and can be used to fetch hundreds of millions of Web documents.
+
+Extensibility: Our service should be designed in a modular way with the expectation that new functionality will be added to it. There could be newer document types that need to be downloaded and processed in the future.
+
+
+
+Designing Facebook newsFeed:
+- Is the constantly updating list of stories in Facebook's homepage
+- Includes status updates, photos, videos, links, app activity, & 'likes' from ppl, pages & groups
+
+Observations:
+- First thing to note is that there are many 'types'
+    - eg) There are photo, vid, etc updates from diff types of entities ppl, pages & groups ...
+- We should be able to create a generic list that doesn't care about its items
+    - That generic list should only care about a dimension & within those dimensions
+        we can have iFrame/cmpt type of items where all they need to know for outside where is how 
+        to plug itself in to the list-item space
+
+Functional Reqs:
+- Newsfeed will be generated based on the posts from the people, pages, and groups that a user follows.
+- A user may have many friends and follow a large number of pages/groups.
+- Feeds may contain images, videos, or just text.
+- Our service should support appending new posts as they arrive to the newsfeed for all active users.
+
+Non-functional Reqs:
+- Our system should be able to generate any user’s newsfeed 
+    in real-time - maximum latency seen by the end user would be 2s.
+- A post shouldn’t take more than 5s to make it to a user’s feed assuming a new newsfeed request comes in.
+
+Relationships:
+- Follow
+- Users
+- Groups
+- Pages
+- Posts
+    - Images
+    - Videos
+    - Text
+
+Thought process:
+Assume millions of users in this scenario
+->
+It is expected each user has a smooth experience
+->
+Expect much more read traffic over write traffic
+- there will be many feed requests
+Expect there to be a generation of feed unq to each user since
+    each user has a different user following & thus will have a different aggregation
+->
+As a result have some aggregation services probably that will hide behind an api gateway
+    to distribute requests most likely in a roundrobin manner
+->
+Expect users to be able to push/publish posts
+->
+when posts get updated there should be a broadcasting operation
+->
+broadcasting should be posted to users followers
+->
+There should be a hashmap to get what servers have users friends so that new content may be sent there
+->
+aggregation servers/cache that receive new posts updates should be able to rank/order base on past say 2 days
+    worth of user's friends posts
+->
+There should be a cron job that updates post stats like likes & follows so that ranking algorithms can 
+    rank better
+->
+Data persistence should occur not at a user level but at a post level
+    to prevent the "hot" user problem and overwhelming any specific type of server
+->
+There should also be caches for posts for the "hot" post problem
+    - the policy can have top 20 percent posts that generate 80 percent of the traffic
+->
+Since one user can have many posts and each post can have many comments
+    & it is important to quickly generate posts for a feed we should use Hbase 
+    since it can support many fast updates & store range data efficiently
+
+
+
+Designing Yelp or Nearby Friends
+Goal:
+- Users can search for nearby places like restaurants, theaters, or shopping malls, etc., 
+    and can also add/view reviews of places.
+
+Functional Requirements:
+- Users should be able to add/delete/update Places.
+- Given their location (longitude/latitude), users should be able to find all nearby places within a given radius.
+- Users should be able to add feedback/review about a place. The feedback can have pictures, text, and a rating.
+
+Non-functional Requirements:
+- Users should have a real-time search experience with minimum latency.
+- Our service should support a heavy search load. There will be a lot of search requests compared to adding a new place.
+
+Entities:
+- Place
+    - ratings
+    - location
+    - number, etc
+- PlaceMedia
+- Reviews
+- Users
+
+API:
+
+search(api_dev_key, search_terms, user_location, radius_filter, maximum_results_to_return, 
+    category_filter, sort, page_token)
+
+
+Parameters:
+- api_dev_key (string): The API developer key of a registered account. This will be used to, among other things, 
+    throttle users based on their allocated quota.
+- search_terms (string): A string containing the search terms.
+- user_location (string): Location of the user performing the search.
+- radius_filter (number): Optional search radius in meters.
+- maximum_results_to_return (number): Number of business results to return.
+- category_filter (string): Optional category to filter search results, e.g., Restaurants, Shopping Centers, etc.
+- sort (number): Optional sort mode: Best matched (0 - default), Minimum distance (1), Highest rated (2).
+- page_token (string): This token will specify a page in the result set that should be returned.
+
+Returns: (JSON)
+- A JSON containing information about a list of businesses matching the search query. 
+    Each result entry will have the business name, address, category, rating, and thumbnail.
+
+
+ThoughtProcess:
+First, we need to be able to support say millions of search requests
+->
+Since a user is looking for near geological locations based on a search critera
+    we need to be able to get best choiced "around" the user
+->
+When the user sends a search criteria, they also send their location
+    which can be represented as a point in a 2d plane
+->
+to narrow in on the area around the person we can use the radius provided by the user
+- If user chose by density than we can make a strongly connected graph of areas around
+    where denser areas create a denser point. 
+    - & we can point the user closer to this area
+    - This idea is not very well developed though
+->
+We can represent an area within a server depending how full that area is
+    & whole plane is made up of servers
+    - How would this scale? It's not very easy through consistent hashing
+    - We can have a minimal unit of area like a 0.5mi square unit
+    - We calculate all unit ids that would be around user that fall within the radius
+    - We ping all the server that have this unit & we get those ids via consistent hashing 
+        formula OR an indexing server bc technically a server can fill up with a small unit 
+        area if that unit area is very dense
+->
+
+
+
+
+
+Designing Uber
+Reqs:
+- Drivers need to regularly notify the service about their current location and their availability to pick passengers.
+- Passengers get to see all the nearby available drivers.
+- Customer can request a ride; nearby drivers are notified that a customer is ready to be picked up.
+- Once a driver and a customer accept a ride, they can constantly see each other’s current location until the trip finishes.
+- Upon reaching the destination, the driver marks the journey complete to become available for the next ride.
+
+
+User needs to send pickup request
+->
+Service needs to find nearby drivers & send notification that a passenger needs a ride
+->
+Passenger request sends their coordinates
+->
+Quad tree that constantly updates
+
+Design TicketMaster
+Functional Requirements:
+
+- Our ticket booking service should be able to list different cities where its affiliate cinemas are located.
+- Once the user selects the city, the service should display the movies released in that particular city.
+- Once the user selects a movie, the service should display the cinemas running that movie and its available showtimes.
+- The user should be able to choose a show at a particular cinema and book their tickets.
+- The service should be able to show the user the seating arrangement of the cinema hall. The user should be able to select 
+    multiple seats according to their preference.
+- The user should be able to distinguish available seats from booked ones.
+- Users should be able to put a hold on the seats for five minutes before they make a payment to finalize the booking.
+- The user should be able to wait if there is a chance that the seats might become available, e.g., when holds by other users 
+    expire.
+- Waiting customers should be serviced in a fair, first come, first serve manner.
+
+Non-Functional Requirements:
+
+- The system would need to be highly concurrent. There will be multiple booking requests for the same seat at any particular    
+    point in time. The service should handle this gracefully and fairly.
+- The core thing of the service is ticket booking, which means financial transactions. This means that the system should be 
+    secure and the database ACID compliant.
+
+

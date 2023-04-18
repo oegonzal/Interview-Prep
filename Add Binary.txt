@@ -1,3 +1,35 @@
+Later try:
+
+
+function binary(s1, s2) {
+    s1_n = "0".repeat(Math.max(0, s2.length - s1.length )) + s1;
+    s2_n = "0".repeat(Math.max(0, s1.length - s2.length )) + s2;
+
+    let carry = 0;
+    let result = "";
+
+    for(let i = s1_n.length - 1; i >= 0; i--) {
+        let s = parseInt(s1_n.charAt(i)) + parseInt(s2_n.charAt(i));
+
+        if (s === 0) {
+            result = "" + (s+carry)  + result;
+            carry = 0;
+        }
+        else if (s === 1) {
+            result = "" + (s+carry)  + result;
+            carry = 0; ...
+        }
+        else {
+            ...
+        }
+    }
+
+    return result;
+}
+
+
+
+
 //Second Try:
 Total Runtime: 12956 ms
 100% test cases passed.

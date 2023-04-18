@@ -1,0 +1,163 @@
+
+        
+class PLineInterval:
+    def __init__(self, lowerApex, higherApex, nextInterval = None, prevInterval = None):
+        self.apex = apex
+        self.lowerApex = lowerApex
+        self.higherApex = higherApex
+        
+        self.nextUpperInterval = nextInterval
+        self.nextLowerInterval = prevInterval
+
+class PriceLine:
+    # Linked list struct bc we can intercept at any given point between terminals (linkedlist more efficient than array)
+    def __init__(self):
+        self.maxInterval = None
+        self.minInterval = None
+        self.lastInterval = None # Last added interval to priceline linkedlist
+        self.lastExtrema = None
+        
+    def update(self, prev_ext, current_ext):
+        # Flag the last extrema in order to track that we are being continuous 
+        self.lastExtrema = current_ext
+        
+        # Get last interval and store as base bc we will connect new_interval with this one
+        base_interval = self.lastInterval
+        
+        # Create interval
+        lowerApex = prev_ext if prev_ext.price < current_ext.price else current_ext
+        higherApex = prev_ext if prev_ext.price >= current_ext.price else current_ext
+        new_interval = PLineInterval(lowerApex, higherApex)
+        
+        # Base: Make initiations if very first interval
+        if base_interval is None:
+            self.maxInterval = new_interval
+            self.minInterval = new_interval
+            self.lastInterval = new_interval
+            return
+        
+        # Keep this after being able to update self.lastInterval for first time
+        if self.lastExtrema != prev_ext:
+            raise Exception("Need to be continuously updating from extrema to extrema")
+
+            
+        if prev_ext.price == current_ext.price:
+            # We do not want to add intervals that are in the same spt as last interval, so break
+            return
+        elif prev_ext.price < current_ext:
+            self.addIncreasingInterval(self, base_interval, next_interval)
+        else:
+            self.addDecreasingInterval(self, base_interval, next_interval)
+        
+        
+        # Update: Note the last interval added to linkedlist
+        self.lastInterval = new_interval
+        
+    '''
+        Fn guarantees prev_interval & next_interval connect
+            AND redirects the logic to Fn on whether new interval is an inceasing or decreasing
+            interval from its prev_interval
+        REMEMBER:
+            prev_interval is a more "recent" interval (newer timestamps) AND next_interval
+            is an interval with "older" timestamps bc we're iterating from soon to late
+    '''
+    def addInterval(self, prev_interval, next_interval):
+        if prev_interval is None or next_interval is None:
+            raise Exception("prev or next interval input cannot be null")
+            
+        if prev_interval.upperApex == next_interval.lowerApex 
+               \ or prev_interval.lowerApex == next_interval_lowerApex:
+            self.addIncreasingInterval(self, prev_interval, next_interval)
+            
+        elif prev_interval.upperApex == next_interval.upperApex 
+                \ or prev_interval.lowerAper == next_interval.upperApex:
+            self.addDecreasingInterval(self, prev_interval, next_interval)
+            
+        else:
+            raise Exception("Incorrect interval type")
+       
+    '''
+        new_interval is new the new interval we want to update the price line with
+        baseInterval is the interval where we want to attach the base interval to build off from
+            (usually is the last interval that was appended)
+        returns volatility_list
+            volatility_list contains a list of the intervals that were overlapped by new_interval
+    '''
+    def addIncreasingInterval(self, base_interval, new_interval):
+        # Must have a base unit to continue algo
+        if base_interval is None:
+            raise Exception("updateUpperbound needs a self.lastInterval")
+            
+        # Cannot attach an interval that is unattached to last interval placed in PriceLine struct
+#         if new_interval.upperApex.price < self.lastInterval.lowerApex.price:
+#             raise Exception("Intervals must be connected with last interval that was added")
+        
+        # New interval is not headed towards upperbound (In this Fn check only interval heading up in price)
+#         if new_interval.upperApex.price == self.lastInterval.lowerApex.price:
+#             # Price did not move (just stayed in same pt in price from prev tf)
+#             # Do not update to new extrema, we need old one to be able to have a tf spread
+#             print ("NOTE: new_interval.upperApex.price == self.lastInterval.lowerApex.price")
+#             return
+        
+        # TODO: check if attached
+        
+        # Logic for overlapping upwards in price **
+        overlapped_intervals = []
+        
+        # Get all intervals overlapped by new_interval starting from base_interval
+        # in the increasing price direction
+        current_interval = base_interval
+        while currentInterval is not None 
+                \ and new_interval.upperApex.price >= currentInterval.lowerApex.price:
+            
+            # If new_interval is bigger (or equal) than last interval in priceline, update maxInterval
+            if current_interval.nextUpperInterval is None 
+                    \ and new_interval.upperApex.price >= current_interval.upperApex.price:
+                self.maxInterval = new_interval
+                
+            current_interval = current_interval.nextUpperInterval
+            overlapped_intervals.append(current_interval)
+            
+        # NOTE: current_interval represents 'last' overlapped interval
+        
+        
+        
+        
+        # Making new connections depends on if base_interval was below or above new_interval
+        
+        if base_interval
+        
+        # current_interval.next.lowerApex = new_interval.upperApex
+
+        # Update next interval's lowerbound to its new bound
+        current_interval.next.lowerP = new_interval.upperP
+
+        # Make new connections (for garbage collection)
+        new_interval.next = current_interval
+        current_interval.next.prev = new_interval
+        current_interval.next = None
+
+        # TODO:
+        # WHAT HAPPENS IF NEW INTERVAL REMOVES EVERYTHING??
+
+        # remove overlapped intervals
+        # update new next interval if its lowerP gets undercut
+        # if interval is new max, update self.maxInterval
+        
+        return overlapped_intervals
+        
+        
+    def addDecreasingInterval(self, interval, currentInterval):
+        if self.lastInterval is None:
+            raise Exception("updateLowerbound needs a self.lastInterval")
+        
+        # No update needed here (most likely a upperbound update)
+        if interval.lowerP >= self.lastInterval.upperP:
+            return
+        
+        # Get lowest interval 'interval' overlaps
+        while currentInterval.prev is not None and interval.lowerP < currentInterval.next.upperP:
+            currentInterval = currentInterval.prev
+            
+        if self.minInterval is None:
+            self.minInterval = interval

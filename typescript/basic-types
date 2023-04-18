@@ -1,0 +1,150 @@
+
+
+
+Boolean
+let isDone: boolean = false;
+
+
+Number:
+let decimal: number = 6;
+let hex: number = 0xf00d;
+let binary: number = 0b1010;
+let octal: number = 0o744;
+
+
+Array:
+
+let list: number[] = [1, 2, 3];
+let list: Array<number> = [1, 2, 3];
+
+
+
+Tuple:
+
+// Declare a tuple type
+let x: [string, number];
+// Initialize it
+x = ["hello", 10]; // OK
+// Initialize it incorrectly
+x = [10, "hello"]; // Error
+Type 'number' is not assignable to type 'string'.
+Type 'string' is not assignable to type 'number'.
+
+
+console.log(x[0].substring(1)); // OK
+console.log(x[1].substring(1)); // Error, 'number' does not have 'substring'
+Property 'substring' does not exist on type 'number'.
+Accessing an element outside the set of known indices fails with an error:
+
+x[3] = "world"; // Error, Property '3' does not exist on type '[string, number]'.
+Tuple type '[string, number]' of length '2' has no element at index '3'.
+
+console.log(x[5].toString()); // Error, Property '5' does not exist on type '[string, number]'.
+Object is possibly 'undefined'.
+Tuple type '[string, number]' of length '2' has no element at index '5'.
+
+
+
+num
+A helpful addition to the standard set of datatypes from JavaScript is the enum. As in languages like C#, 
+an enum is a way of giving more friendly names to sets of numeric values.
+
+enum Color {
+  Red,
+  Green,
+  Blue,
+}
+let c: Color = Color.Green;
+
+
+
+
+Any:
+
+let notSure: any = 4;
+notSure = "maybe a string instead";
+notSure = false; // okay, definitely a boolean
+
+
+Void
+
+void is a little like the opposite of any: the absence of having any type at all. You may commonly 
+see this as the return type of functions that do not return a value:
+
+function warnUser(): void {
+  console.log("This is my warning message");
+}
+
+
+
+Null and Undefined
+In TypeScript, both undefined and null actually have their own types named undefined and null respectively. 
+Much like void, they’re not extremely useful on their own:
+
+// Not much else we can assign to these variables!
+let u: undefined = undefined;
+let n: null = null;
+
+
+
+Never
+
+The never type represents the type of values that never occur. For instance, never is the return type for a 
+function expression or an arrow function expression that always throws an exception or one that never returns. 
+Variables also acquire the type never when narrowed by any type guards that can never be true.
+
+The never type is a subtype of, and assignable to, every type; however, no type is a subtype of, or assignable to, 
+never (except never itself). Even any isn’t assignable to never.
+
+Some examples of functions returning never:
+
+// Function returning never must have unreachable end point
+function error(message: string): never {
+  throw new Error(message);
+}
+
+// Inferred return type is never
+function fail() {
+  return error("Something failed");
+}
+
+// Function returning never must have unreachable end point
+function infiniteLoop(): never {
+  while (true) {}
+}
+
+
+
+
+Object
+
+object is a type that represents the non-primitive type, i.e. anything that is not number, string, boolean, 
+symbol, null, or undefined.
+
+With object type, APIs like Object.create can be better represented. For example:
+
+declare function create(o: object | null): void;
+
+create({ prop: 0 }); // OK
+create(null); // OK
+
+create(42); // Error
+Argument of type '42' is not assignable to parameter of type 'object | null'.
+create("string"); // Error
+Argument of type '"string"' is not assignable to parameter of type 'object | null'.
+create(false); // Error
+Argument of type 'false' is not assignable to parameter of type 'object | null'.
+create(undefined); // Error
+Argument of type 'undefined' is not assignable to parameter of type 'object | null'.
+
+
+
+
+Type assertions
+
+
+let someValue: any = "this is a string";
+
+let strLength: number = (<string>someValue).length;
+
+let strLength: number = (someValue as string).length;

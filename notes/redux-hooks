@@ -1,0 +1,316 @@
+
+Eliminate smoking weed
+Start sleeping earlier to eliminate market losses
+Eliminate choice complexity (hooks vs HOCs)
+Increase implementation speed
+Increase experimentation & think about how you are coding things vs old manner (do more & learn as you go, but 
+    do not introduce more conceptual coplexity until you figure it out)
+Research more to understand how things work & not get stuck in trivial bugs
+
+
+
+
+Memoizing in react redux with hooks:
+-   Positive of hooks is that I am forced to think of memoizing & renders & lifecycle + componentDidUpdate/componentShouldUpdate more 
+
+redux hooks:
+-   Allow for react usage w/o wrapping components w/ "connect" HOC 
+    -   Different to before bc we are coupling compnents more w/ redux as oppose to what was recommended before 
+        to keep components as least knowledgeable as possible about redux (better seperation of logic vs presentation concerns)
+-   const result: any = useSelector(selector: Function, equalityFn?: Function)
+    -   The selector function should be pure since it is potentially executed multiple times and at arbitrary points in time.
+    -   The selector will be run whenever the function component renders (unless its reference hasn't changed since a previous 
+        render of the component so that a cached result can be returned by the hook without re-running the selector).
+    -   useSelector() will also subscribe to the Redux store, and run your selector whenever an action is dispatched.
+
+However, there are some differences between the selectors passed to useSelector() and a mapState function:
+
+The selector may return any value as a result, not just an object. The return value of the selector will be used as the 
+    return value of the useSelector() hook.
+
+When an action is dispatched, useSelector() will do a reference comparison of the previous selector result value and 
+    the current result value. If they are different, the component will be forced to re-render. If they are the same, 
+    the component will not re-render.
+
+The selector function does not receive an ownProps argument. However, props can be used through closure (see the examples below) 
+    or by using a curried selector.
+
+Extra care must be taken when using memoizing selectors (see examples below for more details).
+
+useSelector() uses strict === reference equality checks by default, not shallow equality 
+    (see the following section for more details).
+
+
+
+You may call useSelector() multiple times within a single function component. Each call to useSelector() creates an individual 
+subscription to the Redux store. Because of the React update batching behavior used in React Redux v7, a dispatched action that 
+causes multiple useSelector()s in the same component to return new values should only result in a single re-render.
+
+
+Shallow compare does check for equality. 
+When comparing scalar values (numbers, strings) it compares their values. When comparing objects, it does not 
+compare their's attributes - only their references are compared (e.g. "do they point to same object?).
+
+
+The strict equality operator (===) behaves identically to the abstract equality operator (==) except no type conversion is done, 
+and the types must be the same to be considered equal.
+
+
+The == operator will compare for equality after doing any necessary type conversions. The === operator will not do the conversion, 
+so if two values are not the same type === will simply return false. Both are equally quick
+
+
+
+With mapState, all individual fields were returned in a combined object. It didn't matter if the return object was a new 
+reference or not - connect() just compared the individual fields. With useSelector(), returning a new object every time will 
+always force a re-render by default. If you want to retrieve multiple values from the store, you can:
+
+Call useSelector() multiple times, with each call returning a single field value
+Use Reselect or a similar library to create a memoized selector that returns multiple values in one object, but only returns 
+a new object when one of the values has changed.
+Use the shallowEqual function from React-Redux as the equalityFn argument to useSelector(), like:
+
+import { shallowEqual, useSelector } from 'react-redux'
+
+// later
+const selectedData = useSelector(selectorReturningObject, shallowEqual)
+
+
+
+
+Basic usage:
+
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+export const CounterComponent = () => {
+  const counter = useSelector(state => state.counter)
+  return <div>{counter}</div>
+}
+
+Copy
+Using props via closure to determine what to extract:
+
+import React from 'react'
+import { useSelector } from 'react-redux'
+
+export const TodoListItem = props => {
+  const todo = useSelector(state => state.todos[props.id])
+  return <div>{todo.text}</div>
+}
+
+
+-   Actions with effects 
+-   logic 
+-   closure & scope + component complexity
+-   coupling
+
+https://blog.isquaredsoftware.com/2019/07/blogged-answers-thoughts-on-hooks/
+So yes, our React-Redux hooks definitely couple the component more tightly to Redux, because that's basically true for 
+any component that is using context rather than props. There's an implicit dependency on that context instance and the data 
+being provided.
+
+How much do you want to separate concerns? If you like "shallow" testing components, hooks may not be for you, as they really 
+require "integration"-type tests. Do you prefer cleaner component trees, colocation, and easier static typing, or more separation 
+and indirection?
+
+One other thought: I've frequently observed that React and Redux users can be broadly grouped into two points of view: 
+"app-centric" vs "component-centric" design. I think the questions around hooks tradeoffs tie into some of those mindset 
+aspects. Is React your actual "app"? Or is it "just" the UI layer, with the real app being the logic and data kept outside 
+the component tree? Both are very valid viewpoints, again with differing tradeoffs
+
+
+
+
+
+
+
+Indirection:
+In computer programming, indirection is the ability to reference something using a name, reference, or container 
+instead of the value itself. The most common form of indirection: is the act of manipulating a value through its 
+memory address. For example, accessing a variable through the use of a pointer
+
+
+
+How much do you want to separate concerns? If you like "shallow" testing components, 
+hooks may not be for you, as they really require "integration"-type tests. 
+Do you prefer cleaner component trees, colocation, and easier static typing, or more separation and indirection?
+
+
+Long-term, it's going to be interesting seeing the ramifications of this play out in the ecosystem. 
+Hooks have only been out for a few months, so the community is still trying to work out how to best make use of them. 
+It took us years to go from "mixins" to "HOCs", and then even figure out that "render props" were a thing. We'll be exploring 
+hooks usage patterns for a long time.
+
+One other thought: I've frequently observed that React and Redux users can be broadly grouped into two points of view: 
+"app-centric" vs "component-centric" design. I think the questions around hooks tradeoffs tie into some of those mindset aspects. 
+Is React your actual "app"? Or is it "just" the UI layer, with the real app being the logic and data kept outside the component tree? 
+Both are very valid viewpoints, again with differing tradeoffs.
+
+Many Redux users are on the second group
+
+
+
+Reselect
+https://github.com/reduxjs/reselect#accessing-react-props-in-selectors
+
+
+
+
+
+MIXINS (earliest part of react development):
+
+Partial state and functions are “mixed in” to components
+Built into early versions of React as part of createReactClass
+Not supported with ES6 classes (React.Component ) or function components
+Pros:
+Did enable sharing logic
+Common pattern in earlier JS usage
+Cons:
+Implicit dependencies
+Name clashes
+Inheritance complexity
+
+BECOMES AN INHERITANCE QUESTION
+-   multiple of inheritance of classes can become a problem
+-   by 2015 react team was telling ppl to stop using and to use HOCS (decoration approach)
+
+
+Implicit Dependencies
+The dependencies are implicit for a class, if they exist only in the code within that class, 
+and not in its public interface. Therefore, while instantiating our class, we will not be aware of any dependency 
+that our class may have, to perform its operations
+
+
+
+
+
+Higher-Order Components (HOCs)
+
+Decorator-based approach: function takes a component, returns a wrapper component that passes down data as props
+Pros:
+Works with any component type
+Encourages “container/presentational” pattern
+Cons:
+Some indirection
+-   If you have multiple hocs it may be hard to tell which of them is providing a given prop
+Name clashes
+-   on props from different hocs
+Complex nested component tree
+
+
+
+Render Props
+
+Delegation-based approach:
+store data and accept a render callback
+parent “renders” by running callback, passing in values, and returning output
+Pros:
+Works with any component type
+Can be used to implement HOCs
+Runtime composition instead of “static” composition
+Cons:
+Somewhat harder to compose
+Deep nesting of render props in one component becomes difficult to read
+
+You have comp. that manages the data for you but doesn't do the rendering work itslef
+you inject the callback fn as a prop.
+This render prop compt passes its data to the func & lets that fn do rendering based on the params
+
+
+
+Hooks
+Data flow composition approach
+Pros:
+Easy to compose
+No name clashing
+Easy to extract logic as a custom hook
+Cons:
+Have to follow “Rules of Hooks”
+Closures and “stale props” can be tricky
+Only works with function components
+A few use cases are harder to implement
+
+
+https://blog.isquaredsoftware.com/presentations/2019-09-hooks-hocs-tradeoffs/#/8
+
+What's Actually New with Hooks?
+In some ways: NOTHING!
+
+Class components already had state and side effects
+Logic could be extracted into functions if you wanted to
+Function components "just" do the same things now
+In other ways: EVERYTHING!
+
+Function components can have state and effects
+Can write entire apps without using classes
+Logic can be co-located and trivially extracted for reuse
+No more this, but now have to understand closures
+Components are larger because of need for closures
+
+
+
+"Separation of Concerns?"
+Hooks deliberately make different tradeoffs on the "separation of concerns" and "simplicity" spectrums than HOCs do:
+
+HOCs:
+Promote writing plain components that receive all data as props, keeping them generic, decoupled, and potentially reusable
+Potential name clashes, extra layers in the component tree and DevTools, extremely complex static typing, and edge cases like ref access
+Hooks:
+Shrink the component tree, promote extracting logic as plain functions, are easier to statically type, and are more easily composable
+Lead towards a stronger coupling with dependencies (especially for any use of context)
+Hooks deliberately lead away from "separation of concerns". A component now explicitly expects to read its own data from somewhere and render it. You could write separate components for fetching and rendering, but now you've reinvented the HOC.
+
+
+
+
+React-Redux Usage: connect
+Recommendation: "Keep components unaware of Redux":
+They should simply receive data and functions as props, just like any other React component. This ultimately makes it easier to test and reuse your own components.
+
+Don't use props.dispatch() directly - move async logic outside components to keep it reusable
+
+
+React-Redux Usage: connect
+Use action creators, thunks, and mapDispatch to dispatch actions without explicit mention of dispatch at the call site, and to enable generic "presentational" components:
+In general, Redux suggests that code with side effects should be part of the action creation process. While that logic can be performed inside of a UI component, it generally makes sense to extract that logic into a reusable function so that the same logic can be called from multiple places—in other words, an action creator function.
+
+Automatically optimizes re-renders based on parent props
+
+
+React-Redux Usage: connect
+"Container/presentational" concept over-interpreted by the community. Still useful, but being de-emphasized:
+
+Dan Abramov has marked his "container/presentational" article as outdated
+Our planned Redux docs revamp will drop that phrasing from the "Usage with React" page
+
+
+React-Redux Usage: Hooks
+useSelector just formalizes the "selector function" concept we've already encouraged
+Can potentially reuse mapState functions if memoized, or used with shallowEqual comparison
+useDispatch means you always have dispatch directly available
+Drops the "bound action creator" abstraction
+Can easily write async code in a useEffect and dispatch
+Not as much need to externalize async logic in thunks?
+Can use both of them in custom hooks for more complex logic
+No wrapper component, so you'll need to wrap in React.memo() to optimize re-renders if necessary
+React-Redux hooks do couple the component more tightly to Redux, because that's true for any component that is using context rather than props. There's an implicit dependency on that context instance and the data being provided.
+
+
+Conclusions: It's About Tradeoffs
+Neither approach is "right" or "wrong" - it's about what tradeoffs you want to make:
+
+How much do you want to "separate concerns"?
+Do you prefer "shallow" testing of components, or fully "mounting/integrating" them?
+How important are shallow component trees and static typing?
+It'll take a long time to figure out best practices:
+
+Mixins -> HOCs -> Render Props -> Hooks took years of evolution
+What will hooks usage patterns look like a few years from now?
+Is your code "app-centric" or "component-centric"?
+
+Is React itself your actual "app"?
+Or is it the "view layer" on top of external state and logic?
+
+
+

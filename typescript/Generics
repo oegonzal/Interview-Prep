@@ -1,0 +1,237 @@
+function identity(arg: any): any {
+  return arg;
+}
+While using any is certainly generic in that it will cause the function to accept any and all types for 
+the type of arg, we actually are losing the information about what that type was when the function returns. 
+If we passed in a number, the only information we have is that any type could be returned.
+
+
+
+Here, we will use a type variable, a special kind of variable that works on types rather than values.
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+
+We say that this version of the identity function is generic, as it works over a range of types. Unlike using any, 
+it’s also just as precise (ie, it doesn’t lose any information) as the first identity function that used numbers for 
+the argument and return type.
+
+
+Once we’ve written the generic identity function, we can call it in one of two ways. The first way is to pass 
+all of the arguments, including the type argument, to the function:
+
+let output = identity<string>("myString"); // type of output will be 'string'
+
+
+he second way is also perhaps the most common. Here we use type argument inference — that is, 
+we want the compiler to set the value of T for us automatically based on the type of the argument we pass in:
+
+let output = identity("myString"); // type of output will be 'string'
+
+
+
+
+
+Generic Examples with arrays:
+
+
+function loggingIdentity<T>(arg: T): T {
+  console.log(arg.length); // Error: T doesn't have .length ***
+  return arg;
+}
+
+
+
+function loggingIdentity<T>(arg: T[]): T[] {
+  console.log(arg.length); // Array has a .length, so no more error ****
+  return arg;
+}
+
+
+
+
+Generic Types
+In previous sections, we created generic identity functions that worked over a range of types. 
+In this section, we’ll explore the type of the functions themselves and how to create generic interfaces.
+
+
+***
+These all represent the same function:
+
+
+The type of generic functions is just like those of non-generic functions, with the type parameters listed first, 
+similarly to function declarations:
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let myIdentity: <T>(arg: T) => T = identity;
+
+
+
+
+We could also have used a different name for the generic type parameter in the type, so long as the number of 
+type variables and how the type variables are used line up.
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let myIdentity: <U>(arg: U) => U = identity;
+
+
+
+
+We can also write the generic type as a call signature of an object literal type:
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let myIdentity: { <T>(arg: T): T } = identity;
+
+
+Which leads us to writing our first generic interface. Let’s take the object literal from the previous example 
+and move it to an interface:
+
+interface GenericIdentityFn {
+  <T>(arg: T): T;
+}
+
+function identity<T>(arg: T): T {
+  return arg;
+}
+
+let myIdentity: GenericIdentityFn = identity;
+
+
+
+
+
+
+
+Generic Classes:
+A generic class has a similar shape to a generic interface. Generic classes have a generic type parameter 
+list in angle brackets (<>) following the name of the class.
+
+class GenericNumber<T> {
+  zeroValue: T;
+  add: (x: T, y: T) => T;
+}
+
+let myGenericNumber = new GenericNumber<number>();
+myGenericNumber.zeroValue = 0;
+myGenericNumber.add = function(x, y) {
+  return x + y;
+};
+
+
+****
+As we covered in our section on classes, a class has two sides to its type: the static side and the instance side. 
+Generic classes are only generic over their instance side rather than their static side, so when working with classes, 
+static members can not use the class’s type parameter.
+
+
+
+
+
+
+
+
+
+
+
+Generic Constraints
+
+If you remember from an earlier example, you may sometimes want to write a generic function that works on a 
+set of types where you have some knowledge about what capabilities that set of types will have. In our loggingIdentity 
+example, we wanted to be able to access the .length property of arg, but the compiler could not prove that every 
+type had a .length property, so it warns us that we can’t make this assumption.
+
+function loggingIdentity<T>(arg: T): T {
+  console.log(arg.length); // Error: T doesn't have .length
+  return arg;
+}
+
+
+
+As long as the type has this member, we’ll allow it, but it’s required to have at least this member. To do so, we 
+must list our requirement as a constraint on what T can be.
+
+interface Lengthwise {
+  length: number;
+}
+
+function loggingIdentity<T extends Lengthwise>(arg: T): T {
+  console.log(arg.length); // Now we know it has a .length property, so no more error
+  return arg;
+}
+
+
+Because the generic function is now constrained, it will no longer work over any and all types:
+
+loggingIdentity(3); // Error, number doesn't have a .length property
+Instead, we need to pass in values whose type has all the required properties:
+
+loggingIdentity({ length: 10, value: 3 });
+
+
+
+
+
+Using Type Parameters in Generic Constraints
+You can declare a type parameter that is constrained by another type parameter. For example, here we’d like 
+to get a property from an object given its name. We’d like to ensure that we’re not accidentally grabbing a 
+property that does not exist on the obj, so we’ll place a constraint between the two types:
+
+function getProperty<T, K extends keyof T>(obj: T, key: K) {
+  return obj[key];
+}
+
+let x = { a: 1, b: 2, c: 3, d: 4 };
+
+getProperty(x, "a"); // okay
+getProperty(x, "m"); // error: Argument of type 'm' isn't assignable to 'a' | 'b' | 'c' | 'd'.
+
+
+
+
+Using Class Types in Generics
+When creating factories in TypeScript using generics, it is necessary to refer to class types by their 
+constructor functions. For example,
+
+function create<T>(c: { new (): T }): T {
+  return new c();
+}
+A more advanced example uses the prototype property to infer and constrain relationships between 
+the constructor function and the instance side of class types.
+
+class BeeKeeper {
+  hasMask: boolean;
+}
+
+class ZooKeeper {
+  nametag: string;
+}
+
+class Animal {
+  numLegs: number;
+}
+
+class Bee extends Animal {
+  keeper: BeeKeeper;
+}
+
+class Lion extends Animal {
+  keeper: ZooKeeper;
+}
+
+function createInstance<A extends Animal>(c: new () => A): A {
+  return new c();
+}
+
+createInstance(Lion).keeper.nametag; // typechecks!
+createInstance(Bee).keeper.hasMask; // typechecks!

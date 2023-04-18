@@ -1,0 +1,92 @@
+
+div: nth-child( num ) {
+    flex-grow: 4;
+}
+
+
+For classes:
+.class
+
+
+Select elements with multiple classes:
+.class1.class2
+
+    .name1.name2	Selects all elements with both name1 and name2 set within its class attribute
+
+
+Selects class elements within class elements
+.class1 .class2	
+    .name1 .name2	Selects all elements with name2 that is a descendant of an element with name1
+
+
+p.class 
+All p elements with a certain class
+
+
+element element 
+div p 
+selects all p elements where parent is a div 
+
+-   Selects all p no matter how nested they 
+    are within the div 
+
+
+[attribute]
+
+Brackets are selectors for attributes 
+
+a[target] {
+    background-color: yellow;
+}
+
+
+[attribute=value]	
+
+# All with attributes with a certain value
+[target=_blank] {}
+CSS flex: 
+Parent:
+
+display: flex 
+flex-direction: row | column | row-reverse | column-reverse 
+flex-wrap: nowrap | wrap | wrap-reverse  (elements to wrap?)
+
+(on stack adjust in parallel axis)
+justify-content: flex-start | flex-end | center | space-between |
+                    space-around | space-evenly
+
+(on stack adjust in perpendicular axis)
+align-items: stretch | flex-start | flex-end | center | baseline 
+                | first baseline | last baseline | start | end 
+                | self-start | self-end + ... safe | unsafe;
+
+align-content: flex-start | flex-end | center | space-between | 
+                space-around | space-evenly | stretch | start | 
+                end | baseline | first baseline | last baseline 
+                + ... safe | unsafe;
+
+
+Children:
+
+order: integer;
+flex-grow: integer;
+flex-shrink: integer;
+align-self: auto | flex-start | flex-end | center |
+            baseline | stretch;
+
+
+To remove input default:
+textarea, input { outline: none; }
+-webkit-appearance: none;
+
+
+
+
+React lifecycle:
+Mounting:
+-   constructor, render, (updates), componentDidMount
+Updating (newProps, setState(), forceUpdate())
+-   render, (updates), componentDidUpdate
+Unmounting:
+-   componentWillUnmount
+

@@ -1,0 +1,11 @@
+
+
+-   float top parent if children float and they are not in context space 
+-   All elements have postion: static by default
+-   display: inline will have effect of span where elements have no width or height 
+             & does not start new line
+-   display: block will take all the width and starts new line
+-   box-sizing: border-box; (default is content-box) will keep border and padding within 
+    height and width sizing rather than adding to it like content-box value would
+
+

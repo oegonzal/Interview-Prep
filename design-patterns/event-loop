@@ -1,0 +1,22 @@
+
+
+
+
+
+Each time an event, which has a listener attached to it, fires (otherwise the event is lost), a message is being sent to 
+a queue of messages which are being processed synchronously, in a FIFO manner (first-in-first-out). This is called the event loop.
+
+Each of the messages on the queue has a function associated with it. Once a message is dequeued, the runtime executes the 
+function completely before processing any other message. This is to say, if a function contains other function calls, they 
+are all performed prior to processing a new message from the queue. This is called run-to-completion.
+
+while (queue.waitForMessage()) {
+    queue.processNextMessage();
+}
+The queue.waitForMessage() synchronously waits for new messages. Each of the messages being processed has its own stack 
+and is processed until the stack is empty. Once it finishes, a new message is processed from the queue, if there is one
+
+You might have also heard that JavaScript is non-blocking, meaning that when an asynchronous operation is being performed, 
+the program is able to process other things, such as receiving user input, while waiting for the asynchronous operation to 
+complete, not blocking the main execution thread
+

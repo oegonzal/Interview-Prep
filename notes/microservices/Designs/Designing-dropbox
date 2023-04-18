@@ -1,0 +1,13 @@
+
+
+
+2. Requirements and Goals of the System 
+-   always clarify what reqs are at beginning of interview 
+-   What do we wish to achieve with cloud storage? What is the scope?
+
+
+
+
+Q:
+-   How to effectively sync a client and server with a file directory?
+    -   Have a watcher that notifies on a scheduled interval

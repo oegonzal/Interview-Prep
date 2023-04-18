@@ -1,0 +1,14 @@
+https://www.integralist.co.uk/posts/data-types-and-data-structures
+
+B-tree
+A B-tree is a sorted tree that is very similar in essence to a red-black tree in that it is self-balancing and as such can guarantee logarithmic time for search/insert/delete operations.
+
+A B-tree is useful for large read/writes of data and is commonly used in the design of databases and file systems, but it’s important to note that a B-tree is not a binary search tree because it allows more than two child nodes.
+
+The reasoning for allowing multiple children for a node is to ensure the height of the tree is kept as small as possible. The rationale is that B-trees are designed for handling huge amounts of data which itself cannot exist in-memory, and so that data is pulled (in chunks) from external sources.
+
+This type of I/O is expensive and so keeping the tree ‘fat’ (i.e. to have a very short height instead of lots of node subtrees creating extra length) helps to reduce the amount of disk access.
+
+The design of a B-tree means that all nodes allow a set range for its children but not all nodes will need the full range, meaning that there is a potential for wasted space.
+
+Note: there are also variants of the B-tree, such as B+ trees and B* trees (which we’ll leave as a research exercise for the reader).

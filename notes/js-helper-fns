@@ -1,0 +1,80 @@
+String.repeat(num)
+"hello".repeat(3) => "hellohellohello"
+
+Integer.toString() => turns an int to a string 
+
+String.endsWith()
+=> Check to see if a character ends wwith something
+
+String.startWith()
+=> Check to see if a string start with something
+
+
+String.slice(start, end_exclusive)
+=>
+var str = "Hello world!";
+var res = str.slice(0, 5);
+>> Hello
+
+
+String.substring(start, end_exclusive)
+=> 
+var str = "Hello world!";
+var res = str.substring(1, 4);
+>> ell
+
+
+
+
+
+
+var str = "HELLO WORLD";
+var res = str.charAt(0)  
+var arr = str.split('').reverse()
+
+
+var starts = str.startsWith("HELLO W")
+
+console.log("arr: ", arr)
+console.log("Starts: ", starts)
+
+
+
+
+function toRomanNumeral(num) {
+    var levels = [["I", "V", "X"], ["X", "L", "C"], ["C", "D", "M"], ["M", "V_", "X_"]]
+
+    function map(num, [lower, mid, upper]) {
+        switch (num) {
+            case "1":
+                return `${lower}`
+            case "2":
+                return `${lower}${lower}`
+            case "3":
+                return `${lower}${lower}${lower}`
+            case "4":
+                return `${lower}${mid}`
+            case "5":
+                return `${mid}`
+            case "6":
+                return `${mid}${lower}`
+            case "7":
+                return `${mid}${lower}${lower}`
+            case "8":
+                return `${mid}${lower}${lower}${lower}`
+            case "9":
+                return `${lower}${upper}`
+            default:
+                return '';
+        }
+    }
+
+    var numeral = num.toString().split('').reverse().reduce((acc, curNum, ind) => { 
+        var numeral = map(curNum, levels[Math.min(ind, levels.length-1)]);
+        return numeral + acc;
+    }, '')
+
+    return numeral
+}
+
+console.log(toRomanNumeral(1451))

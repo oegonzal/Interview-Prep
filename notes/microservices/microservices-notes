@@ -1,0 +1,331 @@
+https://www.youtube.com/watch?v=1xo-0gCVhTU
+
+System Design Questions:
+-   Ask what main features are so we know 
+    what may need to scale and what may need 
+    to be flexible for change later
+-   Make it scalable 
+-   Simple and easy to use 
+-   Design data models 
+-   Ask questions, edge cases, & optimization
+
+
+Services communicate:
+-   via http & very well defined APIs
+
+Usually each service has:
+-   Its own DB
+
+
+Advantages:
+-   Language independent
+-   Fast iteration
+-   Small teams
+-   Fault isolaton
+    -   If one fails it doesn't mean all others will fail or whole system
+-   Pair well with containers & makes them dynamically scallable
+    -   On demand computing is expensive so scalability is important at right times
+
+
+
+Disadvantage:
+-   Complex Networking
+-   Overhead
+    -   Database
+    -   Servers
+    -   Knowledge
+        -   Containerization
+        -   Composer
+
+
+Language key words:
+-   Composer
+-   Loadbalancing
+
+
+Docker:
+-   Allows anything your application needs to put into one image and have it run on any other computer that
+    has docker
+-   Not a virtual machine
+    -   VM has to package an entire guest operating system in the virtual machine
+        -   Machine OS => Hypervisor => Guest OS => libs/bins => Application 
+
+    -   Docker 
+        -   Does all translation layer for you, no need for guest operating system for you. 
+            With docker, if you have multiple containers the applications can also share libraries instead of 
+            duplicating them. And also no guest OS is needed
+
+    -   Dockerfile
+        -   Is the definition of the image, not the actual image. The instructions for how to build the image.
+
+    -   Kubernetes
+        -   Say we have the applications and they are containerized, how do we run them? Orchestrator
+        -   Is an open source system for automating, deploying, scaling, and management, of containerized applications.
+            -   Node
+                -   Communicates with master, runs pods
+            -   Pod
+                -   Exist on nodes, Runs 1+ containers 
+            -   Service
+                -   Handles requests
+                -   Load balancer
+            -   Deployment
+                -   Defines desired state - kubernetes does the rest
+
+
+-   Port mapping 
+    -   sudo docker run -d -p 3000:80 tutum/hello-world
+        -   -d is for running the command/application in the background & not having it take up the command line
+        -   -p is the process and port 
+            
+            -   Bind docker application to port 3000 in local machine and redirect that traffic to 
+                docker application's port 80
+    -   sudo docker kill id 
+        -   kills the process/ docker applications
+
+
+-   Kubernetes
+    -   Start: minikube start 
+    -   Kubernetes example deployment file:
+
+    --- deployment.yml
+
+    ---
+    kind: Service
+    apiVersion: v1
+    metadata:
+    name: exampleservice
+    spec:
+    selector:
+        app: myapp
+    ports:
+        - protocol: "TCP"
+        # Port accessible inside cluster
+        port: 8081
+        # Port to forward to inside the pod
+        targetPort: 8080
+        # Port accessible outside cluster
+        nodePort: 30002
+    type: LoadBalancer
+
+
+
+    ---
+    apiVersion: extensions/v1beta1
+    kind: Deployment
+    metadata:
+    name: myappdeployment
+    spec:
+    replicas: 5
+    template:
+        metadata:
+        labels:
+            app: myapp
+        spec:
+        containers:
+            - name: myapp
+            image: jamesquigley/exampleapp:v1.0.0   -- pulls from dockerhub
+            ports:
+                - containerPort: 8080
+
+
+-   Other commands:
+    -   sudo kubectl get pods 
+    -   sudo kubectl get deployments
+    -   minikube dashboard
+    -   sude kubectl create -f deployment.yml
+
+
+
+-   sudo docker push jamesquigley/exampleapp:v1.0.0
+
+-   Kubernetes 
+    -   Automaticall scales the resources specified, even when something goes down it'll spin up a new instance
+        of whatever crashed
+    -   You can also set rules for when to scale and scale down, maybe between 8-10am there is a lot of traffic to 
+        an application so we double the number of instances
+
+
+
+-   Make Dockerfile if you want to run say a node server 
+
+    FROM node:carbon
+
+    # Create app directory
+    WORKDIR /usr/src/app
+
+    COPY package.json .
+    COPY package-lock.json .
+
+    RUN npm install 
+
+    COPY . .
+
+    EXPOSE 8080
+
+    CMD ["npm", "start"]
+
+
+-   sudo docker build -t jamesquigley/exampleapp:v1.0.0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+================================================================================================================================
+================================================================================================================================
+================================================================================================================================
+================================================================================================================================
+
+
+https://www.youtube.com/watch?v=sSm2dRarhPo
+
+In order to sucessfully develop Software
+-   Architecture
+    -   Monolithic, Microservice
+-   Organization Structure
+    -   Small autonomous teams
+-   Processes
+    -   Agile, continuous delivery 
+
+
+
+QUESTIONS:
+
+
+
+
+
+Scalablity types:
+-   Multiple copies of application behing a load balancer 
+    -   Horizontal decoposition
+-   Routing that inspects request and uses specific attribute in request to 
+    redirect (eg, sharding in databases and using the id to hash and to redirect to correct database):
+    -   Data partitioning, scale by splitting similar things
+
+-   Functional decomposition
+    -   Scale by splitting different things
+
+
+
+Drawbacks:
+-   Complexity & developing a distributed system 
+    -   Interprocess network & communication
+    -   Partial failure (certain failures may be down)
+    -   Complexity of implementing business transactions that span multiple databases
+    -   Complexity of testing distributed systems
+    -   Complexity of deploying and operating a distributed system
+    -   Managing the development and deployment of features that span multiple services
+
+
+Shared Databases:
+-   You have to deal with other team members which means you lose autonomy 
+    Best to to be autonomous to not slow down dev and wait for teammates
+
+
+Event Sourcing:
+-   Store all events to a process 
+-   Gives ability to restore state in case a service crashes, events can be reran to get to last state
+-   Event chain example could be: orderCreated => orderUpdated => orderShipped => orderCancelled
+    -   These events are consumed somewhere else to cause something 
+
+-   Built in audit, reliable audit 
+-   Preserved history => More easily implement future requirements 
+
+
+Once we have our microservice architecture and event driven design, we need:
+Forces
+-   Services are wriitten in a variety of different langagues, frameworks and even different versions of those
+-   Each service consists of multipe services instances for througput and availibility
+-   Building and deploying a service must be fast 
+-   Services must be deployed and scaled independently
+-   Service instances need to be isolated 
+-   Deployment must be reliable and cost-effective
+
+Benefits of containers: 
+-   Great Isolation
+-   Great manageability
+-   Conteiner encapsulates implementation technology
+-   Efficient resource utilization
+-   Fast deployment 
+
+docker-compose:
+-   Can give you a makefile with all exact technologies to have & not worry about incompatibility
+-   Good for end-to-end and integration testing to test exact environments
+
+
+
+
+
+
+
+
+
+
+
+Instagram micro service:
+
+When building out a system always start by asking:
+-   What are the main features we are trying to build out 
+
+
+-   Photo storing
+-   Recommendation
+-   Matching
+-   Messaging
+
+
+Photo storing:
+-   File system vs Blob (Blob for database)
+
+Benefits of a database:
+1. Mutability
+2. Transaction (ACID)
+3. Indexing
+4. Access Control
+
+
+** Note: meaning of ACID 
+-   A - The entire transaction takes place at once or doesn't happen at all 
+-   C - The database must be consistent before and after the transaction 
+-   I - Multiple Transactions occur independently without interference
+-   D - The changes of a successful transaction occurs even if the system failure occurs
+
+Cons to storing pictures in a database (given what a database offers):
+-   There is no mutability in a picture 
+    -   If anything needs to be updated about a picture it would be a crop in which case 
+        we create a new picture and should store it apart from first (file directory pro)
+    -   Mutability never means we'll need to update a single pixel in the picture so this 
+        DB feature is pointless
+-   Transactions 
+    -   We wont be doing any major transactions for photos 
+-   Access Control 
+    -   It is cheaper on a file system & doing a SELECT * on a DB vertical access control storage
+        can be extremely slow so file system could prevent this man made issue from occurring
+
+File system (pros)
+-   Cheaper 
+-   Faster
+-   Context Delivery Network
+
+
+

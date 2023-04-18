@@ -1,0 +1,48 @@
+
+Questions:
+-   How will end users use the product?
+-   What is the problem we are trying to solve
+    and how do we deliver the most value in the
+    way that decreases customer experience the 
+    least??
+
+-   How do I get the data to build out the 
+    best features?
+
+
+System Design Questions:
+-   Ask what main features are so we know 
+    what may need to scale and what may need 
+    to be flexible for change later
+-   Make it scalable 
+-   Simple and easy to use 
+-   Design data models 
+-   Ask questions, edge cases, & optimization
+
+
+
+
+Product I enjoy:
+-   Problem:
+    -   How to make dev most productive in making
+        mathematical algs through research
+-   QuantConnect
+    -   Community access
+    -   Amazing IDE
+    -   Tutorials
+    -   Api search
+    -   debugger 
+    -   Research env
+-   Improvements:
+    -   Displays and code editors sizing
+    -   Tabs cannot be switched in order 
+        (static order)
+
+
+Bad UI:
+-   Too much state
+-   Too many steps (no process colocation)
+    -   Refunds not being in the order tab in admin
+-   Too much information in one page
+
+-   public intended pages being login protected

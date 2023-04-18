@@ -1,0 +1,14 @@
+Tiny-url tracking System Design ===> study
+
+
+Notes:
+Inverted Index
+- For graph search
+- Search Service
+
+Webhook notifications:
+- w/ SNS and exponential backoff
+
+Wipeout Service:
+- Ephemeral messaging apps that need messages to be deleted after some time
+    from client/server side
