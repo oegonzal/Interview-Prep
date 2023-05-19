@@ -1,0 +1,32 @@
+Remember ---> most knowledge I intake will decay right away
+- Instead prep really well for with terminology, concepts & stories for 
+    high values events in short term
+https://systemdesign.one/system-design-interview-cheatsheet/
+https://vahid.blog/post/2022-05-05-system-design-interview-cheat-sheet/
+https://gist.github.com/vasanthk/485d1c25737e8e72759f
+https://github.com/gitgik/distributed-system-design
+
+
+Prep:
+- Just keep designing & reviewing different systems
+- Leetcode little by little
+- Rest on Work + Finding patterns/setups in Market + premiums/insurances
+
+
+Stories to focus:
+- ICS data collection & analytics (aggregation services + tracking links)
+- TS booking locking management + oAuth integrations
+- Webhooks
+- Framework caching performance, white-label customization algo, & containerization
+
+
+Otherwise:
+- 100% focus on LinkedIn replies & setting up calls w/ correct companies
+- Based on company: React, Python, Angular, AWS
+- Remote, mid-large comp, autonomy, manager, & team not super collaborative
+
+
+PLAN:
+- Note down main terms
+- Foreach system --> note down main services & foreach service --> note-down main components it interacts with
+- watch vids before sleeping

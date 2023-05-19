@@ -1,0 +1,423 @@
+- https://www.codekarle.com/
+- Sharded Counting & top K problem (Twitter trending w/ moving window & exponential averaging)
+- Exponential Backing (Square webhooks)
+- Cassanda (wide column db ---> supports many read & high throughput - much incoming reqs)
+- Google Gloud --> auto scaled & monitoring
+- Big Query --> google analytics for big data
+- Hadoop
+- Presto - distributed SQL query engine
+- Kafka
+- Google DAtaflow jobs (decoupling + realitime aggregation)
+- pubsub - helps avoid data loss & provides more scalability
+- BigTable (NoSql database)
+- FlockDb - graph DB
+- Elastic Search - text search cache & built with Apache lucene
+- Ziplin monitoring
+- RocksDB - storage engine responsible for storing & retriving data within a cluser of CPU cores
+- Vertica - MPP (Massively Parallel Processing) analytical database that runs queries in parallel across multiple nodes or instances, scaling out linearly to provide high concurrency and low latency at any scale.
+- Client side load balancing
+- Finagle -> load balancing
+    - P2C
+    - Deterministic Aperture (Discrete & Continuous)
+    - Mesh Topology
+    - Random Aperture
+- Read-Write Ratio
+- Celery - open source asynchronous task queue or job queue which is based on distributed message passing. While it supports scheduling, its focus is on operations in real time
+- Regions & zones (for availability & when a zone goes down, request redirection)
+- Push/pull model (twitter)
+- HTTP vs FTP (Http: ordered packages, handshake confirmation, reliable)
+- Md5 hasing function w/ a server count modulus --> unscalable (no consistent hashing) way of load balancing & distribution of requests may be off
+- Consistent Hashing (ring w/ virtual server nodes so server distribution around ring remains constant when some may be added/removed)
+- Acid compliant (financial transactions)
+- Mongo - leader-follower + higher consistency (contract to Cassandra & dynamoDB)
+- Producer-Consumer --> Queue & worker nodes
+- Order Tracking - process in pipelines for orders
+- Datastructure (Linked HashMap or TreeMap - LRU or ticketing hold structure)
+- Kafka (disk sequential jumps & no spins to access memory & zero copy from disk to network, normally it is disk, to os, to app, to network --> many buffer copies & thus slow) & has massive throughput
+    - User can replay messages
+    - pairs well w/ big data systems such as elasticSearch
+    - Allows topics to be split into partitions
+    - Performance improves with fewer, large batches of data
+- RabbitMQ
+    - Allows users to set sophisticated rules for message deliery
+    - Supports STOMP, MQTT, Websockets, & others
+    - Capability to vary point to point, request/eply, and pushlish/subscribe messaging
+    - Strong authentication & expression-based authorization
+- Archive records (move to archive db for rows no longer used, like old orders/transactions, etc) --> to help speed up search & remove fluff
+- Retention policy -> after few years delete archive rows for example
+- Cache for immidiate pre-computed data (feed, recommendations, etc)
+- Queue to decouple and reduce dependencies between services
+- Serialization
+- Transaction: all operations succeed or none of them do --> Distributed Transaction across multiple stores & services --> hold on tickets, payment, update booking store, remove tickets from chart
+- Isolation levels (for parallel requests, feature in databases)
+    - pessimistic locks: deadlocks (db smart enough to not cause deadlock from 2 queries that lock eachother accidentally querying same resources & both waiting for eachother to release), for write, ttl (time to live: max time for lock)
+    - ttl important since rows should not stay locked if transaction fails later in the pipeline eg when trying to make a payment on another service that request get dropped
+    - optimisitic locks: assumes you have a lock & proceed --> not efficient for write heavy bc writes will assum they got the lock & proceed with computation when only one of the concurrent requests got the lock
+    - offline refund service -> in case lock was made for seats inventory, payment made on payment service, but booking information query got dropped/failed to booking store/db
+    --> total transaction failed & thus offline refund service should refund money
+    ---> distributed transaction
+    - linearisation/consistency --> all reader/writer are updated with latest lock & state (distributed transaction)
+- horizontally scallable (service behind load-balancer)
+- cdn - geographically distributed static file store
+- db logical partitions ==> for prescale in case we need seperate database later on isolated hardware per logical db
+- Cassandra: constraint that it needs a partition key (like booking_id, in order to get data)
+    - can handle huge amount of reads & writes
+    - usually not used as a source of truth since it cannot support a diversity of queries it is limited to being queried by partition id (usually sql source of truth since it can handle flexible queires with different datatypes)
+- Redis
+- Write-through Cache (write on DB then on cache)
+- Hadoop -> Analytics & reporting for streaming data (data can come from kafka)
+- RDB --> can have constraints (eg. availble_qty type cannot be negative --> another difference to nosql dbs)
+- ACID property - transaction where if 4 requests come in only 1 transaction will be successful ( where we update db available_rooms table row availle qtr AND booking table info in same transaction & other queries fail)
+- Redis for holding service (TTL - time to live of Redis)
+    - <booking-id, expiration-time>
+    - redis callback -> when booking-id expires you get a notification
+    - if redis pushes callback first before payment then change booking to 'cancel'
+    - if payment is successful then change ticket status to 'booked'
+- think of a store as a an attribute (in frammework world) & observver/subscribers as kafka for loose coupling
+- TTL in Redis doesn't necessarily happen right away on expiration. It can be delayed by say a min or depending (it does periodic checks or on hit - lazy checks)
+- You can also poll the redis head to check every 1 second (cost is it utilizes more computation bc it keeps bombarding redis so comes at cost of more hardware)
+- if payment fails --> can delete expiration keys from redis (small implementations that could be done)
+- if were to use Cassanda then we cannot use transactions & constraints & it has to be implemented on client application side which is extra effort from devside (tradeoff)
+- search capability use elastic search or solar ---> very efficient at search
+- ElasticSearch is not a database. Differnce vs a DB is DB gaurantees data will not be lost
+- Timeseries db are append only mode where data scaved back to back (influxDB openTSDB) (not for random read or updates)
+- Analytics on the data for the whole company then you need something like a datawarehouse
+    which is a huge database to dump all the data and query ( not used for transaction purposes, it is used for offline reporting purposes ==> also can be used with Hadoop where data can come from a lot of systems and be used for offline reporting)
+- SQL (acid) - multiple queries into a transaction for use of consistency like transferring money (eg in same transaction: remove money from one person and add to other person in same transaction) -> and should be consistent everywhere (such that if there are multiple negative transactions on a user, a transaction cannot access a stale balance bc money could be lost)
+- Cassanda is a peer-to-peer distributed system (it does not have nay leader or follower nodes. All equal & no single point of failure)
+    - Data in Cassandra is automatically distributed across nodes (& replicated for fualt tolerance & redundancy)
+    - Uses consistent Hashing to distribute data
+    - Uses gossip protocol
+    - Also uses tunable consistency for both read and write operations w/ tradeoff between availability & consistency
+- NoSql (document) --> good for catalog type of app ( like ecommerge with different products that have different   attributes - milk(expiration, oz) to laptop(ram, cpu) ) ====> specifically mongodb
+- NoSql (columnar) --> ever increasing data like Uber (all the drivers are continuously sending locations) but its not constant bc # of drivers increases per day
+    - Also good when there are finite number of queries where you can query just based off a category & get all the data from it (Cassandra)
+- Combination of databases ===> Amazon order system (ever increasing data) ==> orders in process on sql
+    ---> once order delievered ---> move orders to Cassandra as permanent store
+- For Video System Design: frontend can caluclate buffering & what "formats" are needed from backend based on available bandwidth + device size + experience occurring on the device & request from server
+- Reverse proxy ==> load balancer ==> can do authorization/authentication later from outside world going into system
+- Fuzzy search (for type errors & best matching) via ElasticSearch
+- Amazon Search: can trigger events to be sent to Kafka ==> can be good source to build recommendation
+- Spark streaming (real time data) ---> can put data into hadoop & ontop of spark we can run ML algos
+- Apache Spark is an open-source, distributed processing system used for big data workloads. It utilizes in-memory caching, and optimized query execution for fast analytic queries against data of any size. 
+    - batch processing, interactive queries, real-time analytics, machine learning, and graph processing. 
+    - has become one of the most popular big data distributed processing framework
+- Apache Kafka & Amazon Kinesis are both streaming data solutions (opensource vs AWS managed)
+- Throughput refers to the actual amount of data transmitted and processed throughout the network. If bandwidth describes the theoretical, throughput describes the empirical
+- Network bandwidth defines how much data can possibly travel in a network in a period of time. It is the maximum amount of data the network is capable of transmitting (sometime transmits less due to outages, etc)
+- Encoding URL: We can compute a unique hash (e.g., MD5 or SHA256, etc.) of the given URL. The hash can then be encoded for display. This encoding could be base36 ([a-z ,0-9]) or base62
+- Load balancers help prevent Ddos attacks & malicious intents to take down valuable services
+- Ways to generate unique id:
+    - Distributed unique ID generator (w/ say timestamp & machine id for tinyurl) & hide it with obfuscation function transformation
+    - cryptographic hash function for hash function that uniquely hashes orignal url w/ minimal collision
+    - GUID 
+- Realtime vs Delayed statistics -> 
+    - mirror requests sent to streaming service (Spark) or in metrics calculated in the server
+    - delayed; batch Updater services requests logs from server periodically & uses a map reduce to process the statistics --> then updates db
+- Hotspotting (example when a specific tinyurl becomes really high read traffic requested ( burst in traffic for a popular entry & server get overloaded))
+- There can be a loadbalancer in between services and databases so database get even distribution of requests
+- Fanout service after data writtten to db (like tinyurl) so it gets written to cache right away after written to db
+- Eventually consistent
+- Fan-out-service:
+    - delivery & spreading of data to mulitple destinations. Usually 1:n messaging pattern where data delivered in parallel asynchronously wihtout blocking for responses
+    - Creating copies of the updated data in caches, databases, & servers for read access
+    - notification, search indexing, & updating that are accociated with new data
+    - Umbrella term for services that are triggered  after a write of new data that needs to be sent to many repiencts
+- Sequential consistency: User A posts, then User B who is in a different zine (follower of A) posts about user A post, then for all zones/regions, first post (User A) should always show before User B's (otherwise others will be confused baout what User B is posting)
+- Push model vs Pull model
+    - push model can cause too many updates & to complicate more, may need to update memory in many different zones & regions.
+    - pull model can be used for infrequent log in users, though they may get stale (not latest) data
+- The largest difference for EC2 is that it deploys isolated VM instances with auto scaling support, and ECS deploys scalable clusters of managed Docker containers. Enterprises can use ECS to scale web applications, perform batch processing, and run services in a hybrid environment to deliver better services to users.
+
+- OnPremise -> in house
+- ETL Pipeline
+- Loaded into Cloud warewhouse LIKE snowflake -> then loading into tableau to make dashboards
+- Realtime business critical changes --> Create event driven pipeline:
+    - Change happens OnPremise (Producer) -> Amazon API (in secure manner https - api key or IAM integration) 
+        -> Amazon Eventbridge (to setup rules in order to publish to certain services DLQ or SNS)
+        -> SNS (fanout & broadcast to different consumers and SQS)
+        -> SQS (consumer) -> DLQ in case of failure
+        -> Compute resourse (Lambda or EC2/ECS)
+- If sending XML data to AmazonApI (can be issue) -> base64 encode -> then responsibility down the pipeline of consumer to base64 decode
+- DLQ: dead-letter queue is a special type of message queue that temporarily stores messages that a software system cannot process due to errors. --> which can then can configure a cloudwatch alarm to notify admin or dev team about failure
+- Cloudwatch
+- Priority queue (for example paid customers vs free customers)
+    Source
+    -> eventBridge: to choose what queue to send it to based on rule (free vs paid) (SNS can also choose by type)
+        - eventBridge can be used to offload the decision making away from the source
+    -> SQS-1(pay service) & SQS-2(free service)         
+        -> EC2 or Lambda
+        - EC2 (making sure it can serve: autoscaling & loadbalancer)
+        - if Lambda ( can tune memory, timeout interval so it can respond within appropriate time it needs )
+- AWS step function: that helps developers use AWS services to build distributed applications, automate processes, orchestrate microservices, and create data and machine learning (ML) pipelines.
+- Kinesis data stream: Amazon Kinesis cost-effectively processes and analyzes streaming data at any scale as a fully managed service. With Kinesis, you can ingest real-time data, such as video, audio, application logs, website clickstreams, and IoT telemetry data, for machine learning (ML), analytics, and other applications.
+- Cake delivery company: clientReq -> api gateway -> dynamo & kinesis
+    - Kinesis triggers lambda -> SNS (notifies cake maker) -> cake maker prepares order
+    - Note lambda to lambda chaining is VERY BAD bc if one lambda fails restarting process is difficult
+        so put a buffer in between like Kinesis or SQS
+- AWS SDK (CLI and Console) also help
+- AWS resource management also possible w/ AWS cloudformation & Terraform
+    - cloudformation con: sometimes hard to find templates for specific cases
+    - terraform con: it may not support all AWS functionality. & doesn't support auto roolback to prev state in case of error
+- DynamoDB Stream can be described as a stream of observed changes in data, technically called a Change Data Capture (CDC). Once enabled, whenever you perform a write operation to the DynamoDB table, like put, update or delete, a corresponding event containing information like which record was changed and what was changed will be saved to the Stream in near-real time. https://dynobase.dev/dynamodb-streams/
+- AWS Refshift: uses SQL to analyze structured and semi-structured data across data warehouses, operational databases, and data lakes, using AWS-designed hardware and machine learning to deliver the best price performance at any scale
+- A transaction is a unit of work for a database. For example, purchasing a ticket may be a transaction.
+    - To provide units of work that allow for consistent state and recovery in the event of failures midway through.
+    - To provide isolation between programs accessing a database concurrently.
+- Atomicity: The whole transaction comes as one unit of work. Either all of it completes, or none of it does.
+- Consistency: Our database will have a number of constraints on it (foreign keys, unique keys, etc.). This property guarantees that post transaction we will be left with a valid, constraint-abiding, set of data in our database.
+- Isolation: This is the ability to process multiple concurrent transactions such that they do not affect one another. If you and another person are both trying to buy a ticket simultaneously, one transaction must happen first.
+- Durability: Once a transaction is completed then the results are permanent. For example, if we buy a ticket, then there’s a power cut, our ticket will still be purchased.
+- DB database indexing use B+ tree structures
+- Concept of a snowflake: generate a unq id in a distributed system -> composite of multiple ids to create id -> (time in milliseconds 41 bits, machine id/shard id 13 bits, auto increment sequence mods 1024 10 bits)
+    - this means there can be a total of at most 2^10 unq ids generated per machine per millisecond
+- Databases: created indexes, handle queries, record trxs, & serve reqs
+- Data warehouses: used to store structured data from multiple sources for data analysis
+    - commonly contain data from ETL (Extract, Transform, Load) pfo dxx
+    - Primary purpose is to generate analysis, reports, business intelligence, & dashboards
+    - Compared to dbs: warehouses are not intended to handle queries, txns, or serve reqs
+- Data lakes -> are used to store any type of data in its original raw format
+    - Consumers of this data use a schema-on-read approach where a format is paplied to the data when it is read. In contract DB & data warehouses use a schema-on-write approach
+- MapReduce: programming model for processing big data w/ a parallel and distributed method.
+    splits the data set into smaller datasets, performs the same computation across all the smaller data sets in parallel, & combines the result
+    - data set is split into smaller data sets --> each small data set is assigned to a worker node (a server) -> map function to it & prodcues an output (output is key-value)
+    - shuffle -> output from the map step is reorganized so that all data of one key is held together on a worker node
+    - reduce -> each worker node applies the reduce function to the reorganized data, which collapses the data to the final output
+- MapReduce commonly used to process and analyze server logs
+- MapReduce constrainteed to key value pairs
+- Augmenting a fan-out service with a user analytics service --> user ana srvc tracks how posts are read and uses ML & historical request patterns to predict # of copies of the post to hold in cache/replicas in different zones to sufficiently handle burst of reads from users followers
+- Natural Language Processing & Levenshtein distance for commonly misspelled words
+- idempotent: An operation with the same input produces the same results no matter how many times an operation repeats.
+- Authentication with payment forms ** study this
+- OAuth ** study this
+- Commutativity: The order of applied operations shouldn’t affect the end result.
+- Idempotency: Similar operations that have been repeated should apply only once.
+- Operational transformation (OT)
+    - Causality preservation: If operation a happened before operation b, then operation a is executed before operation b.
+    - Convergence: All document replicas at different clients will eventually be identical.
+- Counting in scale: https://www.youtube.com/watch?v=bUHFg8CZFws
+- Cluster proxy (load balancer) --> allows services not to know about specific database stores
+    - when new machine added to db cluser, cluster proxy should know about it through configuration service (ZooKeeper)
+    - ZooKeeper maintains a health check -> so it always know what machines are available
+- Shard proxy
+    - cache query results
+    - monitor db instance health
+    - publish mertrics
+    - terminate query that take too long
+- Master chard and Read Replica -==> for high availibility to prevent data loss
+- Putting on different data denter in case one data center goes down
+- Cassandra --> shards --> gossip protocol where state info propogates throughout the cluster
+    - Here every node knows about eachother (as oppose to just the cluster proxy knowing info about shards)
+ - Websocket: The WebSocket protocol enables interaction between a web browser (or other client application) and a web server with lower overhead than half-duplex alternatives such as HTTP polling, facilitating real-time data transfer from and to the server. This is made possible by providing a standardized way for the server to send content to the client without being first requested by the client, and allowing messages to be passed back and forth while keeping the connection open. In this way, a two-way ongoing conversation can take place between the client and the server. The communications are usually done over TCP port number 443 (or 80 in the case of unsecured connections), which is beneficial for environments that block non-web Internet connections using a firewall.
+    - Unlike HTTP, WebSocket provides full-duplex communication.[6][7] Additionally, WebSocket enables streams of messages on top of TCP. TCP alone deals with streams of bytes with no inherent concept of a message.
+- In distributed computing, a remote procedure call is when a computer program causes a procedure to execute in a different address space, which is written as if it were a normal procedure call, without the programmer explicitly writing the details for the remote interaction
+    - rpc is a form of inter-process communication in which a process invokes a local call that causes a routine to execute in another process that is running on a remote machine or netwrok
+- Http is outside network standardized communication (nouns & resource based)
+- Rpc is within network communication ususally tied to a specific tech stack for optimization (verbs based)
+- Scalable => partitioning
+- Reliable (avoid data loss) => replication and checkpointing
+- Fast => In-memory (caches)
+- Blocking systems => create one thread per client connection (socket that handles connection on server side is blocked => this happens within a single execution thread & thread that handles connection is blocked as well )
+- Modern multi-core machines can handle hundreds of concurrent connections each
+    - say server starts to experience slowdown & # of active threads & connections starts to increase
+    - when this happens, machines can go into a death spiral & the cluster of machines may die
+    - rate limiting helps keep system stable during traffic peaks
+    - using a single thread on the server side to handle multiple concurrent connections,
+        server just queues the request & the the actual I/O is then processed at some later point.
+        Piling up reqs in the queue are far less expensive than piling up threads
+        non-blocking systems are more efficient & as a result has higher throughput
+        - tradeoff of non-blocking system is increased complexity of operations
+        - non-blocking systems have a thread per request & we can easily track progress of the request
+            by looking into the thread's stack
+            - exceptions pop up the stack and it is easy to catch & handle them
+            - we can use thread local variables in blocking systems
+- buffering & batching
+    - API gateway cluster must be big size for handling thousands of youtube reqs
+    - if we pass each individual events to cluster not efficient
+    - it is better to send events into a buffer then send as batch (if timeout occurs OR if batch fills up, whichever is first)
+        - many benefits of batching: increases thorughput, helps save on cost, & compression is more effective
+        - drawbacks: more complexity in server & client side
+            eg) when few events in batch fail (reprocess all or just ones that failed?)
+- tiemouts: connection timeout & request timeout (requests processing takes too much time & client is not willing to wait any longer. Choosing a timeout checks stats & select mayble 1% slowest cutoff as timeout. Then can perhaps retry them intelligently in case timeout happened on bad/low availibity server => use exponential backoff and jitter algos)
+    - jitter adds randomness to rety intervals to spread load (w/o jitter it helps seperate retries)
+- Circuit breaker: calculates how many reqs have failed recently for specific operation ( if passes error threshold exceeds then stop calling downstream system. in some time later we can allow limited requests & if reqs sucessful we can stop circuitbreaker & allow requests to pass normally & start counting failure requests from scratch. Con is it is harder to test & mayt be hard to select threshold & timeout)
+- Dropbox design: erver and clients can calculate a hash (e.g., SHA-256) to check if file chunk has changed and needs cloud upload
+- Cassanda is good for fast writes & range based reads (bc it has a buffer for writes that gets moved to disk in the background - also since it is a column db it can retrieve multiple columns that are dynamically placed over time --> making it ideal for something like a chat service)
+- Noticiation need to go through manufactur of device push notification server
+- Partitioning tweets via PK: {timestamp_second}{sequence_id_for_second} --> saves write processing by not indexing or sortying by creating instance since primary key already indexed by this + save read processing by also not having to sort by creation time
+    - in timeline generation we usually want to get latest created tweets by a user
+    - we can use cache to store <key_user_id, linked_list_last_20_tweets> & updated linked list head/tail ever time there is a more recent tweet
+
+- For instance, if a video becomes popular, the logical replica corresponding to that video will experience more traffic than other servers. These uneven loads for logical replicas can then translate into uneven load distribution on corresponding physical servers. To resolve this issue, any busy server in one location can redirect a client to a less busy server in the same cache location. We can use dynamic HTTP redirections for this scenario.
+    - However, the use of redirections also has its drawbacks. First, since our service tries to load balance locally, it leads to multiple redirections if the host that receives the redirection can’t serve the video. Also, each redirection requires a client to make an additional HTTP request; it also leads to higher delays before the video starts playing back. Moreover, inter-tier (or cross data-center) redirections lead a client to a distant cache location because the higher tier caches are only present at a small number of locations.
+- Load balancers:
+    - hardware: network devices that are powerful machines w/ many cpus cores and memory  --> optimized for very high throughput
+    - networking protocols -> TCP protocols simply forwaard/trnasfer packets without checking inside
+        - thus TCP load balancer are super fast
+    - HTTP load bbalancers on contrast terminate the connections
+        - gets an HTTP request from a aclient, establishes a connection to a server & sends request to server
+            - HTTP LB can look inside the message & make a decision off the message (eg based off cookie info or header)
+    - Can distribute: via algos like round-robin, list connection (lowest numer of active conns), least response algo (sends reqs to server w/ fastest response time), & hash-based algo --> based on url or or IP address for example
+
+- DNS is like a phonebook for the internet (contains directory of domain names & translates them to IP addresses)
+    - we register our partitioner service in DNS eg) specify domain name: partitionerservice.domain.com
+    - so when clients hit domain name, reqs are forwarded to the load balancer device
+    - For load balancer to know about partitioner service machines we need to explicity tell IP address of each machine
+    - Both software and hardware provide api to register & unregister servers
+    - Load balancer pings each server periodically to check health ( & will direct traffic to it when it sees server is healthy again)
+    - high availibility LB (primary & secondary)
+        - primary accepts connections
+        - second one monitors primary
+        - each live in different data centers in case primary datacenter goes downs
+- With client-side discovery every server instance register itself in some common place. Named service registry. Service registy is another highly available web service, which cna perform health checks to determine health of each registered instance.
+    - Clients then query service registry and obtain list of register servicce
+    - example => ZooKeeper
+    - In our case every partition registers itself to ZooKeeper
+    - In our case each partition registers itself in zookeeper, while every paritioner instance queries zookeper for list of paritions
+- Leader replication (follower takes over on leader fail)
+- vs leaderless replication (Cassandra has peer nodes where none is leader)
+    - quorum write (write occurs when predefined number of replicas acknowledge write)
+    - similar concept applies to paritition, when parititoner service makes call to partition
+        as soon as leader partition persists message or only when message is replicated to specified # of replicas
+        - When we wait for replication to complete we increase reliability but also increase latency
+        - Plus if req'd # of replicas is not available at moment availibilty will suffer
+
+- Rollup aggregation --> youtube views events --> partitioner service --> paritions 
+    ---> essentially rollup takes high frequency batches aggregates them to different levels
+        - 1 min to --> hr --> days ---> months
+        - Each level aggregates lower frequency
+- Queue behind a load balancer is good practice to prevent overloading the database
+- Two pipelines in efficient aggregate count system
+    - one pipeline is ParitionServices that takes massive stream of count event
+    - next one is a QueryService, that first checks a cache to see if aggregations counts are available otherwise, it checks the DB (which should be getting updated data from PartitionService pipeline which eventually pushes latest aggregations to a queue behind the DB to prevent db from being overwhelmed)
+        - QueryServie Caches can also be prepared w/ job to prevent many DB hits by users that way if there is a sudden spike in traffic there isnt a massive load on the db
+
+
+
+
+Questions:
+- Ticketing -> ReservationService -> Once datastruct updates a reservation to booked, how does RDS get updated? --> Queue event --> subscriber takes event & updates RDS 
+
+
+Process Ask points to interviewer:
+- What is read to write ratio?
+
+Presentation points:
+- Algorithms & datastructure to speed up & simplify
+- Data partitioning for equal distribution of requests
+
+
+Presentation:
+- My floor is 150k --> however than can be adjusted based on the role, responsibility, & teamsize
+
+
+Requirement Clarification => for youtube view counts:
+
+- Users/Customers
+    - Who will use the system?
+    - How the system will be used?
+- Scale (read and write)
+    - How many read queries per second?
+    - How much data is queired per request?
+    - How many video views are processed per second?
+    - Cam there be spikes in traffic?
+- Performance
+    - What is expected write-to-read data delay?
+    - What is expected p99 latency for read queries?
+        - Doing aggregatin during write? In order to minimize read as much as possible?
+- Cost
+    - Should the design minimize the cost of development?
+    - Should the design minimize the cost of maintenance?
+
+Api Creation:
+- specific fn -> generic 'type' param -> generic 'function type' -> batch processing list for generic types & function types
+
+
+Where we store:
+- How to scale writes?
+- How to scale reads?
+- How to make both writes and reads fast?
+- How not to lose data in case of hardware faults and network paritions?
+- How to achieve strong consistency? What are the tradeoffs?
+- How to recover data in case of an outage?
+- How to ensure data security?
+- How to make it extensible for data model changes in the future?
+- Where to run (cloud vs on-premises data centers)?
+- How much money will it all cost?
+
+
+
+
+
+
+PLAN:
+- finish AWS course
+- Start practicing (setup features for past projects + design w/ AWS services)
+
+
+
+https://serverfault.com/questions/1012360/how-can-i-tell-the-maximum-threads-my-server-can-run
+
+QUESTION:
+Fantastic explanation about cpu sockets, processes, & threads:
+
+Here is the machine spec:
+
+CPU(s):                20
+Thread(s) per core:    1
+Core(s) per socket:    10
+Socket(s):             2
+Based on what I've read so far, these numbers mean that I can run 20 parallel jobs because I have 20 CPUs.
+
+However, how many threads can I run within each of those CPUs?
+
+
+ANSWER:
+
+Welcome to ServerFault!
+
+You have two CPU sockets, that is two physical processors. Each processor has 10 cores, each core being basically equivalent to a classic single-core CPU on its own. Each core can only run 1 thread at a time, i.e. hyperthreading is disabled.
+
+So, you can have a total maximum of 20 threads executing in parallel, one thread per CPU/core. That can mean 20 single-threaded jobs, 1 multi-threaded job with 20 threads, or anything in between.
+
+But that is only for threads that are expected to be 100% busy at work all the time, almost every millisecond of their life. If your threads are going to spend any significant time waiting for something else to happen, the system will automatically be able to run other threads while your thread(s) are waiting.
+
+Unless you are in an environment that is heavily optimized for number crunching, you aren't going to get all those 20 threads for yourself for 100% of the time: the background processes (daemons) of the OS are going to occupy some of them for some (small) proportion of time. Run ps -ef (or equivalent) on any modern unix-like system when it's idle: you are going to see way more than 20 processes, each containing at least one thread, and that is just for the OS itself.
+
+Assuming that you'll get the most out of the system by allocating exactly the number of threads the hardware has available may be oversimplifying the optimization problem. Depending on exactly what you're doing, you might want to use more or less threads. For example, if you are planning for heavy calculation jobs that are inherently CPU-bound, you might actually get better results by allocating slightly less than 20 threads for your job, so that one or two CPU cores will remain available for the OS's background tasks, so your job threads will get interrupted less often.
+
+But if you are setting up a J2EE server environment, the JVM will usually have a large number of threads, and most of which will spend most of their life waiting for input, so the total number of threads used by the J2EE server's JVM on a 20-CPU system can easily be way higher than 20.
+
+
+
+COMMENTS:
+
+
+That is a very helpful explanation; thanks. My threads are going to be actually I/O bound. I have 2 tasks: 1) I will be getting the size of a file on UNIX system and 2) writing something to disk. I believe both are I/O bound operations. For both, my plan was to run multiple processes (i.e., on separate CPUs) and then run multiple threads within each process (CPU). Am I clear? If so, do you think this approach is reasonable? – 
+tera_789
+ Apr 16, 2020 at 2:22
+2
+Your tasks are clearly I/O bound. But you are mistaken in thinking that threads happen within a single CPU. A classic single-threaded process can only use one CPU at a time; a multithreaded process is more complex, but can execute on several CPUs in parallel, up to the number of CPUs it has. If a process is multithreaded, its threads will "naturally" share the memory space of the process, so passing data from one thread to another within a process will be easy. Processes are more strictly separated from each other: they'll need the OS's Inter-Process Communication services to share memory. – 
+telcoM
+ Apr 16, 2020 at 4:42
+Hmmm...Let me try to repeat what you said: There is no need to run multiple processes and then, multiple threads within them. It is enough to start a multi-threaded program on a single CPU, and it will naturally use the resources of other CPUs. Did I get it correctly? – 
+tera_789
+ Apr 16, 2020 at 5:25
+2
+Yes, you understood correctly. For example, the top command will show a process's %CPU value as 100% when a single-threaded process is fully utilizing a single core. A multi-threaded process can show percentages higher than 100%, as its threads are using multiple cores. A value of 400% would indicate that the process has at least four threads and on average, the full capacity of 4 CPU cores was needed to run it on the last statistics refresh interval (typically 1 second by default). – 
+telcoM
+ Apr 16, 2020 at 6:25
+Ok, thanks. I think I got it now. I am not sure if you are familiar with Python and its GIL, but as I understand, only 1 thread can run with Python program at a time - as a result, CPU usage may never go higher than 100% there. Anyway, so going back to my question: on my machine (based on the spec provided), I can run 20 threads max if each thread runs at 100%. If not, then I can potentially have even 100 threads where 99 are waiting and 1 is running - is this correct? Also, if my machine supported hyper threading, this means at least 2 threads can run on a single CPU at the same time, right? – 
+tera_789
+ Apr 16, 2020 at 6:43
+1
+Python's GIL is a limitation that is specific to the common implementation of Python only. If using normal Python, you might want to have multiple processes after all, as you won't be able to use threads effectively. If you can split the tasks into 20 sub-tasks that can be done independently, your program could then fork into a total of 20 processes to fully utilize your machine, and then put the partial results from each process together. Then those 20 processes could run in parallel. More complicated than with just one process, but with a 20-to-1 difference, might well be worth it. – 
+telcoM
+ Apr 16, 2020 at 6:56
+1
+And yes, you're correct on hyperthreading, but that won't help Python with its GIL. Your system currently can and will run 20 threads in parallel, and all those threads don't need to be from the same process: your system can execute up to 20 different single-threaded processes in parallel. If you have more than that (as usual), they will have to take turns, and processes/threads waiting for I/O or some other event will automatically give up their turn for ones that can do some work immediately. – 
+telcoM
+ Apr 16, 2020 at 7:02
+
+
+

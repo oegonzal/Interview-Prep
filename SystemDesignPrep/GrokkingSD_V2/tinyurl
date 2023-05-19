@@ -1,0 +1,8 @@
+
+
+- URLs should be unpredictable and not guessable
+    - otherwise malicious attackers may be able to guess a predefine range & gather information about the long urls and system/user information
+
+- Sequencer to provide unique IDs
+- Rate limier to avoid system exploitation
+- Base-58 encoder to transform the sequencer's numeric ou

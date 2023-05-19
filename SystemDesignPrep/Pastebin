@@ -10,3 +10,15 @@ The system should be highly reliable, any data uploaded should not be lost.
 The system should be highly available. This is required because if our service is down, users will not be able to access their Pastes.
 Users should be able to access their Pastes in real-time with minimum latency.
 Paste links should not be guessable (not predictable).
+
+
+
+------------------------------------------------------------------------------------
+Practice:
+
+Requirements
+- The client must be able to upload text data and receive a unique URL
+- The received URL is used to access the text data
+
+
+
